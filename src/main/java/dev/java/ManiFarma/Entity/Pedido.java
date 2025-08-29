@@ -1,7 +1,7 @@
 package dev.java.ManiFarma.Entity;
 
 import jakarta.persistence.*;
-
+//  28/08/2025
 @Entity
 public class Pedido {
 

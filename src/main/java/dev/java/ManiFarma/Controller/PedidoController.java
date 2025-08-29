@@ -18,7 +18,7 @@ public class PedidoController {
         this.pedidoService = pedidoService;
     }
 
-    // Criar pedido
+    // Criar pedido 28/08/2025
     @PostMapping("/criar")
     public ResponseEntity<?> criarPedido(@RequestBody PedidoRequestDTO request) {
         PedidoResponseDTO dto = pedidoService.criarPedido(request);

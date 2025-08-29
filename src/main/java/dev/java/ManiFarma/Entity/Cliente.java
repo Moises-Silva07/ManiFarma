@@ -2,7 +2,7 @@ package dev.java.ManiFarma.Entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
-
+//  28/08/2025
 @Data
 @Entity
 @Table(name = "clientes")

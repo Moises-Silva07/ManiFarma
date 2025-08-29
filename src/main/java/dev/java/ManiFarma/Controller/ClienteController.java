@@ -18,7 +18,7 @@ public class ClienteController {
         this.clienteService = clienteService;
     }
 
-    // ----------------------------
+    // ---------------------------- 28/08/2025
     // Cadastro de cliente
     // ----------------------------
     @PostMapping("/cadastro")
