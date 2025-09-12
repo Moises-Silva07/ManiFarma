@@ -6,4 +6,5 @@ import java.util.List;
 //  28/08/2025
 public interface PedidoRepository extends JpaRepository<Pedido, Long> {
     List<Pedido> findByClienteId(Long clienteId);
+    List<Pedido> findByEmployeeId(Long employeeId);
 }

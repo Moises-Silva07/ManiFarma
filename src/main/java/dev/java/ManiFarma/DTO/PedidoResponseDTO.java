@@ -11,4 +11,7 @@ public class PedidoResponseDTO {
     private String receita;
     private Long clienteId;
     private String clienteNome;
+    
+    private Long employeeId;
+    private String employeeNome;
 }

@@ -3,8 +3,10 @@ package dev.java.ManiFarma.Service;
 import dev.java.ManiFarma.DTO.PedidoRequestDTO;
 import dev.java.ManiFarma.DTO.PedidoResponseDTO;
 import dev.java.ManiFarma.Entity.Cliente;
+import dev.java.ManiFarma.Entity.Employee;
 import dev.java.ManiFarma.Entity.Pedido;
 import dev.java.ManiFarma.Repository.ClienteRepository;
+import dev.java.ManiFarma.Repository.EmployeeRepository;
 import dev.java.ManiFarma.Repository.PedidoRepository;
 import org.springframework.stereotype.Service;
 
@@ -17,18 +19,23 @@ public class PedidoService {
 
     private final PedidoRepository pedidoRepository;
     private final ClienteRepository clienteRepository;
+    private final EmployeeRepository employeeRepository;
 
-    public PedidoService(PedidoRepository pedidoRepository, ClienteRepository clienteRepository) {
+    public PedidoService(PedidoRepository pedidoRepository, ClienteRepository clienteRepository, EmployeeRepository employeeRepository) {
         this.pedidoRepository = pedidoRepository;
         this.clienteRepository = clienteRepository;
+        this.employeeRepository = employeeRepository;
     }
 
     public PedidoResponseDTO criarPedido(PedidoRequestDTO request) {
         Optional<Cliente> clienteOpt = clienteRepository.findById(request.getClienteId());
+        Optional<Employee> employeeOpt = employeeRepository.findById(request.getEmployeeId());
         if (clienteOpt.isEmpty()) return null;
+        if (employeeOpt.isEmpty()) return null;
 
         Pedido pedido = new Pedido();
         pedido.setCliente(clienteOpt.get());
+        pedido.setEmployee(employeeOpt.get());
         pedido.setDescricao(request.getDescricao());
         pedido.setStatus(request.getStatus());
         pedido.setReceita(request.getReceita());
@@ -39,6 +46,10 @@ public class PedidoService {
 
     public List<PedidoResponseDTO> listarPedidosDoCliente(Long clienteId) {
         List<Pedido> pedidos = pedidoRepository.findByClienteId(clienteId);
+        return pedidos.stream().map(this::toDTO).toList();
+    }
+    public List<PedidoResponseDTO> getEmployeesList(Long employeeId) {
+        List<Pedido> pedidos = pedidoRepository.findByEmployeeId(employeeId);
         return pedidos.stream().map(this::toDTO).toList();
     }
 
@@ -65,6 +76,7 @@ public class PedidoService {
         PedidoResponseDTO dto = new PedidoResponseDTO();
         dto.setId(pedido.getId());
         dto.setClienteId(pedido.getCliente().getId());
+        dto.setEmployeeId(pedido.getEmployee().getId());
         dto.setDescricao(pedido.getDescricao());
         dto.setStatus(pedido.getStatus());
         dto.setReceita(pedido.getReceita());

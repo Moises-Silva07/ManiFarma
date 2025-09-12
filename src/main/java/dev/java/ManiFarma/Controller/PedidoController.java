@@ -33,6 +33,13 @@ public class PedidoController {
         return ResponseEntity.ok(pedidos);
     }
 
+    // Listar pedidos ligados a um funcionario
+    @GetMapping("/employee/{employeeId}")
+    public ResponseEntity<List<PedidoResponseDTO>> listarPedidosEmployee(@PathVariable Long employeeId) {
+        List<PedidoResponseDTO> pedidos = pedidoService.getEmployeesList(employeeId);
+        return ResponseEntity.ok(pedidos);
+    }
+
     // Atualizar pedido
     @PutMapping("/atualizar/{pedidoId}")
     public ResponseEntity<?> atualizarPedido(@PathVariable Long pedidoId, @RequestBody PedidoRequestDTO request) {

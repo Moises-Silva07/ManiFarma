@@ -9,4 +9,5 @@ public class PedidoRequestDTO {
     private StatusPedido status;
     private String receita; // opcional
     private Long clienteId; // vincula ao cliente
+    private Long employeeId; // vincula ao funcionario
 }
