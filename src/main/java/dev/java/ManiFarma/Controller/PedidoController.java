@@ -18,7 +18,20 @@ public class PedidoController {
         this.pedidoService = pedidoService;
     }
 
-    // Criar pedido 28/08/2025
+    @GetMapping
+    public ResponseEntity<List<PedidoResponseDTO>> getAll() {
+        List<PedidoResponseDTO> pedidos = pedidoService.getAllOrder();
+        return ResponseEntity.ok(pedidos);
+    }
+
+    @GetMapping("/{id}")
+        public ResponseEntity<?> buscarPorId(@PathVariable Long id) {
+        PedidoResponseDTO pedido = pedidoService.getOrderById(id);
+        if (pedido == null) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(pedido);
+    }
+
+
     @PostMapping("/criar")
     public ResponseEntity<?> criarPedido(@RequestBody PedidoRequestDTO request) {
         PedidoResponseDTO dto = pedidoService.criarPedido(request);
@@ -26,14 +39,12 @@ public class PedidoController {
         return ResponseEntity.ok(dto);
     }
 
-    // Listar pedidos de um cliente
     @GetMapping("/cliente/{clienteId}")
     public ResponseEntity<List<PedidoResponseDTO>> listarPedidos(@PathVariable Long clienteId) {
         List<PedidoResponseDTO> pedidos = pedidoService.listarPedidosDoCliente(clienteId);
         return ResponseEntity.ok(pedidos);
     }
 
-    // Listar pedidos ligados a um funcionario
     @GetMapping("/employee/{employeeId}")
     public ResponseEntity<List<PedidoResponseDTO>> listarPedidosEmployee(@PathVariable Long employeeId) {
         List<PedidoResponseDTO> pedidos = pedidoService.getEmployeesList(employeeId);

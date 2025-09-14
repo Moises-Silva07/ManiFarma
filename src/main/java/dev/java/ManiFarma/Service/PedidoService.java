@@ -27,6 +27,16 @@ public class PedidoService {
         this.employeeRepository = employeeRepository;
     }
 
+    public List<PedidoResponseDTO> getAllOrder() {
+     List<Pedido> pedidos = pedidoRepository.findAll();
+     return pedidos.stream().map(this::toDTO).collect(Collectors.toList());
+    }
+
+    public PedidoResponseDTO getOrderById(Long id) {
+        Optional<Pedido> pedidoOpt = pedidoRepository.findById(id);
+        return pedidoOpt.map(this::toDTO).orElse(null);
+    }
+
     public PedidoResponseDTO criarPedido(PedidoRequestDTO request) {
         Optional<Cliente> clienteOpt = clienteRepository.findById(request.getClienteId());
         Optional<Employee> employeeOpt = employeeRepository.findById(request.getEmployeeId());
