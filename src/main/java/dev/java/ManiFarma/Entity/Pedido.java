@@ -1,5 +1,8 @@
 package dev.java.ManiFarma.Entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.persistence.*;
 //  28/08/2025
 @Entity
@@ -24,6 +27,9 @@ public class Pedido {
     @JoinColumn(name = "employee_id")
     private Employee employee;
 
+    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PedidoProduto> itens = new ArrayList<>();
+
     // Getters e Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -42,5 +48,13 @@ public class Pedido {
 
     public Employee getEmployee() { return employee; }
     public void setEmployee(Employee employee) { this.employee = employee; }
+
+    public List<PedidoProduto> getItens() {
+        return itens;
+    }
+
+    public void setItens(List<PedidoProduto> itens) {
+        this.itens = itens;
+    }
 
 }
