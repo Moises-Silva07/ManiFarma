@@ -8,7 +8,7 @@ public class UserResponseDTO {
     private String nome;
     private String email;
     private boolean isClient;
-    private String token; // <--- Certifique-se de que esta linha está presente
+    private String token; 
     // Campos específicos de Cliente
     private String cpf;
     private String endereco;
