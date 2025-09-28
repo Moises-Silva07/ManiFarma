@@ -1,31 +1,31 @@
-package dev.java.ManiFarma.Controller;
+// package dev.java.ManiFarma.Controller;
 
 
-import org.springframework.web.bind.annotation.*;
+// import org.springframework.web.bind.annotation.*;
 
-import dev.java.ManiFarma.DTO.EmployeeRequest;
-import dev.java.ManiFarma.DTO.EmployeeResponse;
-import dev.java.ManiFarma.Service.EmployeeService;
+// import dev.java.ManiFarma.DTO.EmployeeRequest;
+// import dev.java.ManiFarma.DTO.EmployeeResponse;
+// import dev.java.ManiFarma.Service.EmployeeService;
 
-import java.util.List;
+// import java.util.List;
 
-@RestController
-@RequestMapping("/employees")
-public class EmployeeController {
+// @RestController
+// @RequestMapping("/employees")
+// public class EmployeeController {
 
-    private final EmployeeService service;
+//     private final EmployeeService service;
 
-    public EmployeeController(EmployeeService service) {
-        this.service = service;
-    }
+//     public EmployeeController(EmployeeService service) {
+//         this.service = service;
+//     }
 
-    @PostMapping
-    public EmployeeResponse create(@RequestBody EmployeeRequest request) {
-        return service.create(request);
-    }
+//     @PostMapping
+//     public EmployeeResponse create(@RequestBody EmployeeRequest request) {
+//         return service.create(request);
+//     }
 
-    @GetMapping
-    public List<EmployeeResponse> findAll() {
-        return service.findAll();
-    }
-}
+//     @GetMapping
+//     public List<EmployeeResponse> findAll() {
+//         return service.findAll();
+//     }
+// }

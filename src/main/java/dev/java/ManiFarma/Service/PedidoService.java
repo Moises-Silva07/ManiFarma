@@ -56,13 +56,13 @@ public class PedidoService {
         pedido.setStatus(request.getStatus());
         pedido.setReceita(request.getReceita());
 
-        Cliente cliente = clienteRepository.findById(request.getClienteId())
-                .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
-        pedido.setCliente(cliente);
+        // Cliente cliente = clienteRepository.findById(request.getClienteId())
+        //         .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
+        // pedido.setCliente(cliente);
 
-        Employee employee = employeeRepository.findById(request.getEmployeeId())
-                .orElseThrow(() -> new RuntimeException("Funcionário não encontrado"));
-        pedido.setEmployee(employee);
+        // Employee employee = employeeRepository.findById(request.getEmployeeId())
+        //         .orElseThrow(() -> new RuntimeException("Funcionário não encontrado"));
+        // pedido.setEmployee(employee);
 
         List<PedidoProduto> itens = new ArrayList<>();
         for (PedidoProdutoRequestDTO itemDTO : request.getItens()) {
