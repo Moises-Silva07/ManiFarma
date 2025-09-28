@@ -1,4 +1,5 @@
 package dev.java.ManiFarma.Entity;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.Data;
@@ -8,7 +9,8 @@ import lombok.EqualsAndHashCode;
 @Data
 @Entity
 @Table(name = "clientes")
-public class Cliente extends User {
+public class Cliente extends User { 
+
 
     private String cpf;
     private String endereco;

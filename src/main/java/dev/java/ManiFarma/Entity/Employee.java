@@ -1,6 +1,5 @@
 package dev.java.ManiFarma.Entity;
 
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.*;
@@ -13,7 +12,7 @@ import lombok.*;
 @Builder
 @Entity
 @Table(name = "employees")
-public class Employee extends User {
+public class Employee extends User { 
 
     private String role;
     private Double salary;
