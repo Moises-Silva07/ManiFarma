@@ -1,38 +1,29 @@
 package dev.java.ManiFarma.Service;
-
 import dev.java.ManiFarma.DTO.ClienteResponseDTO;
 import dev.java.ManiFarma.Entity.Cliente;
 import dev.java.ManiFarma.Repository.ClienteRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-//  28/08/2025
+
 @Service
 public class ClienteService {
 
     private final ClienteRepository clienteRepository;
-    private Cliente clienteLogado; // simples, para teste
+    // Remova clienteLogado se não for mais necessário para outras funcionalidades
 
     public ClienteService(ClienteRepository clienteRepository) {
         this.clienteRepository = clienteRepository;
     }
 
-    public ClienteResponseDTO cadastrar(Cliente cliente) {
-        clienteRepository.save(cliente);
-        return toDTO(cliente);
-    }
-
-    public ClienteResponseDTO login(String email, String senha) {
-        Optional<Cliente> opt = clienteRepository.findByEmailAndSenha(email, senha);
-        if (opt.isPresent()) {
-            clienteLogado = opt.get();
-            return toDTO(clienteLogado);
+    // Mantenha outros métodos relacionados a clientes aqui, se houver.
+    // Exemplo: um método para buscar um cliente por ID
+    public ClienteResponseDTO findById(Long id) {
+        Optional<Cliente> optCliente = clienteRepository.findById(id);
+        if (optCliente.isEmpty()) {
+            throw new RuntimeException("Cliente não encontrado");
         }
-        return null;
-    }
-
-    public Cliente getClienteLogado() {
-        return clienteLogado;
+        return toDTO(optCliente.get());
     }
 
     private ClienteResponseDTO toDTO(Cliente cliente) {

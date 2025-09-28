@@ -1,12 +1,10 @@
 package dev.java.ManiFarma.Service;
-
 import dev.java.ManiFarma.DTO.EmployeeRequest;
 import dev.java.ManiFarma.DTO.EmployeeResponse;
 import dev.java.ManiFarma.Entity.Employee;
 import dev.java.ManiFarma.Repository.EmployeeRepository;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -21,6 +19,9 @@ public class EmployeeService {
     }
 
     public EmployeeResponse create(EmployeeRequest request) {
+        // Esta lógica de criação pode ser mantida se for para criar um Employee
+        // que já existe como User, ou se for uma criação interna sem autenticação.
+        // Caso contrário, a criação inicial de um Employee para login deve ser via AuthService.
         Employee employee = Employee.builder()
                 .name(request.getName())
                 .role(request.getRole())

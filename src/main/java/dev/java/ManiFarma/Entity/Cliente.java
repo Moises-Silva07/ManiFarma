@@ -1,21 +1,16 @@
 package dev.java.ManiFarma.Entity;
-
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import lombok.Data;
-//  28/08/2025
+import lombok.EqualsAndHashCode;
+
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
 @Table(name = "clientes")
-public class Cliente {
+public class Cliente extends User {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    private String nome;
-    private String email;
     private String cpf;
     private String endereco;
     private String telefone;
-    private String senha; // senha em texto por enquanto
 }

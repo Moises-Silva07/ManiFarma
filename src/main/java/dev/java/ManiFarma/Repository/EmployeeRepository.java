@@ -1,9 +1,9 @@
 package dev.java.ManiFarma.Repository;
 
-
-import org.springframework.data.jpa.repository.JpaRepository;
-
 import dev.java.ManiFarma.Entity.Employee;
+import org.springframework.stereotype.Repository;
 
-public interface EmployeeRepository extends JpaRepository<Employee, Long> {
+@Repository
+public interface EmployeeRepository extends UserRepository {
+    // Métodos específicos para Employee, se houver
 }

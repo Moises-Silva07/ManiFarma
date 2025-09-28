@@ -1,27 +1,21 @@
 package dev.java.ManiFarma.Entity;
 
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import lombok.*;
 
-@Entity
-@Table(name = "employees")
+@EqualsAndHashCode(callSuper = true)
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Employee {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    private String name;
+@Entity
+@Table(name = "employees")
+public class Employee extends User {
 
     private String role;
-
     private Double salary;
-
     private String shift;
 }
