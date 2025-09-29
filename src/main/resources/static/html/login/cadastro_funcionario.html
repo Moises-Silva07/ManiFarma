@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/cadastro_funcionario.css">
+
+    <title>Cadastro Funcionário</title>
+</head>
+<body>
+    <main>
+        <section>
+            <div class="container-cadastro">
+                <h1>Cadastro Funcionário</h1>
+
+                <form id="cadastroForm">
+                    <div class="campo">
+                        <label for="nomeCompleto">Nome Completo:</label>
+                        <input type="text" id="nomeCompleto" name="nomeCompleto" required>
+                    </div>
+
+                    <div class="campo">
+                        <label for="nomeAcesso">Email de Acesso:</label>
+                        <input type="email" id="nomeAcesso" name="nomeAcesso" required>
+                    </div>
+
+                    <div class="campo">
+                        <label for="cargo">Cargo:</label>
+                        <input type="text" id="cargo" name="cargo" required>
+                    </div>
+
+                    <div class="campo">
+                        <label for="senha">Senha:</label>
+                        <input type="password" id="senha" name="senha" required autocomplete="new-password">
+                    </div>
+
+                    <div class="campo">
+                        <label for="confirmaSenha">Confirmar Senha:</label>
+                        <input type="password" id="confirmaSenha" name="confirmaSenha" required autocomplete="new-password">
+                    </div>
+
+                    <div class="botao">
+                        <button type="submit" class="btn">Cadastrar</button>
+                        <a href="/html/login/login.html" class="btn">Login</a>
+                    </div>
+                </form>
+
+                <p id="mensagem"></p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 - Todos os direitos reservados - ManiFarma</p>
+    </footer>
+
+    <script src="/js/main.js"></script>
+    <script src="/js/cadastro_funcionario.js"></script>
+</body>
+</html>

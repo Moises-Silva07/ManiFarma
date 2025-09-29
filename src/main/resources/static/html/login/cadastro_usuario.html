@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Caminhos já estão corretos -->
+    <link rel="stylesheet" href="/css/global_login.css">
+    <link rel="stylesheet" href="/css/cadastro_usuario.css">
+
+    <title>Cadastro Usuário</title>
+
+</head>
+<body>
+<main>
+    <section aria-label="Formulário de cadastro usuário">
+
+        <div class="container">
+
+            <h1>Cadastro Cliente</h1>
+
+            <form id="form">
+
+                <div class="field">
+                    <label for="nome">Nome:</label>
+                    <input type="text" id="nome" name="nome" required>
+                </div>
+
+                <div class="field">
+                    <label for="email">E-mail:</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+
+                <div class="field">
+                    <label for="cpf">Cpf:</label>
+                    <input type="text" id="cpf" name="cpf" required>
+                </div>
+
+                <div class="field">
+                    <label for="endereco">Endereço:</label>
+                    <input type="text" id="endereco" name="endereco" required>
+                </div>
+
+                <div class="field">
+                    <label for="telefone">Telefone:</label>
+                    <input type="tel" id="telefone" name="telefone" required placeholder="(99) 99999-9999" pattern="\(\d{2}\)\s\d{5}-\d{4}">
+                </div>
+
+                <div class="field">
+                    <label for="senha">Senha:</label>
+                    <input type="password" id="senha" name="senha" required autocomplete="new-password">
+                </div>
+
+                <div class="field">
+                    <label for="confirmaSenha">Confirmar Senha:</label>
+                    <input type="password" id="confirmaSenha" name="confirmaSenha" required autocomplete="new-password">
+                </div>
+
+                <div>
+                    <button type="submit" class="btn">Cadastrar</button>
+                    <!-- Caminho já está correto -->
+                    <a href="/html/login/login.html" class="btn">Voltar</a>
+                </div>
+
+            </form>
+        </div>
+
+        <!-- ======================= CORREÇÃO AQUI ======================= -->
+        <!-- Adicionando o id="message" para o JavaScript encontrar este elemento -->
+        <p id="message" role="alert"></p>
+        <!-- ============================================================= -->
+
+    </section>
+</main>
+
+<footer>
+    <p>&copy; 2025 - Todos os direitos reservados - ManiFarma</p>
+</footer>
+
+<!-- Caminhos já estão corretos -->
+<script src="/js/main.js" defer></script>
+<script src="/js/cadastro_usuario.js" defer></script>
+</body>
+</html>

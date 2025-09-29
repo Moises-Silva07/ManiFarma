@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Teste de Caminho</title>
+</head>
+<body>
+    <h1>Página de Teste de Caminho</h1>
+    <p>Abra o console (F12) para ver os resultados.</p>
+
+    <script>
+        // Este código vai nos dizer o endereço exato desta página
+        console.log("Endereço completo (href):", window.location.href);
+        console.log("Protocolo:", window.location.protocol);
+        console.log("Caminho (pathname):", window.location.pathname);
+    </script>
+
+    <!-- Agora, vamos tentar carregar o script usando diferentes caminhos -->
+    
+    <!-- Tentativa 1: Caminho Absoluto (/) -->
+    <script src="/js/main.js" id="teste-1"></script>
+    
+    <!-- Tentativa 2: Caminho Relativo (../) -->
+    <script src="../js/main.js" id="teste-2"></script>
+    
+    <!-- Tentativa 3: Caminho Relativo (../../) -->
+    <script src="../../js/main.js" id="teste-3"></script>
+
+</body>
+</html>

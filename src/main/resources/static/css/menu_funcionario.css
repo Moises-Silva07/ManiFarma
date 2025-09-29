@@ -1,0 +1,79 @@
+body {
+    height: 100vh;
+    background-color: #101820;
+}
+
+header {
+  background-color: #FEE715; 
+  padding: 20px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  margin: 0;
+  font-size: 25px;
+  color:#101820;
+  line-height: 1;
+}
+
+nav {
+  display: flex;
+  gap: 32px;          /* espaço entre links */
+}
+
+nav a {
+  color: #101820;
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: bold;
+  transition: color 0.3s;
+}
+
+nav a:hover {
+  color: #000000;
+}
+
+
+main {
+  padding: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+section h1 {
+  color:#FEE715;
+  font-size: 60px;
+}
+
+section button {
+  background-color: #FEE715;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+section button:hover {
+  background-color: #92850c; /* azul mais escuro */
+}
+
+section button a {
+  color: #101820;
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+/* Rodapé */
+footer {
+  position: absolute; /* Fixa no canto inferior da tela */
+  bottom: 10px; /* 10px acima do fundo */
+  width: 100%;
+  text-align: center;
+  font-size: 0.8em;
+  color: #FEE715;
+}
