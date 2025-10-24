@@ -1,0 +1,25 @@
+.container p {
+  color: #dddddd;
+}
+
+/* Área dos botões */
+.btn {
+  display: inline-block;
+  text-decoration: none;
+  text-align: center;
+
+  padding: 12px;
+  background: #FEE715;
+  color: #101820;
+  border-radius: 8px;
+  font-weight: bold;
+  min-width: 120px;
+  cursor: pointer;
+  border: none;
+  font-size: 1em;
+  transition: 0.3s;
+}
+
+.btn:hover {
+  background: #92850c;
+}

@@ -65,17 +65,12 @@ public class AuthService {
     }
 
     public UserResponseDTO login(LoginRequest request) {
-        // Use o AuthenticationManager para autenticar o usuário
+        //para autenticar o usuário
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getSenha())
         );
 
-        // Se a autenticação for bem-sucedida, o Spring Security preenche o SecurityContext
-        // e podemos prosseguir para gerar o token.
-        // Se falhar, o AuthenticationManager lançará uma exceção (ex: BadCredentialsException)
-        // que será tratada pelo Spring Security, resultando em um 401 Unauthorized.
 
-        // Se chegou aqui, a autenticação foi bem-sucedida.
         Optional<User> optUser = userRepository.findByEmail(request.getEmail());
         if (optUser.isEmpty()) {
             throw new RuntimeException("Usuário não encontrado após autenticação bem-sucedida. Isso não deveria acontecer.");

@@ -5,10 +5,10 @@ import dev.java.ManiFarma.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager; // Adicione esta importação
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration; // Adicione esta importação
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -29,30 +29,28 @@ public class SecurityConfig {
     private OurUserDetailsService ourUserDetailsService;
 
     @Bean
-    public UserDetailsService userDetailsService( ) {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http ) throws Exception {
+        http
+
+                .csrf(csrf -> csrf.disable( ))
+
+
+                .authorizeHttpRequests(authorize -> authorize
+                        // PERMITE TUDO. QUALQUER REQUISIÇÃO. SEM RESTRIÇÕES.
+                        .anyRequest().permitAll()
+                );
+
+
+        return http.build( );
+    }
+    @Bean
+    public UserDetailsService userDetailsService() {
         return ourUserDetailsService;
     }
 
     @Bean
     public JwtAuthFilter jwtAuthFilterBean() {
         return new JwtAuthFilter(jwtUtil, userDetailsService());
-    }
-
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http ) throws Exception {
-        http
-            .csrf(csrf -> csrf.disable( ))
-            .authorizeHttpRequests(authorize -> authorize
-                .requestMatchers("/api/auth/**").permitAll() // ESTA LINHA É CRÍTICA
-                .anyRequest().authenticated()
-            )
-            .sessionManagement(session -> session
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            )
-            .authenticationProvider(authenticationProvider())
-            .addFilterBefore(jwtAuthFilterBean(), UsernamePasswordAuthenticationFilter.class);
-
-        return http.build( );
     }
 
     @Bean
@@ -68,9 +66,10 @@ public class SecurityConfig {
         return authenticationProvider;
     }
 
-    // Adicione este Bean para o AuthenticationManager
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
+
+
 }

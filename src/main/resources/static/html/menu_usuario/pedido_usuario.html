@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/pedido_usuario.css">
+
+    <title>Enviar Pedido Médico</title>
+</head>
+<body>
+    <header>
+        <h1> Novo Pedido Médico </h1>
+    </header>
+
+    <main class="container">
+        <section>
+            <form id="pedidoForm">
+                <label for="descricao">Descrição do Pedido: </label>
+                <textarea name="descricao" id="descricao" required></textarea>
+
+                <label for="receita">Anexar Receita (PDF/Imagem): </label>
+                <input type="file" id="receita" name="receita" accept=".jpg, .jpeg, .png, .pdf" required>
+
+                <input type="hidden" id="clienteId" value="1">
+
+                <button type="submit" class="btn">Enviar Pedido</button>
+            </form>
+
+            <p id="mensagem"></p>
+
+        </section>
+    </main>
+    <footer><p>&copy 2025 - Todos os direitos reservados ManiFarma</p></footer>
+
+    <script src="/js/main.js"></script>
+    <script src="/js/enviar_pedido.js"></script>
+</body>
+</html>

@@ -7,6 +7,7 @@ import dev.java.ManiFarma.Service.AuthService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin(origins = "http://localhost:5500")
 @RestController
 @RequestMapping("/api/auth" )
 public class AuthController {

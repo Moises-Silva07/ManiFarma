@@ -3,6 +3,7 @@ package dev.java.ManiFarma.Controller;
 import dev.java.ManiFarma.DTO.PedidoRequestDTO;
 import dev.java.ManiFarma.DTO.PedidoResponseDTO;
 import dev.java.ManiFarma.Service.PedidoService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,52 +19,31 @@ public class PedidoController {
         this.pedidoService = pedidoService;
     }
 
+    // Endpoint para criar um novo pedido
+    @PostMapping
+    public ResponseEntity<PedidoResponseDTO> criarPedido(@RequestBody PedidoRequestDTO request) {
+        PedidoResponseDTO novoPedido = pedidoService.criarPedido(request);
+        return new ResponseEntity<>(novoPedido, HttpStatus.CREATED);
+    }
+
+    // Endpoint para buscar todos os pedidos
     @GetMapping
-    public ResponseEntity<List<PedidoResponseDTO>> getAll() {
-        List<PedidoResponseDTO> pedidos = pedidoService.getAllOrder();
+    public ResponseEntity<List<PedidoResponseDTO>> listarTodosPedidos() {
+        List<PedidoResponseDTO> pedidos = pedidoService.getAllPedidos();
         return ResponseEntity.ok(pedidos);
     }
 
+    // Endpoint para buscar um pedido por ID
     @GetMapping("/{id}")
-        public ResponseEntity<?> buscarPorId(@PathVariable Long id) {
-        PedidoResponseDTO pedido = pedidoService.getOrderById(id);
-        if (pedido == null) return ResponseEntity.notFound().build();
+    public ResponseEntity<PedidoResponseDTO> buscarPedidoPorId(@PathVariable Long id) {
+        PedidoResponseDTO pedido = pedidoService.getPedidoById(id);
         return ResponseEntity.ok(pedido);
     }
 
-
-    @PostMapping("/criar")
-    public ResponseEntity<?> criarPedido(@RequestBody PedidoRequestDTO request) {
-        PedidoResponseDTO dto = pedidoService.criarPedido(request);
-        if (dto == null) return ResponseEntity.badRequest().body("Cliente não encontrado");
-        return ResponseEntity.ok(dto);
-    }
-
+    // Endpoint para buscar todos os pedidos de um cliente específico
     @GetMapping("/cliente/{clienteId}")
-    public ResponseEntity<List<PedidoResponseDTO>> listarPedidos(@PathVariable Long clienteId) {
-        List<PedidoResponseDTO> pedidos = pedidoService.listarPedidosDoCliente(clienteId);
+    public ResponseEntity<List<PedidoResponseDTO>> buscarPedidosPorCliente(@PathVariable Long clienteId) {
+        List<PedidoResponseDTO> pedidos = pedidoService.getPedidosPorCliente(clienteId);
         return ResponseEntity.ok(pedidos);
-    }
-
-    @GetMapping("/employee/{employeeId}")
-    public ResponseEntity<List<PedidoResponseDTO>> listarPedidosEmployee(@PathVariable Long employeeId) {
-        List<PedidoResponseDTO> pedidos = pedidoService.getEmployeesList(employeeId);
-        return ResponseEntity.ok(pedidos);
-    }
-
-    // Atualizar pedido
-    @PutMapping("/atualizar/{pedidoId}")
-    public ResponseEntity<?> atualizarPedido(@PathVariable Long pedidoId, @RequestBody PedidoRequestDTO request) {
-        PedidoResponseDTO dto = pedidoService.atualizarPedido(pedidoId, request);
-        if (dto == null) return ResponseEntity.badRequest().body("Pedido não encontrado");
-        return ResponseEntity.ok(dto);
-    }
-
-    // Deletar pedido
-    @DeleteMapping("/deletar/{pedidoId}")
-    public ResponseEntity<?> deletarPedido(@PathVariable Long pedidoId) {
-        boolean deletado = pedidoService.deletarPedido(pedidoId);
-        if (!deletado) return ResponseEntity.badRequest().body("Pedido não encontrado");
-        return ResponseEntity.ok("Pedido deletado com sucesso");
     }
 }

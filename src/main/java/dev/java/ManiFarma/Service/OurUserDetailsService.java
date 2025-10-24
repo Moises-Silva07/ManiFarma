@@ -7,6 +7,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.security.core.GrantedAuthority;
+import java.util.Collections;
 
 import java.util.ArrayList;
 
@@ -21,11 +23,18 @@ public class OurUserDetailsService implements UserDetailsService {
         User user = userRepository.findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado com email: " + username));
 
-        // Aqui você pode adicionar as roles/autoridades do usuário se tiver
+        // A flag 'enabled' do UserDetails do Spring Security é a terceira.
+        // Usamos '!user.isDisabled()' para que:
+        // - se isDisabled=false (ativo), enabled=true
+        // - se isDisabled=true (inativo), enabled=false
         return new org.springframework.security.core.userdetails.User(
                 user.getEmail(),
-                user.getSenha(), // A senha já está criptografada no banco de dados
-                new ArrayList<>() // Lista vazia de autoridades por enquanto
+                user.getSenha(),
+                !user.isDisabled(), // enabled
+                true, // accountNonExpired
+                true, // credentialsNonExpired
+                true, // accountNonLocked
+                Collections.emptyList() // authorities
         );
     }
 }

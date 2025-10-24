@@ -8,12 +8,13 @@ public class UserResponseDTO {
     private String nome;
     private String email;
     private boolean isClient;
-    private String token; 
-    // Campos específicos de Cliente
+    private String token;
+    private boolean isDisabled; // ADICIONE ESTA LINHA
+
+    // (Campos de Cliente e Employee)
     private String cpf;
     private String endereco;
     private String telefone;
-    // Campos específicos de Employee
     private String role;
     private Double salary;
     private String shift;

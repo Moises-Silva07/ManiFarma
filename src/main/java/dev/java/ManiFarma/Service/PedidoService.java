@@ -4,26 +4,19 @@ import dev.java.ManiFarma.DTO.PedidoProdutoRequestDTO;
 import dev.java.ManiFarma.DTO.PedidoProdutoResponseDTO;
 import dev.java.ManiFarma.DTO.PedidoRequestDTO;
 import dev.java.ManiFarma.DTO.PedidoResponseDTO;
-import dev.java.ManiFarma.Entity.Cliente;
-import dev.java.ManiFarma.Entity.Employee;
-import dev.java.ManiFarma.Entity.Pedido;
-import dev.java.ManiFarma.Entity.PedidoProduto;
-import dev.java.ManiFarma.Entity.Produto;
+import dev.java.ManiFarma.Entity.*;
 import dev.java.ManiFarma.Repository.ClienteRepository;
 import dev.java.ManiFarma.Repository.EmployeeRepository;
 import dev.java.ManiFarma.Repository.PedidoRepository;
 import dev.java.ManiFarma.Repository.ProdutoRepository;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.annotation.Transactional;
-
-
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
-//  28/08/2025
+
 @Service
 public class PedidoService {
 
@@ -32,104 +25,102 @@ public class PedidoService {
     private final EmployeeRepository employeeRepository;
     private final ProdutoRepository produtoRepository;
 
-    public PedidoService(ProdutoRepository produtoRepository,PedidoRepository pedidoRepository, ClienteRepository clienteRepository, EmployeeRepository employeeRepository) {
+    public PedidoService(PedidoRepository pedidoRepository, ClienteRepository clienteRepository, EmployeeRepository employeeRepository, ProdutoRepository produtoRepository) {
         this.pedidoRepository = pedidoRepository;
         this.clienteRepository = clienteRepository;
         this.employeeRepository = employeeRepository;
         this.produtoRepository = produtoRepository;
     }
 
-    public List<PedidoResponseDTO> getAllOrder() {
-     List<Pedido> pedidos = pedidoRepository.findAll();
-     return pedidos.stream().map(this::toDTO).collect(Collectors.toList());
-    }
-
-    public PedidoResponseDTO getOrderById(Long id) {
-        Optional<Pedido> pedidoOpt = pedidoRepository.findById(id);
-        return pedidoOpt.map(this::toDTO).orElse(null);
-    }
-
     @Transactional
     public PedidoResponseDTO criarPedido(PedidoRequestDTO request) {
+        // 1. Busca o cliente. Se não existir, lança uma exceção clara.
+        Cliente cliente = (Cliente) clienteRepository.findById(request.getClienteId())
+                .orElseThrow(() -> new EntityNotFoundException("Cliente não encontrado com ID: " + request.getClienteId()));
+
+        // 2. Cria a entidade Pedido
         Pedido pedido = new Pedido();
         pedido.setDescricao(request.getDescricao());
-        pedido.setStatus(request.getStatus());
+        pedido.setStatus(StatusPedido.PENDENTE); // Define o status inicial como pendente
         pedido.setReceita(request.getReceita());
+        pedido.setCliente(cliente);
 
-        // Cliente cliente = clienteRepository.findById(request.getClienteId())
-        //         .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
-        // pedido.setCliente(cliente);
-
-        // Employee employee = employeeRepository.findById(request.getEmployeeId())
-        //         .orElseThrow(() -> new RuntimeException("Funcionário não encontrado"));
-        // pedido.setEmployee(employee);
-
-        List<PedidoProduto> itens = new ArrayList<>();
-        for (PedidoProdutoRequestDTO itemDTO : request.getItens()) {
-            Produto produto = produtoRepository.findById(itemDTO.getProdutoId())
-                    .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
-
-            PedidoProduto item = new PedidoProduto();
-            item.setPedido(pedido);
-            item.setProduto(produto);
-            item.setQuantidade(itemDTO.getQuantidade());
-
-            itens.add(item);
+        // 3. Associa o funcionário apenas se um employeeId for fornecido
+        if (request.getEmployeeId() != null) {
+            Employee employee = (Employee) employeeRepository.findById(request.getEmployeeId())
+                    .orElseThrow(() -> new EntityNotFoundException("Funcionário não encontrado com ID: " + request.getEmployeeId()));
+            pedido.setEmployee(employee);
         }
-        pedido.setItens(itens);
 
-        Pedido salvo = pedidoRepository.save(pedido);
+        // 4. Processa os itens do pedido
+        if (request.getItens() != null && !request.getItens().isEmpty()) {
+            List<PedidoProduto> itens = new ArrayList<>();
+            for (PedidoProdutoRequestDTO itemDTO : request.getItens()) {
+                Produto produto = produtoRepository.findById(itemDTO.getProdutoId())
+                        .orElseThrow(() -> new EntityNotFoundException("Produto não encontrado com ID: " + itemDTO.getProdutoId()));
 
-        return toDTO(salvo);
+                PedidoProduto item = new PedidoProduto();
+                item.setPedido(pedido);
+                item.setProduto(produto);
+                item.setQuantidade(itemDTO.getQuantidade());
+                itens.add(item);
+            }
+            pedido.setItens(itens);
+        }
+
+        // 5. Salva o pedido e seus itens no banco de dados
+        Pedido pedidoSalvo = pedidoRepository.save(pedido);
+
+        // 6. Retorna o DTO de resposta
+        return toDTO(pedidoSalvo);
     }
 
-    public List<PedidoResponseDTO> listarPedidosDoCliente(Long clienteId) {
-        List<Pedido> pedidos = pedidoRepository.findByClienteId(clienteId);
-        return pedidos.stream().map(this::toDTO).toList();
-    }
-    public List<PedidoResponseDTO> getEmployeesList(Long employeeId) {
-        List<Pedido> pedidos = pedidoRepository.findByEmployeeId(employeeId);
-        return pedidos.stream().map(this::toDTO).toList();
+    public List<PedidoResponseDTO> getAllPedidos() {
+        return pedidoRepository.findAll().stream()
+                .map(this::toDTO)
+                .collect(Collectors.toList());
     }
 
-    public PedidoResponseDTO atualizarPedido(Long pedidoId, PedidoRequestDTO request) {
-        Optional<Pedido> pedidoOpt = pedidoRepository.findById(pedidoId);
-        if (pedidoOpt.isEmpty()) return null;
-
-        Pedido pedido = pedidoOpt.get();
-        pedido.setDescricao(request.getDescricao());
-        pedido.setStatus(request.getStatus());
-        pedido.setReceita(request.getReceita());
-
-        pedidoRepository.save(pedido);
+    public PedidoResponseDTO getPedidoById(Long id) {
+        Pedido pedido = pedidoRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Pedido não encontrado com ID: " + id));
         return toDTO(pedido);
     }
-
-    public boolean deletarPedido(Long pedidoId) {
-        if (!pedidoRepository.existsById(pedidoId)) return false;
-        pedidoRepository.deleteById(pedidoId);
-        return true;
+    
+    public List<PedidoResponseDTO> getPedidosPorCliente(Long clienteId) {
+        return pedidoRepository.findByClienteId(clienteId).stream()
+                .map(this::toDTO)
+                .collect(Collectors.toList());
     }
 
-     private PedidoResponseDTO toDTO(Pedido pedido) {
-        PedidoResponseDTO response = new PedidoResponseDTO();
-        response.setId(pedido.getId());
-        response.setDescricao(pedido.getDescricao());
-        response.setStatus(pedido.getStatus());
-        response.setReceita(pedido.getReceita());
-        response.setClienteId(pedido.getCliente().getId());
-        response.setEmployeeId(pedido.getEmployee().getId());
 
-        List<PedidoProdutoResponseDTO> itensResponse = new ArrayList<>();
-        for (PedidoProduto item : pedido.getItens()) {
-            PedidoProdutoResponseDTO dto = new PedidoProdutoResponseDTO();
-            dto.setProdutoId(item.getProduto().getId());
-            dto.setProdutoNome(item.getProduto().getNome());
-            dto.setQuantidade(item.getQuantidade());
-            itensResponse.add(dto);
+    // Converte a entidade Pedido para um DTO de resposta de forma segura
+    private PedidoResponseDTO toDTO(Pedido pedido) {
+        PedidoResponseDTO dto = new PedidoResponseDTO();
+        dto.setId(pedido.getId());
+        dto.setDescricao(pedido.getDescricao());
+        dto.setStatus(pedido.getStatus());
+        dto.setReceita(pedido.getReceita());
+
+        // Associa IDs de forma segura, verificando se não são nulos
+        if (pedido.getCliente() != null) {
+            dto.setClienteId(pedido.getCliente().getId());
         }
-        response.setItens(itensResponse);
+        if (pedido.getEmployee() != null) {
+            dto.setEmployeeId(pedido.getEmployee().getId());
+        }
 
-        return response;
+        // Mapeia os itens do pedido para DTOs
+        if (pedido.getItens() != null) {
+            dto.setItens(pedido.getItens().stream().map(item -> {
+                PedidoProdutoResponseDTO itemDto = new PedidoProdutoResponseDTO();
+                itemDto.setProdutoId(item.getProduto().getId());
+                itemDto.setProdutoNome(item.getProduto().getNome());
+                itemDto.setQuantidade(item.getQuantidade());
+                return itemDto;
+            }).collect(Collectors.toList()));
+        }
+
+        return dto;
     }
 }

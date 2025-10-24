@@ -17,4 +17,8 @@ public class User {
     private String email;
     private String senha;
     private boolean isClient;
+
+    // ADICIONE ESTA LINHA
+    @Column(name = "is_disabled")
+    private boolean isDisabled = false; // Garante que o padrão seja 'false' (ativo)
 }
