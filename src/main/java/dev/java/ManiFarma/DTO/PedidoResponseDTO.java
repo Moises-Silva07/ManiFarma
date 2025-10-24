@@ -13,6 +13,7 @@ public class PedidoResponseDTO {
     private String receita;
     private Long clienteId;
     private Long employeeId;
+    private Double valorTotal;
     private List<PedidoProdutoResponseDTO> itens;
 
     public Long getId() {
@@ -69,5 +70,13 @@ public class PedidoResponseDTO {
 
     public void setItens(List<PedidoProdutoResponseDTO> itens) {
         this.itens = itens;
+    }
+
+    public Double getValorTotal() {
+        return valorTotal;
+    }
+
+    public void setValorTotal(Double valorTotal) {
+        this.valorTotal = valorTotal;
     }
 }

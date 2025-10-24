@@ -24,12 +24,24 @@ public class PedidoService {
     private final ClienteRepository clienteRepository;
     private final EmployeeRepository employeeRepository;
     private final ProdutoRepository produtoRepository;
+    
+    // <-- INJETANDO NOVOS SERVIÇOS
+    private final PaymentService paymentService;
+    private final EmailService emailService;
 
-    public PedidoService(PedidoRepository pedidoRepository, ClienteRepository clienteRepository, EmployeeRepository employeeRepository, ProdutoRepository produtoRepository) {
+    // <-- ATUALIZANDO CONSTRUTOR
+    public PedidoService(PedidoRepository pedidoRepository, 
+                         ClienteRepository clienteRepository, 
+                         EmployeeRepository employeeRepository, 
+                         ProdutoRepository produtoRepository,
+                         PaymentService paymentService, // <-- NOVO
+                         EmailService emailService) {  // <-- NOVO
         this.pedidoRepository = pedidoRepository;
         this.clienteRepository = clienteRepository;
         this.employeeRepository = employeeRepository;
         this.produtoRepository = produtoRepository;
+        this.paymentService = paymentService; // <-- NOVO
+        this.emailService = emailService;   // <-- NOVO
     }
 
     @Transactional
@@ -45,12 +57,21 @@ public class PedidoService {
         pedido.setReceita(request.getReceita());
         pedido.setCliente(cliente);
 
-        // 3. Associa o funcionário apenas se um employeeId for fornecido
+        // 3. Associa o funcionário (com verificação de tipo)
         if (request.getEmployeeId() != null) {
-            Employee employee = (Employee) employeeRepository.findById(request.getEmployeeId())
+            User user = employeeRepository.findById(request.getEmployeeId())
                     .orElseThrow(() -> new EntityNotFoundException("Funcionário não encontrado com ID: " + request.getEmployeeId()));
+
+            // <-- Correção de segurança para ClassCastException
+            if (!(user instanceof Employee)) {
+                throw new ClassCastException("O usuário com ID " + user.getId() + " é um Cliente, não um Funcionário.");
+            }
+
+            Employee employee = (Employee) user;
             pedido.setEmployee(employee);
         }
+
+        double valorTotalPedido = 0.0; // Variável para o total
 
         // 4. Processa os itens do pedido
         if (request.getItens() != null && !request.getItens().isEmpty()) {
@@ -58,6 +79,9 @@ public class PedidoService {
             for (PedidoProdutoRequestDTO itemDTO : request.getItens()) {
                 Produto produto = produtoRepository.findById(itemDTO.getProdutoId())
                         .orElseThrow(() -> new EntityNotFoundException("Produto não encontrado com ID: " + itemDTO.getProdutoId()));
+
+                // Cálculo do valor
+                valorTotalPedido += produto.getPreco() * itemDTO.getQuantidade();
 
                 PedidoProduto item = new PedidoProduto();
                 item.setPedido(pedido);
@@ -68,10 +92,22 @@ public class PedidoService {
             pedido.setItens(itens);
         }
 
+        pedido.setValorTotal(valorTotalPedido); // Atribui o total ao pedido
+
         // 5. Salva o pedido e seus itens no banco de dados
         Pedido pedidoSalvo = pedidoRepository.save(pedido);
 
-        // 6. Retorna o DTO de resposta
+        // --- INÍCIO DA NOVA LÓGICA DE PAGAMENTO E EMAIL ---
+
+        // 6. Gerar o link de pagamento
+        String linkPagamento = paymentService.criarLinkDePagamento(pedidoSalvo);
+
+        // 7. Enviar o e-mail (de forma assíncrona, graças ao @Async no EmailService)
+        emailService.enviarEmailPagamento(pedidoSalvo.getCliente(), pedidoSalvo, linkPagamento);
+
+        // --- FIM DA NOVA LÓGICA ---
+
+        // 8. Retorna o DTO de resposta
         return toDTO(pedidoSalvo);
     }
 
@@ -109,6 +145,8 @@ public class PedidoService {
         if (pedido.getEmployee() != null) {
             dto.setEmployeeId(pedido.getEmployee().getId());
         }
+
+        dto.setValorTotal(pedido.getValorTotal()); // Mapeia o valor total
 
         // Mapeia os itens do pedido para DTOs
         if (pedido.getItens() != null) {

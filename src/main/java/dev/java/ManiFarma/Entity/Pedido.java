@@ -19,6 +19,8 @@ public class Pedido {
 
     private String receita; 
 
+    private Double valorTotal; // <--- ADICIONE ESTE CAMPO
+
     @ManyToOne
     @JoinColumn(name = "cliente_id")
     private Cliente cliente;
@@ -43,6 +45,10 @@ public class Pedido {
     public String getReceita() { return receita; }
     public void setReceita(String receita) { this.receita = receita; }
 
+    // <--- ADICIONE OS GETTERS E SETTERS PARA O NOVO CAMPO
+    public Double getValorTotal() { return valorTotal; }
+    public void setValorTotal(Double valorTotal) { this.valorTotal = valorTotal; }
+
     public Cliente getCliente() { return cliente; }
     public void setCliente(Cliente cliente) { this.cliente = cliente; }
 
@@ -56,5 +62,4 @@ public class Pedido {
     public void setItens(List<PedidoProduto> itens) {
         this.itens = itens;
     }
-
 }

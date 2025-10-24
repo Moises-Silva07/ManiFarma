@@ -48,6 +48,7 @@ CREATE TABLE pedido (
     descricao TEXT,
     status VARCHAR(50) NOT NULL,
     receita VARCHAR(255),
+    valor_total DOUBLE PRECISION, -- <--- ADICIONE ESTA LINHA
     cliente_id BIGINT NOT NULL, -- Um pedido sempre deve ter um cliente
     employee_id BIGINT, -- Um funcionário pode ser atribuído depois
     CONSTRAINT fk_pedido_cliente FOREIGN KEY (cliente_id) REFERENCES clientes(id),
