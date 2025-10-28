@@ -9,9 +9,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 // ... (imports)
-
 // ... (imports)
-
 @Service
 public class EmailService {
 
@@ -36,15 +34,24 @@ public class EmailService {
 
             message.setSubject("TESTE ManiFarma: Pedido #" + pedido.getId());
 
+            // --- CORREÇÃO AQUI ---
             String texto = String.format(
-                "Olá, comi seu pai hoje!\n\n" + // Adiciona um "TESTE" no corpo
-                "ta ai seu link fdpta \n\n" +
-                "Link de pagamento:\n" +
-                "%s\n\n",
-                cliente.getNome(),
-                pedido.getId(),
-                pedido.getValorTotal(),
-                linkPagamento
+                    // 1º %s = cliente.getNome()
+                    "Olá, %s!\n\n"
+                    + // 2º %s = pedido.getId()
+                    "Recebemos seu pedido de teste #%s.\n\n"
+                    + // 3º %s = pedido.getValorTotal()
+                    "Valor total: R$ %s\n\n"
+                    + // 4º %s = linkPagamento
+                    "Link de pagamento:\n"
+                    + "%s\n\n"
+                    + "Atenciosamente,\n"
+                    + "Equipe ManiFarma (TESTE)",
+                    // Variáveis na ordem dos placeholders:
+                    cliente.getNome(), // 1º
+                    pedido.getId(), // 2º
+                    pedido.getValorTotal(), // 3º (Você pode querer formatar isso melhor)
+                    linkPagamento // 4º
             );
 
             message.setText(texto);
