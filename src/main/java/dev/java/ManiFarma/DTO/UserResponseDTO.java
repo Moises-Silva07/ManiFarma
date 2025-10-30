@@ -13,7 +13,11 @@ public class UserResponseDTO {
 
     // (Campos de Cliente e Employee)
     private String cpf;
-    private String endereco;
+    private String cep;
+    private String rua;
+    private String bairro;
+    private String cidade;
+    private String estado;
     private String telefone;
     private String role;
     private Double salary;

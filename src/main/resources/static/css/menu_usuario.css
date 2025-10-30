@@ -10,12 +10,3 @@ body {
 .navbar-nav {
   padding: 0 40px;
 }
-
-footer {
-  position: absolute; 
-  bottom: 10px; 
-  width: 100%;
-  text-align: center;
-  font-size: 0.8em;
-  color: #FEE715;
-}

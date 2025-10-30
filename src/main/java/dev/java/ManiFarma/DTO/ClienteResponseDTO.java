@@ -8,6 +8,10 @@ public class ClienteResponseDTO {
     private String nome;
     private String email;
     private String cpf;
-    private String endereco;
+    private String cep;
+    private String rua;
+    private String bairro;
+    private String cidade;
+    private String estado;
     private String telefone;
 }

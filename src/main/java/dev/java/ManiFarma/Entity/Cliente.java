@@ -9,10 +9,14 @@ import lombok.EqualsAndHashCode;
 @Data
 @Entity
 @Table(name = "clientes")
-public class Cliente extends User { 
+public class Cliente extends User {
 
 
     private String cpf;
-    private String endereco;
+    private String cep;
+    private String rua;
+    private String bairro;
+    private String cidade;
+    private String estado;
     private String telefone;
 }

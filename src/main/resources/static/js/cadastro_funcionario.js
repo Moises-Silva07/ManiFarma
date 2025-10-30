@@ -1,4 +1,4 @@
-document.getElementById("cadastroForm").addEventListener("submit", async (e) => {
+document.getElementById("form").addEventListener("submit", async (e) => {
     e.preventDefault();
 
     // Pegando os valores corretos do formulário
@@ -10,37 +10,32 @@ document.getElementById("cadastroForm").addEventListener("submit", async (e) => 
 
     // Validação de senha
     if (senha !== confirmaSenha) {
-        document.getElementById("mensagem").textContent = "As senhas não conferem!";
+        document.getElementById("message").textContent = "As senhas não conferem!";
         return;
     }
+
+    // 4. Preparação para a API.
+    const endpoint = "/api/auth/register";
 
     // Monta payload apenas com os campos necessários para Employee
     const payload = {
         nome,
         email,
         senha,
-        isClient: false,
+        client: false,
         role
     };
 
-    console.log("%c>>> Payload preparado para envio:", "color: green; font-weight: bold;");
-    console.log(payload);
-
     // Faz a requisição para o backend
-    const { ok, data } = await apiRequest("/api/auth/register", "POST", payload);
+    const { ok, data } = await apiRequest(endpoint, "POST", payload);
 
+    // 6. Tratamento da Resposta.
     if (ok) {
-        console.log("%c>>> Resposta de sucesso recebida do servidor:", "color: green; font-weight: bold;");
-        console.log(data);
-
-        document.getElementById("mensagem").textContent = "Cadastro realizado com sucesso!";
-        document.getElementById("cadastroForm").reset();
+        document.getElementById("message").textContent = "Cadastro realizado com sucesso! Redirecionando para o login...";
+        setTimeout(() => { 
+            window.location.href = "/html/login/login.html"; 
+        }, 2000);
     } else {
-        console.error("%c>>> Erro no cadastro:", "color: red; font-weight: bold;");
-        console.error(data);
-
-        // Mostra a mensagem do backend se existir
-        document.getElementById("mensagem").textContent =
-            (data && data.mensagem) ? data.mensagem : "Cadastro inválido!";
+        document.getElementById("message").textContent = data?.mensagem || "Cadastro inválido! Verifique os dados.";
     }
 });

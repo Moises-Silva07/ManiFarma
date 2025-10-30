@@ -4,57 +4,65 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/global/global_login.css">
     <link rel="stylesheet" href="/css/cadastro_funcionario.css">
 
     <title>Cadastro Funcionário</title>
+
 </head>
 <body>
-    <main>
-        <section>
-            <div class="container-cadastro">
-                <h1>Cadastro Funcionário</h1>
+<main>
+    <section aria-label="Formulário de cadastro funcionário">
+        <div class="container">
 
-                <form id="cadastroForm">
-                    <div class="campo">
-                        <label for="nomeCompleto">Nome Completo:</label>
-                        <input type="text" id="nomeCompleto" name="nomeCompleto" required>
-                    </div>
+            <h1>Cadastro Funcionário</h1>
 
-                    <div class="campo">
-                        <label for="nomeAcesso">Email de Acesso:</label>
-                        <input type="email" id="nomeAcesso" name="nomeAcesso" required>
-                    </div>
+            <form id="form">
 
-                    <div class="campo">
-                        <label for="cargo">Cargo:</label>
-                        <input type="text" id="cargo" name="cargo" required>
-                    </div>
+                <div class="field">
+                    <label for="nomeCompleto">Nome Completo:</label>
+                    <input type="text" id="nomeCompleto" name="nomeCompleto" required>
+                </div>
 
-                    <div class="campo">
-                        <label for="senha">Senha:</label>
-                        <input type="password" id="senha" name="senha" required autocomplete="new-password">
-                    </div>
+                <div class="field">
+                    <label for="nomeAcesso">Email:</label>
+                    <input type="email" id="nomeAcesso" name="nomeAcesso" required>
+                </div>
 
-                    <div class="campo">
-                        <label for="confirmaSenha">Confirmar Senha:</label>
-                        <input type="password" id="confirmaSenha" name="confirmaSenha" required autocomplete="new-password">
-                    </div>
+                <div class="field">
+                    <label for="cargo">Cargo:</label>
+                    <input type="text" id="cargo" name="cargo" required>
+                </div>
 
-                    <div class="botao">
-                        <button type="submit" class="btn">Cadastrar</button>
-                        <a href="/html/login/login.html" class="btn">Login</a>
-                    </div>
-                </form>
+                <div class="field">
+                    <label for="senha">Senha:</label>
+                    <input type="password" id="senha" name="senha" required autocomplete="new-password">
+                </div>
 
-                <p id="mensagem"></p>
-            </div>
-        </section>
-    </main>
+                <div class="field">
+                    <label for="confirmaSenha">Confirmar Senha:</label>
+                    <input type="password" id="confirmaSenha" name="confirmaSenha" required autocomplete="new-password">
+                </div>
 
-    <footer>
-        <p>&copy; 2025 - Todos os direitos reservados - ManiFarma</p>
-    </footer>
+                <div class="container-btn">
+                    <button type="submit" class="btn">Cadastrar</button>
+                    
+                    <a href="/html/login/login.html" class="btn">Login</a>
+                </div>
+                
+            </form>
+        </div>
+
+        <div class="message">
+            <p id="message" role="alert"></p>
+        </div>
+
+    </section>
+</main>
+
+<footer>
+    <p>&copy; 2025 - Todos os direitos reservados - ManiFarma</p>
+</footer>
 
     <script src="/js/main.js"></script>
     <script src="/js/cadastro_funcionario.js"></script>

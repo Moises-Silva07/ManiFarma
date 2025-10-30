@@ -1,40 +1,26 @@
-body {
-  height: 100vh;
-  background: #101820;
-}
-
-header {
-  background: #FEE715;
-  color: #101820;
-  text-align: center;
-  padding: 15px;
-}
-
-.container {
-  max-width: 700px;
-  margin: 30px auto;
-  padding: 20px;
-  border: 1px solid #FEE715;
-  background: #101820;
-  border-radius: 10px;
-  box-shadow: 0px 2px 6px rgba(0,0,0,0.1);
-}
-
-form {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
 label {
     color:#FEE715
 }
 
-textarea, input[type="file"] {
+input {
+  color: #e6e6e6;
+}
+
+textarea {
+  width: 100%;               
+  height: 150px;            
+  resize: none;              
+  overflow-y: auto;          
+  overflow-x: hidden;       
+  
   padding: 10px;
   border: 1px solid #FEE715;
   border-radius: 8px;
-  color:#FEE715
+  font-size: 1em;
+  color: #101820;
+  background: #e6e6e6;
+  outline: none;
+  transition: 0.3s;
 }
 
 .btn {
@@ -51,29 +37,3 @@ textarea, input[type="file"] {
   background: #92850c;
 }
 
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 15px;
-}
-
-table, th, td {
-  border: 1px solid #FEE715;
-  text-align: center;
-  padding: 10px;
-}
-
-th {
-  background: #101820;
-  color: #FEE715;
-}
-
-/* Rodapé */
-footer {
-  position: absolute; /* Fixa no canto inferior da tela */
-  bottom: 10px; /* 10px acima do fundo */
-  width: 100%;
-  text-align: center;
-  font-size: 1em;
-  color: #FEE715;
-}

@@ -19,7 +19,11 @@ CREATE TABLE users (
 CREATE TABLE clientes (
     id BIGINT NOT NULL PRIMARY KEY,
     cpf VARCHAR(14),
-    endereco VARCHAR(255),
+    cep VARCHAR(255),
+    rua VARCHAR(255),
+    bairro VARCHAR(255),
+    cidade VARCHAR(255),
+    estado VARCHAR(255),
     telefone VARCHAR(20),
     CONSTRAINT fk_clientes_users FOREIGN KEY (id) REFERENCES users(id)
 );

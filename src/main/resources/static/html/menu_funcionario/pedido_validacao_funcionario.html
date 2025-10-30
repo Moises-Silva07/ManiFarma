@@ -6,13 +6,14 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
 
-    <link rel="stylesheet" href="/css/global/global_menu.css">
-    <link rel="stylesheet" href="/css/menu_funcionario.css">
+    <link rel="stylesheet" href="/css/global/global_menu_funcionario.css">
+    <link rel="stylesheet" href="/css/pedido_validacao_funcionario.css">
 
-    <title>Document</title>
+    <title>Validação de Pedidos</title>
+
 </head>
 <body>
-   <!-- Start nav bar -->
+    <!-- Start nav bar -->
     <nav class="navbar navbar-expand-lg">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">ManiFarma</a>
@@ -33,10 +34,11 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="/html/menu_funcionario/pedido_validacao_funcionario.html">Validar Pedidos</a></li>
-                            <li><a class="dropdown-item" href="/html/menu_funcionario/itens_pedidos_funcionario.html">Itens x Pedido</a></li>
+                            <li><a class="dropdown-item" href="/html/menu_funcionario/itens_pedidos_funcionario.html">Itens x Pedidos</a></li>
                             <li><a class="dropdown-item" href="/html/menu_funcionario/itens_funcionario.html">Itens</a></li>
                         </ul>
                     </li>
+
 
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -52,7 +54,38 @@
     </nav>
     <!-- End nav bar -->
 
+    <main>
+        <section>
+            <div class="container mt-4">
+                <h2>Pedidos Pendentes</h2>
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover align-middle" id="tabelaPedidos">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>ID Pedido</th>
+                                <th>ID Funcionário</th>
+                                <th>Status</th>
+                                <th>Valor Total</th>
+                            </tr>
+                        </thead>
+                        <tbody id="corpoTabela">
+                            <tr><td colspan="4" class="text-center text-muted">Carregando pedidos...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <p id="message" class="mensagem"></p>
+
+            </div>
+        </section>
+    </main>
+
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+
+    <script src="/js/main.js"></script>
+    <script src="/js/funcionario_pedidos.js"></script>
 
 </body>
 </html>

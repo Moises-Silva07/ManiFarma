@@ -17,7 +17,19 @@ public class Pedido {
     @Enumerated(EnumType.STRING)
     private StatusPedido status;
 
-    private String receita; 
+    private String receita;
+
+    @Column(length = 255)
+    private String linkPagamento; // 🔹 novo campo
+
+    // getters e setters
+    public String getLinkPagamento() {
+        return linkPagamento;
+    }
+
+    public void setLinkPagamento(String linkPagamento) {
+        this.linkPagamento = linkPagamento;
+    }
 
     private Double valorTotal; // <--- ADICIONE ESTE CAMPO
 

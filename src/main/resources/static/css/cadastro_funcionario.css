@@ -1,81 +1,20 @@
-
-/* Centralizar o container-cadastro no meio da tela */
-body {
-  height: 100vh;
-  
+/* Área dos botões */
+.container-btn {
   display: flex;
   justify-content: center;
+  gap: 5%; 
   align-items: center;
-
-  background: #101820;
-}
-
-/* Caixa do login */
-.container-cadastro {
-  background: #101820;
-  padding: 30px 50px;
-  border-radius: 12px;
-  border: 1px solid #FEE715;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-
   width: 100%;
-  max-width: 600px; /* largura máxima */
-
-  text-align: center;
-}
-
-/* Título */
-.container-cadastro h1 {
-  margin-bottom: 20px;
-  font-size: 30px;
-  color: #FEE715;
-}
-
-/* Labels e inputs */
-.campo {
-  display: flex; /* Ativa flexbox */
-  flex-direction: column; /* Coloca os itens (label + input) em coluna */
-  margin-bottom: 15px;
-  text-align: left;
-}
-
-.campo label {
-  margin-bottom: 5px;
-  font-size: 15px;
-  font-weight: bold; /* Deixa o texto em negrito */
-  color: #FEE715;
-}
-
-.campo input {
-  padding: 9px;
-  border: 1px solid #FEE715;
-  border-radius: 8px;
-  outline: none; /* Remove a borda azul padrão ao clicar */
-  transition: 0.3s; /* Animações suaves em mudanças (ex: foco) */
-}
-
-input:focus {  /* Quando o input recebe foco */
-  border-color: #FEE715;
-  box-shadow: 0 0 5px rgba(254, 231, 15, 0.5);  /* “Glow amarelo”, efeito de brilho */
-}
-
-/* Área dos botões */
-.botao {
-    display: flex;
-    justify-content: space-between;
 }
 
 .btn {
-  display: inline-block;
+  width: 100%;
   text-decoration: none;
-  text-align: center;
-
   padding: 12px;
   background: #FEE715;
   color: #101820;
   border-radius: 8px;
   font-weight: bold;
-  min-width: 150px;
   cursor: pointer;
   border: none;
   font-size: 1em;
@@ -84,30 +23,4 @@ input:focus {  /* Quando o input recebe foco */
 
 .btn:hover {
   background: #92850c;
-}
-
-#mensagem {
-  margin-top: 20px;
-  font-size: 0.9em;
-  color: #FEE715;
-  text-align: center;
-}
-
-/* Rodapé */
-footer {
-  position: absolute; /* Fixa no canto inferior da tela */
-  bottom: 10px; /* 10px acima do fundo */
-  width: 100%;
-  text-align: center;
-  font-size: 0.9em;
-  color: #FEE715;
-}
-
-@media (max-width: 320px) {
-    .container-cadastro {
-      padding: 20px 15px;
-    }
-    footer {
-      font-size: 13px;
-    }
 }

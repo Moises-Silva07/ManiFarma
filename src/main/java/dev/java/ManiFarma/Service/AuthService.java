@@ -45,7 +45,11 @@ public class AuthService {
             cliente.setSenha(passwordEncoder.encode(request.getSenha()));
             cliente.setClient(true);
             cliente.setCpf(request.getCpf());
-            cliente.setEndereco(request.getEndereco());
+            cliente.setCep(request.getCep());
+            cliente.setRua(request.getRua());
+            cliente.setBairro(request.getBairro());
+            cliente.setCidade(request.getCidade());
+            cliente.setEstado(request.getEstado());
             cliente.setTelefone(request.getTelefone());
             newUser = cliente;
         } else {
@@ -93,7 +97,11 @@ public class AuthService {
         if (user instanceof Cliente) {
             Cliente cliente = (Cliente) user;
             dto.setCpf(cliente.getCpf());
-            dto.setEndereco(cliente.getEndereco());
+            dto.setCep(cliente.getCep());
+            dto.setRua(cliente.getRua());
+            dto.setBairro(cliente.getBairro());
+            dto.setCidade(cliente.getCidade());
+            dto.setEstado(cliente.getEstado());
             dto.setTelefone(cliente.getTelefone());
         } else if (user instanceof Employee) {
             Employee employee = (Employee) user;

@@ -38,15 +38,15 @@ public class UserService {
                 .orElseThrow(() -> new EntityNotFoundException("Usuário com o e-mail '" + email + "' não encontrado."));
         this.deactivateUser(user.getId());
     }
-    
+
     // --- NOVO MÉTODO PARA ATIVAR/DESATIVAR ---
     public UserResponseDTO toggleUserActivation(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado com o ID: " + id));
-        
+
         user.setDisabled(!user.isDisabled()); // Inverte o valor da flag
         User updatedUser = userRepository.save(user);
-        
+
         return toUserResponseDTO(updatedUser);
     }
 
@@ -62,7 +62,11 @@ public class UserService {
         if (user instanceof Cliente) {
             Cliente cliente = (Cliente) user;
             dto.setCpf(cliente.getCpf());
-            dto.setEndereco(cliente.getEndereco());
+            dto.setCep(cliente.getCep());
+            dto.setRua(cliente.getRua());
+            dto.setBairro(cliente.getBairro());
+            dto.setCidade(cliente.getCidade());
+            dto.setEstado(cliente.getEstado());
             dto.setTelefone(cliente.getTelefone());
         } else if (user instanceof Employee) {
             Employee employee = (Employee) user;
@@ -72,7 +76,7 @@ public class UserService {
         }
         return dto;
     }
-    
+
     // --- MÉTODOS EXISTENTES (findAll, findById, updateUser, etc.) ---
     // (O resto dos seus métodos como findAllUsers, findUserById, updateUser, etc., permanecem aqui sem alterações)
 
@@ -102,7 +106,11 @@ public class UserService {
         if (existingUser instanceof Cliente) {
             Cliente cliente = (Cliente) existingUser;
             if (request.getCpf() != null) cliente.setCpf(request.getCpf());
-            if (request.getEndereco() != null) cliente.setEndereco(request.getEndereco());
+            if (request.getCep() != null) cliente.setCep(request.getCep());
+            if (request.getRua() != null) cliente.setRua(request.getRua());
+            if (request.getBairro() != null) cliente.setBairro(request.getBairro());
+            if (request.getCidade() != null) cliente.setCidade(request.getCidade());
+            if (request.getEstado() != null) cliente.setEstado(request.getEstado());
             if (request.getTelefone() != null) cliente.setTelefone(request.getTelefone());
         }
 

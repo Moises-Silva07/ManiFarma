@@ -137,28 +137,71 @@ public class PedidoService {
         dto.setDescricao(pedido.getDescricao());
         dto.setStatus(pedido.getStatus());
         dto.setReceita(pedido.getReceita());
+        dto.setValorTotal(pedido.getValorTotal() != null ? pedido.getValorTotal() : 0.0);
 
-        // Associa IDs de forma segura, verificando se não são nulos
-        if (pedido.getCliente() != null) {
-            dto.setClienteId(pedido.getCliente().getId());
-        }
-        if (pedido.getEmployee() != null) {
-            dto.setEmployeeId(pedido.getEmployee().getId());
-        }
+        if (pedido.getCliente() != null) dto.setClienteId(pedido.getCliente().getId());
+        if (pedido.getEmployee() != null) dto.setEmployeeId(pedido.getEmployee().getId());
 
-        dto.setValorTotal(pedido.getValorTotal()); // Mapeia o valor total
-
-        // Mapeia os itens do pedido para DTOs
         if (pedido.getItens() != null) {
             dto.setItens(pedido.getItens().stream().map(item -> {
                 PedidoProdutoResponseDTO itemDto = new PedidoProdutoResponseDTO();
-                itemDto.setProdutoId(item.getProduto().getId());
-                itemDto.setProdutoNome(item.getProduto().getNome());
+                if (item.getProduto() != null) {
+                    itemDto.setProdutoId(item.getProduto().getId());
+                    itemDto.setProdutoNome(item.getProduto().getNome());
+                } else {
+                    itemDto.setProdutoNome("Produto removido");
+                }
                 itemDto.setQuantidade(item.getQuantidade());
                 return itemDto;
             }).collect(Collectors.toList()));
         }
 
         return dto;
+    }
+
+    @Transactional
+    public void gerarLinkEEnviarEmail(Long pedidoId) {
+        Pedido pedido = pedidoRepository.findById(pedidoId)
+                .orElseThrow(() -> new EntityNotFoundException("Pedido não encontrado: " + pedidoId));
+
+        String linkPagamento = paymentService.criarLinkDePagamento(pedido);
+
+        // opcional — salva o link no pedido
+        pedido.setLinkPagamento(linkPagamento);
+        pedido.setStatus(StatusPedido.ENVIODECOTACAO); // 🔹 muda o status automaticamente
+        pedidoRepository.save(pedido);
+
+        // envia o e-mail
+        emailService.enviarEmailPagamento(pedido.getCliente(), pedido, linkPagamento);
+    }
+
+    @Transactional
+    public void atribuirFuncionario(Long pedidoId, Long employeeId) {
+        Pedido pedido = pedidoRepository.findById(pedidoId)
+                .orElseThrow(() -> new EntityNotFoundException("Pedido não encontrado: " + pedidoId));
+
+        Employee employee = (Employee) employeeRepository.findById(employeeId)
+                .orElseThrow(() -> new EntityNotFoundException("Funcionário não encontrado: " + employeeId));
+
+        pedido.setEmployee(employee);
+        pedidoRepository.save(pedido);
+    }
+
+    @Transactional
+    public void alterarStatus(Long pedidoId, String novoStatus) {
+        Pedido pedido = pedidoRepository.findById(pedidoId)
+                .orElseThrow(() -> new EntityNotFoundException("Pedido não encontrado: " + pedidoId));
+
+        // Limpa espaços e converte para maiúscula
+        String statusFormatado = novoStatus.trim().toUpperCase();
+
+        // Verifica se o status é válido
+        try {
+            StatusPedido statusEnum = StatusPedido.valueOf(statusFormatado);
+            pedido.setStatus(statusEnum);
+            pedidoRepository.save(pedido);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Status inválido enviado: " + novoStatus);
+        }
     }
 }

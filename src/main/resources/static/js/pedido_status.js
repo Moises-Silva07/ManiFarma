@@ -1,32 +1,36 @@
-const clienteId = 1; // depois substituir pelo ID do cliente logado
-
-async function carregarPedidos() {
-  const { ok, data } = await apiRequest(`/api/pedidos/cliente/${clienteId}`, "GET", null, true);
-
+document.addEventListener("DOMContentLoaded", async () => {
+  const clienteId = localStorage.getItem("userId");
   const tabela = document.getElementById("tabelaPedidos");
-  tabela.innerHTML = "";
+  const msg = document.getElementById("message");
 
-  if (!ok) {
-    tabela.innerHTML = `<tr><td colspan="4">❌ Erro ao carregar pedidos</td></tr>`;
+  if (!clienteId) {
+    msg.textContent = "Erro: cliente não identificado. Faça login novamente.";
+    msg.style.color = "red";
     return;
   }
 
-  if (data.length === 0) {
-    tabela.innerHTML = `<tr><td colspan="4">Nenhum pedido encontrado</td></tr>`;
-    return;
-  }
+  const { ok, data } = await apiRequest(`/api/pedidos/cliente/${clienteId}`, "GET", null, true, true);
 
-  data.forEach(pedido => {
-    const row = `
-      <tr>
+  if (ok && Array.isArray(data) && data.length > 0) {
+    msg.textContent = "";
+    tabela.innerHTML = "";
+
+    data.forEach(pedido => {
+      const row = document.createElement("tr");
+      row.innerHTML = `
         <td>${pedido.id}</td>
         <td>${pedido.descricao}</td>
-        <td>${pedido.status}</td>
-        <td>${pedido.receita ? pedido.receita : "Nenhum anexo"}</td>
-      </tr>
-    `;
-    tabela.innerHTML += row;
-  });
-}
+        <td>${pedido.status || "Pendente"}</td>
+        <td>${pedido.receita || "Nenhuma"}</td>
+      `;
+      tabela.appendChild(row);
+    });
 
-carregarPedidos();
+  } else if (ok && data.length === 0) {
+    msg.textContent = "Você ainda não possui pedidos.";
+    msg.style.color = "gray";
+  } else {
+    msg.textContent = "Erro ao carregar seus pedidos. Tente novamente mais tarde.";
+    msg.style.color = "red";
+  }
+});

@@ -30,7 +30,7 @@ public class EmailService {
 
             // --- AQUI ESTÁ A MUDANÇA PARA O TESTE ---
             // message.setTo(cliente.getEmail()); // Linha original (comente ou apague)
-            message.setTo("moises0702silva@gmail.com"); // <-- PARA: eduardo.andrade.dev@gmail.com
+            message.setTo("moises0702silva@gmail.com"); // <-- PARA: Olavo
 
             message.setSubject("TESTE ManiFarma: Pedido #" + pedido.getId());
 
