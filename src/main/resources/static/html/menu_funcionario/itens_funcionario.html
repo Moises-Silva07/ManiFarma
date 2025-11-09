@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="/css/global/global_menu_funcionario.css">
+    <link rel="stylesheet" href="/css/itens_funcionario.css">
+
+    <title>Tabela de Itens</title>
+</head>
+<body>
+    <!-- Start nav bar -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/html/menu_funcionario/menu_funcionario.html">ManiFarma</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav ms-auto"> <!-- ms-auto = Os links vão pra direita -->
+
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">Início</a>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Pedidos
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/html/menu_funcionario/pedido_validacao_funcionario.html">Validar Pedidos</a></li>
+                            <li><a class="dropdown-item" href="/html/menu_funcionario/itens_pedidos_funcionario.html">Itens x Pedido</a></li>
+                            <li><a class="dropdown-item" href="/html/menu_funcionario/itens_funcionario.html">Itens</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Configuração
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">Conta</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- End nav bar -->
+
+    <main>
+        <section>
+            <div class="container mt-4">
+                <h2>Tabela de Itens</h2>
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover align-middle" id="tabelaItens">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>ID</th>
+                                <th>Nome</th>
+                                <th>Preço</th>
+                            </tr>
+                        </thead>
+                        <tbody id="corpoItens">
+                            <tr><td colspan="4" class="text-center text-muted">Carregando itens...</td></tr>
+                        </tbody>  
+                    </table>
+                    <div class="button-container">
+                        <button onclick="criarItem()" id="criar" class="button">Criar</button>
+                        <button onclick="editarItem()" id="editar" class="button">Editar</button>
+                        <button onclick="excluirItem()" id="excluir" class="button">Excluir</button>
+                    </div>
+                </div>
+
+                <p id="message" class="mensagem"></p>
+
+            </div>
+        </section>
+    </main>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+
+    <script src="/js/main.js" defer></script>
+    <script src="/js/itens_funcionario.js" defer></script>
+
+</body>
+</html>

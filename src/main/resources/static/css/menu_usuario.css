@@ -1,0 +1,12 @@
+body {
+  height: 100vh;
+  background-color: #101820;
+}
+
+.navbar {
+  background-color: #FEE715;
+}
+
+.navbar-nav {
+  padding: 0 40px;
+}

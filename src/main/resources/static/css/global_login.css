@@ -1,0 +1,132 @@
+/* Reset global */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+:root {
+  --bg-color: #101820;
+  --primary-color: #FEE715;
+  --success-color: #28a745;
+}
+
+/* Centralizar o container no meio da tela */
+body {
+  height: 100vh;
+  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background: #101820;
+}
+
+/* Caixa do login */
+.container {
+  background: #101820;
+  padding: 30px 40px;
+  border-radius: 12px;
+  border: 1px solid #FEE715;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+
+  width: 100%;
+  max-width: 600px; /* largura máxima */
+
+  text-align: center;
+}
+
+/* Título */
+.container h1 {
+  margin-bottom: 20px;
+  font-size: 30px;
+  color: #FEE715;
+}
+
+/* Labels e inputs */
+.field {
+  display: flex; /* Ativa flexbox */
+  flex-direction: column; /* Coloca os itens (label + input) em coluna */
+  margin-bottom: 15px;
+  text-align: left;
+  width: 300px;
+}
+
+.field label {
+  margin-bottom: 5px;
+  font-size: 15px;
+  font-weight: bold; /* Deixa o texto em negrito */
+  color: #FEE715;
+}
+
+.field input {
+  padding: 9px;
+  border: 1px solid #FEE715;
+  border-radius: 8px;
+  outline: none; /* Remove a borda azul padrão ao clicar */
+  transition: 0.3s; /* Animações suaves em mudanças (ex: foco) */
+}
+
+input:focus {  /* Quando o input recebe foco */
+  border-color: #FEE715;
+  box-shadow: 0 0 5px rgba(254, 231, 15, 0.5);  /* “Glow amarelo”, efeito de brilho */
+}
+
+/* Área dos botões */
+.button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 8px;
+  background: #FEE715;
+  color: #101820;
+  border: none;
+  border-radius: 8px; 
+  cursor: pointer; /* Muda cursor para mãozinha */
+  font-size: 1em;
+  font-weight: bold;
+  transition: 0.3s;  /* Suaviza animações */
+}
+
+.button:hover {
+  background: #92850c;
+}
+
+.button:focus {
+  outline: 2px solid #FEE715;
+  outline-offset: 2px;
+}
+
+.message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 20px;
+}
+
+#message {
+  position: absolute;
+  text-align: center;
+  margin-top: 20px;
+  font-size: 0.9em;
+  color: #FEE715;
+}
+
+/* Rodapé */
+footer {
+  position: absolute; 
+  bottom: 10px;
+  width: 100%;
+  text-align: center;
+  font-size: 0.9em;
+  color: #FEE715;
+}
+
+@media (max-width: 425px) {
+    .container {
+      padding: 20px 20px;
+    }
+    footer {
+      font-size: 13px;
+    }
+}

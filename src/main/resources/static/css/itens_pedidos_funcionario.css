@@ -1,0 +1,52 @@
+.container h2 {
+  color: #FEE715;
+  text-align: center;
+  padding-bottom: 10px;
+}
+
+.produto-card {
+  text-align: left;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 15px;
+  transition: 0.2s;
+  background-color: #f9f9f9;
+}
+
+.produto-card:hover {
+  background-color: #eef7ff;
+  transform: scale(1.02);
+}
+
+.qtd-control {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.qtd-control button {
+  width: 30px;
+  height: 30px;
+  border: none;
+  background-color: var(--primary-color);
+  color: white;
+  font-weight: bold;
+  border-radius: 5px;
+  transition: 0.2s;
+}
+
+.qtd-control button:hover {
+  background-color: #004080;
+}
+
+.qtd-control input {
+  width: 50px;
+  text-align: center;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}

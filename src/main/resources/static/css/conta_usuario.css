@@ -1,0 +1,57 @@
+.container h1{
+  color: #FEE715;
+  padding-bottom: 10px;
+}
+
+/* Labels e inputs */
+.field {
+  display: flex; /* Ativa flexbox */
+  flex-direction: column; /* Coloca os itens (label + input) em coluna */
+  margin-bottom: 5px;
+  text-align: left;
+  width: 100%;
+}
+
+.field label {
+  margin-bottom: 5px;
+  font-size: 15px;
+  font-weight: bold; /* Deixa o texto em negrito */
+  color: #FEE715;
+}
+
+.field input {
+  color: rgb(105, 105, 105);
+  padding: 5px;
+  border: 1px solid #FEE715;
+  border-radius: 8px;
+  outline: none; /* Remove a borda azul padrão ao clicar */
+  transition: 0.3s; /* Animações suaves em mudanças (ex: foco) */
+}
+
+input:focus {  /* Quando o input recebe foco */
+  border-color: #FEE715;
+  box-shadow: 0 0 5px rgba(254, 231, 15, 0.5);  /* “Glow amarelo”, efeito de brilho */
+}
+
+.excluirConta__container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding-top: 50px;
+}
+
+.excluirConta__container h2 {
+    color: #F00;
+}
+
+.excluirConta__container p {
+    color: #e9e9e9;
+}
+
+button:focus {
+  outline: 2px solid #FEE715;
+  outline-offset: 2px;
+}
+
+

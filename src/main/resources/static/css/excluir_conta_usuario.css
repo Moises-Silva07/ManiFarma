@@ -1,0 +1,40 @@
+.excluirConta__container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding-top: 50px;
+}
+
+.excluirConta__container h2 {
+    color: #F00;
+}
+
+.excluirConta__container p {
+    color: #e9e9e9;
+}
+
+/* Botão */
+button {
+  padding: 12px;
+  margin-top: 8px;
+  background: #FEE715;
+  color: #101820;
+  border: none;
+  border-radius: 8px; 
+  cursor: pointer; /* Muda cursor para mãozinha */
+  font-size: 1em;
+  font-weight: bold;
+  transition: 0.3s;  /* Suaviza animações */
+}
+
+button:hover {
+  background: #92850c;
+}
+
+button:focus {
+  outline: 2px solid #FEE715;
+  outline-offset: 2px;
+}
+
+

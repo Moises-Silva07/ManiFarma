@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatórios de Pedidos - ManiFarma</title>
+    <link rel="stylesheet" href="../../css/relatorios_pedido.css">
+</head>
+<body>
+<nav class="navbar">
+    <h1 class="logo">📊 Relatórios - ManiFarma</h1>
+</nav>
+
+<main class="container">
+    <section class="card resumo">
+        <h2>Resumo Geral</h2>
+        <div class="grid">
+            <div class="info-box">
+                <h3>Total de Pedidos</h3>
+                <p id="totalPedidos">0</p>
+            </div>
+            <div class="info-box">
+                <h3>Receita Total</h3>
+                <p id="receitaTotal">R$ 0,00</p>
+            </div>
+            <div class="info-box">
+                <h3>Pendentes</h3>
+                <p id="pendentes">0</p>
+            </div>
+            <div class="info-box">
+                <h3>Pagos</h3>
+                <p id="pagos">0</p>
+            </div>
+            <div class="info-box">
+                <h3>Concluídos</h3>
+                <p id="concluidos">0</p>
+            </div>
+            <div class="info-box">
+                <h3>Cancelados</h3>
+                <p id="cancelados">0</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="card">
+        <h2>Última Atualização</h2>
+        <p id="ultimaAtualizacao">Carregando...</p>
+    </section>
+
+    <button id="btnAtualizar">🔄 Atualizar Relatório</button>
+</main>
+
+<footer>
+    <p>© 2025 ManiFarma - Sistema de Relatórios</p>
+</footer>
+
+<script>
+    const API_URL = "http://localhost:8080/api/reports/summary";
+
+    async function carregarRelatorio() {
+        try {
+            const resposta = await fetch(API_URL);
+            if (!resposta.ok) throw new Error("Erro ao buscar os dados.");
+            const dados = await resposta.json();
+
+            document.getElementById("totalPedidos").textContent = dados.totalPedidos;
+            document.getElementById("receitaTotal").textContent = `R$ ${dados.receitaTotal.toFixed(2)}`;
+            document.getElementById("pendentes").textContent = dados.pendentes;
+            document.getElementById("pagos").textContent = dados.pagos;
+            document.getElementById("concluidos").textContent = dados.concluidos;
+            document.getElementById("cancelados").textContent = dados.cancelados;
+
+            const data = new Date();
+            document.getElementById("ultimaAtualizacao").textContent = data.toLocaleString("pt-BR");
+
+        } catch (erro) {
+            console.error("Erro ao carregar relatório:", erro);
+            document.getElementById("ultimaAtualizacao").textContent = "Erro ao carregar os dados.";
+        }
+    }
+
+    document.getElementById("btnAtualizar").addEventListener("click", carregarRelatorio);
+
+    // Carrega automaticamente ao abrir
+    carregarRelatorio();
+</script>
+</body>
+</html>
