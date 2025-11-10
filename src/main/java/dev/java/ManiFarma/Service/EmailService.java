@@ -8,15 +8,16 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-// ... (imports)
-// ... (imports)
+import java.text.NumberFormat; // Para formatar o valor
+import java.util.Locale;       // Para formatar o valor
+
 @Service
 public class EmailService {
 
     private final JavaMailSender mailSender;
 
     @Value("${spring.mail.username}")
-    private String fromEmail; // Pega o 'eduardo.andrade.dev@gmail.com' das properties
+    private String fromEmail; 
 
     public EmailService(JavaMailSender mailSender) {
         this.mailSender = mailSender;
@@ -26,38 +27,44 @@ public class EmailService {
     public void enviarEmailPagamento(Cliente cliente, Pedido pedido, String linkPagamento) {
         try {
             SimpleMailMessage message = new SimpleMailMessage();
-            message.setFrom(fromEmail); // <-- DE: eduardo.andrade.dev@gmail.com
+            message.setFrom(fromEmail); 
 
-            // --- AQUI ESTÁ A MUDANÇA PARA O TESTE ---
-            // message.setTo(cliente.getEmail()); // Linha original (comente ou apague)
-            message.setTo("moises0702silva@gmail.com"); // <-- PARA: Olavo
+            // --- 1. CORREÇÃO DO DESTINATÁRIO ---
+            // Substitua a linha de teste pela linha original
+            message.setTo(cliente.getEmail()); // <-- PARA: O email do cliente real
+            
+            // --- 2. (OPCIONAL) Limpeza do Assunto ---
+            message.setSubject("ManiFarma: Cotação do Pedido #" + pedido.getId());
 
-            message.setSubject("TESTE ManiFarma: Pedido #" + pedido.getId());
+            // Formata o valor para R$ XX,XX
+            NumberFormat formatadorMoeda = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
+            String valorFormatado = formatadorMoeda.format(pedido.getValorTotal());
 
-            // --- CORREÇÃO AQUI ---
+            // --- 3. (OPCIONAL) Limpeza do Texto ---
+            // O seu String.format já estava correto, apenas removi os "teste"
             String texto = String.format(
                     // 1º %s = cliente.getNome()
                     "Olá, %s!\n\n"
                     + // 2º %s = pedido.getId()
-                    "Recebemos seu pedido de teste #%s.\n\n"
-                    + // 3º %s = pedido.getValorTotal()
-                    "Valor total: R$ %s\n\n"
+                    "Sua cotação para o pedido #%s está pronta.\n\n"
+                    + // 3º %s = valorFormatado
+                    "Valor total: %s\n\n"
                     + // 4º %s = linkPagamento
-                    "Link de pagamento:\n"
+                    "Para realizar o pagamento, acesse o link abaixo:\n"
                     + "%s\n\n"
                     + "Atenciosamente,\n"
-                    + "Equipe ManiFarma (TESTE)",
-                    // Variáveis na ordem dos placeholders:
-                    cliente.getNome(), // 1º
-                    pedido.getId(), // 2º
-                    pedido.getValorTotal(), // 3º (Você pode querer formatar isso melhor)
-                    linkPagamento // 4º
+                    + "Equipe ManiFarma",
+                    // Variáveis na ordem:
+                    cliente.getNome(),     // 1º
+                    pedido.getId(),        // 2º
+                    valorFormatado,        // 3º
+                    linkPagamento          // 4º
             );
 
             message.setText(texto);
             mailSender.send(message);
 
-            System.out.println(">>> E-mail de teste enviado com SUCESSO para eduardo.andrade.dev@gmail.com");
+            System.out.println(">>> E-mail de cotação enviado com SUCESSO para " + cliente.getEmail());
 
         } catch (Exception e) {
             System.err.println(">>> FALHA AO ENVIAR EMAIL: " + e.getMessage());
