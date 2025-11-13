@@ -1,12 +1,16 @@
+// Verifica se o usuário está logado
 document.addEventListener("DOMContentLoaded", async () => {
   const clienteId = localStorage.getItem("userId");
   const tabela = document.getElementById("tabelaPedidos");
   const msg = document.getElementById("message");
 
   if (!clienteId) {
-    msg.textContent = "Erro: cliente não identificado. Faça login novamente.";
-    msg.style.color = "red";
-    return;
+    showModal({
+            title: "Atenção",
+            message: "Usuário não identificado. Faça login novamente.",
+            type: "warning",
+        });
+    window.location.href = "/html/login/login.html";
   }
 
   const { ok, data } = await apiRequest(`/api/pedidos/cliente/${clienteId}`, "GET", null, true, true);
@@ -22,7 +26,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         ? `
            ${pedido.receita} 
            <button class="btn btn-outline-primary btn-sm ver-receita" data-id="${pedido.id}">
-             📄 Ver Receita
+             Ver Receita
            </button>`
         : "Nenhuma";
 
@@ -66,7 +70,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
           modal.show();
         } catch (error) {
-          msgErro.textContent = "Erro ao buscar imagem do servidor.";
+          showModal({
+            title: "Erro",
+            message: "Erro ao buscar imagem do servidor.",
+            type: "danger",
+        });
           msgErro.classList.remove("d-none");
           modal.show();
         }
@@ -74,10 +82,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
   } else if (ok && data.length === 0) {
-    msg.textContent = "Você ainda não possui pedidos.";
-    msg.style.color = "gray";
+    showModal({
+            title: "Atenção",
+            message: "Você ainda não possui pedidos.",
+            type: "warning",
+        });
   } else {
-    msg.textContent = "Erro ao carregar seus pedidos. Tente novamente mais tarde.";
-    msg.style.color = "red";
+    showModal({
+            title: "Erro",
+            message: "Erro ao carregar seus pedidos. Tente novamente mais tarde.",
+            type: "danger",
+        });
   }
 });

@@ -34,17 +34,25 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+
+                // Tirar o comentario para rotas autorizadas
+
+                //.authorizeHttpRequests(authorize -> authorize
+                //        .requestMatchers(
+                //                "/api/auth/**",
+                 //               "/api/reports/**",
+                 //               "/api/receitas/**",
+                 //               "/api/viacep/**",
+                 //               "/h2-console/**",
+                  //              "/error"
+                   //     ).permitAll()
+                   //     .anyRequest().authenticated()
+
+                // manter para alterar o front tranquilo
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(
-                                "/api/auth/**",
-                                "/api/reports/**",
-                                "/api/receitas/**",
-                                "/api/viacep/**",
-                                "/h2-console/**",
-                                "/error"
-                        ).permitAll()
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
                 )
+
                 .exceptionHandling(ex -> ex
                         .authenticationEntryPoint((request, response, authException) -> {
                             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);

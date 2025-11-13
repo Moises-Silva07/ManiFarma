@@ -1,7 +1,11 @@
-// CONFIGURAÇÃO DE VERIFICAÇÃO DE LOGIN (Funcioando)
+// Verifica se o usuário está logado
 const userId = localStorage.getItem("userId"); 
 if (!userId) {
-    showAlert("Usuário não identificado. Faça login novamente.", "danger");
+    showModal({
+            title: "Erro",
+            message: "Usuário não identificado. Faça login novamente.",
+            type: "danger",
+        });
     window.location.href = "/html/login/login.html";
 }
 
@@ -21,7 +25,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         document.getElementById("uf").value = dados.estado || "";
         
     } else {
-        showAlert("Erro ao carregar dados do usuário", "danger");
+        showModal({
+            title: "Erro",
+            message: "Erro ao carregar dados do usuário",
+            type: "danger",
+        });
         console.error(resposta.data);
     }
 });
@@ -45,9 +53,17 @@ document.getElementById("form-dados").addEventListener("submit", async (e) => {
 
     const resposta = await apiRequest(`/api/users/${userId}`, "PUT", body, true, true);
     if (resposta.ok) {
-        showToast("Dados atualizados com sucesso!", "success");
+        showModal({
+            title: "Sucesso!",
+            message: "Dados atualizados com sucesso!",
+            type: "success"
+        });
     } else {
-        showAlert("Erro ao atualizar dados.", "danger");
+        showModal({
+            title: "Erro",
+            message: "Erro ao atualizar dados.",
+            type: "danger",
+        });
         console.error(resposta.data);
     }
 });
@@ -60,8 +76,22 @@ document.getElementById("form-senha").addEventListener("submit", async (e) => {
     const novaSenha = document.getElementById("novaSenha").value;
     const confirma = document.getElementById("confirmaSenha").value;
 
+
+    // Expressão regular para validar:
+    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#%])[A-Za-z\d@$!%*?&#%]{8,}$/;
+
+
+    if (!regex.test(novaSenha)) {
+        document.getElementById("message").textContent = "A senha deve ter no mínimo 8 caracteres, incluindo letra maiúscula (A-Z), minúscula(a-z), número(1-9) e caractere especial(@$!%*?&).";
+        return;
+    }
+
     if (novaSenha !== confirma) {
-        showAlert("As senhas não coincidem.", "warning");
+        showModal({
+            title: "Atenção",
+            message: "As senhas não coincidem.",
+            type: "warning",
+        });
         return;
     }
 
@@ -69,37 +99,37 @@ document.getElementById("form-senha").addEventListener("submit", async (e) => {
     const resposta = await apiRequest(`/api/users/${userId}/senha`, "PUT", body, true);
 
     if (resposta.ok) {
-        showToast("Senha alterada com sucesso!", "success");
+        showModal({
+            title: "Sucesso!",
+            message: "Senha alterada com sucesso!",
+            type: "success"
+        });
     } else {
-        showAlert("Erro ao alterar senha.");
+        showModal({
+            title: "Erro",
+            message: "Erro ao alterar senha.",
+            type: "danger",
+        });
         console.error(resposta.data);
     }
 });
 
 
-// DESATIVAR CONTA (Funcionando)
-// Seleciona elementos
-const modalElement = document.getElementById("modalConfirmarExclusao");
-const confirmarBtn = document.getElementById("confirmar-exclusao");
-const modalBootstrap = new bootstrap.Modal(modalElement);
+// DESATIVAR CONTA
+document.getElementById("btn-excluir-conta").addEventListener("click", async () => {
+    const confirmar = await showModal({
+        title: "Confirmação",
+        message: "Tem certeza que deseja desativar sua conta?",
+        type: "confirm"
+    });
 
-document.getElementById("btn-excluir-conta").addEventListener("click", () => {
-    // Apenas abre a modal, sem executar nada ainda
-    modalBootstrap.show();
-});
+    if (!confirmar) return; // Usuário cancelou
 
-confirmarBtn.addEventListener("click", async () => {
     try {
-        // Fecha a modal
-        modalBootstrap.hide();
-
-        // Faz a requisição
         const resposta = await apiRequest(`/api/users/${userId}/toggle-activation`, "PATCH", null, true);
 
         if (resposta.ok) {
-            // Alerta de sucesso com outra modal Bootstrap
-            const successModal = new bootstrap.Modal(document.getElementById("modalSucesso"));
-            successModal.show();
+            showToast("Conta desativada com sucesso!", "success");
 
             // Espera 2 segundos e redireciona
             setTimeout(() => {
@@ -107,11 +137,20 @@ confirmarBtn.addEventListener("click", async () => {
                 window.location.href = "/html/index.html";
             }, 2000);
         } else {
-            showAlert("Não foi possível concluir a desativação da conta. Tente novamente.");
+            showModal({
+                title: "Erro",
+                message: "Não foi possível concluir a desativação da conta. Tente novamente.",
+                type: "danger"
+            });
             console.error(resposta.data);
         }
     } catch (error) {
         console.error("Erro ao desativar conta:", error);
+        showModal({
+            title: "Erro inesperado",
+            message: "Ocorreu um problema ao tentar desativar a conta.",
+            type: "danger"
+        });
     }
 });
 
@@ -139,7 +178,11 @@ function limpa_formulário_cep() {
         else {
             //CEP não Encontrado.
             limpa_formulário_cep();
-            showAlert("CEP não encontrado.", "warning");
+            showModal({
+                title: "Atenção",
+                message: "CEP não encontrado.",
+                type: "warning"
+            });
         }
     }
 
@@ -177,7 +220,11 @@ function pesquisacep(valor) {
             else {
                 //cep é inválido.
                 limpa_formulário_cep();
-                showAlert("Formato de CEP inválido.", "danger");
+                showModal({
+                    title: "Erro",
+                    message: "Formato de CEP inválido.",
+                    type: "danger"
+                });
             }
         } //end if.
         else {

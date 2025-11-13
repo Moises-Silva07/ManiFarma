@@ -16,68 +16,39 @@
     <nav class="navbar navbar-expand-lg">
         <div class="container-fluid">
             <a class="navbar-brand" href="/html/menu_funcionario/menu_funcionario.html">ManiFarma</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <div class="collapse navbar-collapse" id="navbarNavDropdown">
-                <ul class="navbar-nav ms-auto"> <!-- ms-auto = Os links vão pra direita -->
-
-                    <!-- <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Início</a>
-                    </li>
-
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Pedidos
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="/html/menu_funcionario/pedido_validacao_funcionario.html">Validar Pedidos</a></li>
-                            <li><a class="dropdown-item" href="/html/menu_funcionario/itens_pedidos_funcionario.html">Itens x Pedido</a></li>
-                            <li><a class="dropdown-item" href="/html/menu_funcionario/itens_funcionario.html">Itens</a></li>
-                        </ul>
-                    </li> -->
-
-                    <!-- <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Configuração
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Conta</a></li>
-                        </ul>
-                    </li> -->
-                </ul>
-            </div>
         </div>
     </nav>
     <!-- End nav bar -->
 
     <main>
-        <section>
+        <section class="main-section">
+            <div class="main-header">
+            <div>
+                <h1>Administração</h1>
+                <p>Gerencie pedidos, cadastros e relatórios com praticidade.</p>
+            </div>
+            </div>
+
             <div class="container-programa">
+
                 <div class="campo-programa">
-                    <h2>Administração ManiFarma</h2>
-                    <a href="#">Conta</a>
+                    <h2>🧾 Pedidos</h2>
+                    <a href="/html/menu_funcionario/pedido_validacao_funcionario.html" class="btn-acesso">Validar Pedidos</a>
                 </div>
-                <hr>
+
                 <div class="campo-programa">
-                    <h2>Pedidos</h2>
-                    <a href="/html/menu_funcionario/pedido_validacao_funcionario.html">Validar Pedidos</a>
+                    <h2>💲 Vinculação</h2>
+                    <a href="/html/menu_funcionario/itens_pedidos_funcionario.html" class="btn-acesso">Orçamento</a>
                 </div>
-                <hr>
+
                 <div class="campo-programa">
-                    <h2>Vinculação</h2>
-                    <a href="/html/menu_funcionario/itens_pedidos_funcionario.html">Itens x Pedidos</a>
+                    <h2>💊 Cadastros Gerais</h2>
+                    <a href="/html/menu_funcionario/itens_funcionario.html" class="btn-acesso">Itens</a>
                 </div>
-                <hr>
+
                 <div class="campo-programa">
-                    <h2>Cadastros Gerais</h2>
-                    <a href="/html/menu_funcionario/itens_funcionario.html">Itens</a>
-                </div>
-                <hr>
-                <div class="campo-programa">
-                    <h2>Relatórios</h2>
-                    <a href="/html/menu_funcionario/relatorios_pedido.html">Vendas</a>
+                    <h2>📈 Relatórios</h2>
+                    <a href="/html/menu_funcionario/relatorios_pedido.html" class="btn-acesso">Vendas</a>
                 </div>
             </div>
         </section>

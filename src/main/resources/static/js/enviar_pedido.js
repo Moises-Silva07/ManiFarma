@@ -1,7 +1,11 @@
 // Verifica se o usuário está logado
 const userId = localStorage.getItem("userId");
 if (!userId) {
-    alert("Usuário não identificado. Faça login novamente.");
+    showModal({
+            title: "Atenção",
+            message: "Usuário não identificado. Faça login novamente.",
+            type: "warning",
+        });
     window.location.href = "/html/login/login.html";
 }
 
@@ -13,7 +17,11 @@ document.getElementById("form").addEventListener("submit", async (e) => {
   const arquivo = receitaInput.files[0];
 
   if (!descricao || !arquivo) {
-    alert("Por favor, preencha a descrição e selecione um arquivo de receita.");
+    showModal({
+            title: "Atenção",
+            message: "Por favor, preencha a descrição e selecione um arquivo de receita.",
+            type: "warning",
+        });
     return;
   }
 
@@ -38,16 +46,30 @@ document.getElementById("form").addEventListener("submit", async (e) => {
     const data = await resposta.json();
 
     if (resposta.ok) {
-      alert("Pedido enviado com sucesso!");
+      showModal({
+            title: "Sucesso!",
+            message: "Pedido enviado com sucesso!" + " " + `Acompanhe os seus pedidos em "Meus Pedidos". `,
+            type: "success"
+        });
+
       document.getElementById("form").reset();
       console.log("Resposta do servidor:", data);
+
     } else {
       console.error("Erro:", data);
-      alert("Erro ao enviar pedido: " + (data.error || "Desconhecido"));
+      showModal({
+            title: "Erro",
+            message: "Erro ao enviar pedido.",
+            type: "danger",
+        });
     }
   } catch (err) {
     console.error("Erro geral:", err);
-    alert("Erro inesperado ao enviar pedido.");
+    showModal({
+            title: "Erro",
+            message: "Erro inesperado ao enviar pedido.",
+            type: "danger",
+        });
   }
 });
 

@@ -1,12 +1,135 @@
-body {
-  height: 100vh;
+/* Fundo geral */
+main {
   background-color: #101820;
+  color: #FEE715;
+  padding: 50px 20px;
+  min-height: 80vh;
 }
 
-.navbar {
+/* Cabeçalho */
+.main-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 25px;
+  border-bottom: 2px solid #FEE715;
+  margin-bottom: 50px;
+  padding-bottom: 25px;
+  text-align: center;
+}
+
+.main-logo {
+  width: 90px;
+  height: 90px;
+  object-fit: contain;
+}
+
+.main-header h1 {
+  font-size: 2rem;
+  margin-bottom: 10px;
+  color: #FEE715;
+}
+
+.main-header p {
+  color: #cfcfcf;
+  max-width: 600px;
+  font-size: 1rem;
+}
+
+/* Container principal */
+.container-programa {
+  display: flex;
+  flex-direction: column;
+  gap: 60px;
+}
+
+/* Card */
+.programa {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #0d141b;
+  border: 1px solid #FEE715;
+  border-radius: 16px;
+  padding: 40px;
+  gap: 40px;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.programa:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0 20px rgba(254, 231, 21, 0.15);
+}
+
+/* Invertido */
+.programa.invertido {
+  flex-direction: row-reverse;
+}
+
+/* Informações (lado do botão) */
+.programa-info {
+  flex: 1;
+  text-align: center;
+}
+
+.programa-info h2 {
+  font-size: 1.6rem;
+  margin-bottom: 15px;
+}
+
+/* Botão */
+.btn-acesso {
+  display: inline-block;
   background-color: #FEE715;
+  color: #101820;
+  font-weight: 600;
+  padding: 10px 22px;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all 0.2s ease;
 }
 
-.navbar-nav {
-  padding: 0 40px;
+.btn-acesso:hover {
+  background-color: #fff56a;
+  transform: scale(1.05);
+}
+
+/* Descrição */
+.programa-descricao {
+  flex: 2;
+  text-align: left;
+}
+
+.programa-descricao h3 {
+  font-size: 1.3rem;
+  color: #fff;
+  margin-bottom: 10px;
+}
+
+.programa-descricao p {
+  color: #cfcfcf;
+  line-height: 1.7;
+  font-size: 1rem;
+  margin: 0;
+}
+
+/* Responsivo */
+@media (max-width: 900px) {
+  .programa {
+    flex-direction: column;
+    text-align: center;
+    gap: 25px;
+  }
+
+  .programa.invertido {
+    flex-direction: column;
+  }
+
+  .programa-descricao {
+    text-align: center;
+  }
+
+  .main-header {
+    flex-direction: column;
+  }
 }

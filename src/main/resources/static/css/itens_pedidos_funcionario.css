@@ -1,3 +1,20 @@
+.pagination .page-link {
+  color: #101820;      
+  border-color: #FEE715;
+}
+
+.pagination .page-item.active .page-link {
+  background-color: #FEE715;
+  border-color: #FEE715;
+  color: #101820;                      
+}
+
+.pagination .page-link:hover {
+  background-color: #FEE715;
+  color: #101820;
+}
+
+
 .container h2 {
   color: #FEE715;
   text-align: center;
@@ -33,7 +50,7 @@
   width: 30px;
   height: 30px;
   border: none;
-  background-color: var(--primary-color);
+  background-color: #223344;
   color: white;
   font-weight: bold;
   border-radius: 5px;
@@ -41,7 +58,7 @@
 }
 
 .qtd-control button:hover {
-  background-color: #004080;
+  background-color: #101820;
 }
 
 .qtd-control input {
@@ -49,4 +66,8 @@
   text-align: center;
   border: 1px solid #ccc;
   border-radius: 5px;
+}
+
+#btnAdicionarItens {
+  background-color: #FEE715;
 }

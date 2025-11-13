@@ -2,12 +2,18 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const corpoTabela = document.getElementById("corpoTabela");
   const funcionarioId = localStorage.getItem("userId"); // Funcionário logado
+  const paginacao = document.getElementById("paginacao");
 
   if (!funcionarioId) {
     alert("Funcionário não identificado. Faça login novamente.");
     window.location.href = "/html/login/login.html";
     return;
   }
+
+  // Variáveis de paginação
+  let todosPedidos = [];
+  let paginaAtual = 1;
+  const itensPorPagina = 8;
 
   const { ok, data } = await apiRequest("/api/pedidos", "GET", null, true, true);
 
@@ -21,20 +27,32 @@ document.addEventListener("DOMContentLoaded", async () => {
     return;
   }
 
-  corpoTabela.innerHTML = "";
-  data.forEach((pedido) => {
-    const linha = document.createElement("tr");
-    linha.innerHTML = `
-      <td>${pedido.id}</td>
-      <td>${pedido.employeeId || "—"}</td>
-      <td>
-        <span class="badge ${pedido.status === "CONCLUIDO" ? "bg-success" :
-                              pedido.status === "CANCELADO" ? "bg-danger" : "bg-warning text-dark"}">
-          ${pedido.status || "PENDENTE"}
-        </span>
-      </td>
-      <td>R$ ${(pedido.valorTotal || 0).toFixed(2)}</td>
-    `;
+  todosPedidos = data;
+  renderizarTabela();
+
+  // --- Função para renderizar tabela ---
+  function renderizarTabela() {
+    corpoTabela.innerHTML = "";
+
+    const inicio = (paginaAtual - 1) * itensPorPagina;
+    const fim = inicio + itensPorPagina;
+    const pedidosPagina = todosPedidos.slice(inicio, fim);
+
+    pedidosPagina.forEach((pedido) => {
+      const linha = document.createElement("tr");
+      linha.innerHTML = `
+        <td>${pedido.id}</td>
+        <td>
+          ${pedido.employeeId ? `${pedido.employeeId} (${pedido.employeeNome})` : "—"}
+        </td>
+        <td>
+          <span class="badge ${pedido.status === "CONCLUIDO" ? "bg-success" :
+                                pedido.status === "CANCELADO" ? "bg-danger" : "bg-warning text-dark"}">
+            ${pedido.status || "PENDENTE"}
+          </span>
+        </td>
+        <td>R$ ${(pedido.valorTotal || 0).toFixed(2)}</td>
+      `;
 
     // Subtabela de detalhes (escondida por padrão)
     const detalhes = document.createElement("tr");
@@ -44,7 +62,14 @@ document.addEventListener("DOMContentLoaded", async () => {
       <td colspan="4">
         <div class="p-3 border rounded bg-light">
           <h5>Detalhes do Pedido #${pedido.id}</h5>
+          <p><strong>Funcionário responsável:</strong> 
+            ${pedido.employeeNome ? pedido.employeeNome + " (ID: " + pedido.employeeId + ")" : "Nenhum funcionário atribuído."}
+          </p>
+          <br>
           <p><strong>Cliente ID:</strong> ${pedido.clienteId}</p>
+          <p><strong>Cliente:</strong> ${pedido.clienteNome || "—"}</p>
+          <p><strong>Telefone:</strong> ${pedido.clienteTelefone || "—"}</p>
+          <br>
           <p><strong>Descrição:</strong> ${pedido.descricao}</p>
           <p><strong>Receita:</strong> ${pedido.receita || "—"}</p>
 
@@ -81,50 +106,95 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Toggle ao clicar
     linha.addEventListener("click", () => {
-      detalhes.style.display =
-        detalhes.style.display === "none" ? "table-row" : "none";
+      detalhes.style.display = detalhes.style.display === "none" ? "table-row" : "none";
     });
 
     corpoTabela.appendChild(linha);
     corpoTabela.appendChild(detalhes);
   });
 
+  renderizarPaginacao();
+  inicializarVerReceita();
+}
 
-  // Depois de gerar todas as linhas: 
-  document.querySelectorAll(".ver-receita").forEach(btn => {
-    btn.addEventListener("click", async (e) => {
-      const pedidoId = e.currentTarget.getAttribute("data-id");
+  // --- Função para renderizar os botões de paginação ---
+  function renderizarPaginacao() {
+    paginacao.innerHTML = "";
+    const totalPaginas = Math.ceil(todosPedidos.length / itensPorPagina);
 
-      const img = document.getElementById("imagemReceita");
-      const msgErro = document.getElementById("mensagemErroReceita");
-      const modal = new bootstrap.Modal(document.getElementById("modalReceita"));
-
-      img.src = "";
-      msgErro.classList.add("d-none");
-
-      try {
-        const response = await fetch(`http://localhost:8080/api/pedidos/${pedidoId}/receita`);
-
-        if (!response.ok) {
-          const data = await response.json().catch(() => ({}));
-          msgErro.textContent = data.error || "Erro ao carregar a imagem.";
-          msgErro.classList.remove("d-none");
-        } else {
-          const blob = await response.blob();
-          const url = URL.createObjectURL(blob);
-          img.src = url;
-        }
-
-        modal.show();
-      } catch (error) {
-        msgErro.textContent = "Erro ao buscar imagem do servidor.";
-        msgErro.classList.remove("d-none");
-        modal.show();
+    const liAnterior = document.createElement("li");
+    liAnterior.className = `page-item ${paginaAtual === 1 ? "disabled" : ""}`;
+    liAnterior.innerHTML = `<button class="page-link">Anterior</button>`;
+    liAnterior.onclick = () => {
+      if (paginaAtual > 1) {
+        paginaAtual--;
+        renderizarTabela();
       }
-    });
-  });
-});
+    };
+    paginacao.appendChild(liAnterior);
 
+    const inicio = Math.max(1, paginaAtual - 2);
+    const fim = Math.min(totalPaginas, inicio + 4);
+    for (let i = inicio; i <= fim; i++) {
+      const li = document.createElement("li");
+      li.className = `page-item ${i === paginaAtual ? "active" : ""}`;
+      li.innerHTML = `<button class="page-link">${i}</button>`;
+      li.onclick = () => {
+        paginaAtual = i;
+        renderizarTabela();
+      };
+      paginacao.appendChild(li);
+    }
+
+    const liProximo = document.createElement("li");
+    liProximo.className = `page-item ${paginaAtual === totalPaginas ? "disabled" : ""}`;
+    liProximo.innerHTML = `<button class="page-link">Próximo</button>`;
+    liProximo.onclick = () => {
+      if (paginaAtual < totalPaginas) {
+        paginaAtual++;
+        renderizarTabela();
+      }
+    };
+    paginacao.appendChild(liProximo);
+  }
+
+  // --- Reatribui os botões "Ver Receita" após renderização ---
+  function inicializarVerReceita() {
+    document.querySelectorAll(".ver-receita").forEach(btn => {
+      btn.addEventListener("click", async (e) => {
+        e.stopPropagation(); // evita abrir/fechar detalhes ao clicar no botão
+
+        const pedidoId = e.currentTarget.getAttribute("data-id");
+        const img = document.getElementById("imagemReceita");
+        const msgErro = document.getElementById("mensagemErroReceita");
+        const modal = new bootstrap.Modal(document.getElementById("modalReceita"));
+
+        img.src = "";
+        msgErro.classList.add("d-none");
+
+        try {
+          const response = await fetch(`http://localhost:8080/api/pedidos/${pedidoId}/receita`);
+
+          if (!response.ok) {
+            const data = await response.json().catch(() => ({}));
+            msgErro.textContent = data.error || "Erro ao carregar a imagem.";
+            msgErro.classList.remove("d-none");
+          } else {
+            const blob = await response.blob();
+            const url = URL.createObjectURL(blob);
+            img.src = url;
+          }
+
+          modal.show();
+        } catch (error) {
+          msgErro.textContent = "Erro ao buscar imagem do servidor.";
+          msgErro.classList.remove("d-none");
+          modal.show();
+        }
+      });
+    });
+  }
+});
 
 // Função para alterar status do pedido 
 async function alterarStatus(id, novoStatus) {

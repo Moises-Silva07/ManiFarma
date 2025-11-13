@@ -115,3 +115,60 @@ form {
   font-size: 0.85em;
   color: rgba(255, 255, 255, 0.6);
 }
+
+@media (max-width: 1024px) {
+    .container {
+      width: 850px;
+    }
+    footer {
+      font-size: 13px;
+    }
+}
+@media (max-width: 928px) {
+    .container {
+      width: 750px;
+    }
+    footer {
+      font-size: 13px;
+    }
+}
+@media (max-width: 820px) {
+    .container {
+      width: 650px;
+    }
+    footer {
+      font-size: 13px;
+    }
+}
+@media (max-width: 725px) {
+    .container {
+      width: 550px;
+    }
+    footer {
+      font-size: 13px;
+    }
+}
+@media (max-width: 610px) {
+    .container {
+      width: 450px;
+    }
+    footer {
+      font-size: 13px;
+    }
+}
+@media (max-width: 510px) {
+    .container {
+      width: 350px;
+    }
+    footer {
+      font-size: 13px;
+    }
+}
+@media (max-width: 375px) {
+    .container {
+      width: 300px;
+    }
+    footer {
+      font-size: 13px;
+    }
+}

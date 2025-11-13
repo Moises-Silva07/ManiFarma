@@ -4,10 +4,16 @@ document.addEventListener("DOMContentLoaded", async () => {
   const modal = new bootstrap.Modal(document.getElementById("modalItens"));
   const listaProdutos = document.getElementById("listaProdutos");
   const btnConfirmarItens = document.getElementById("btnConfirmarItens");
+  const paginacao = document.getElementById("paginacao");
 
   let pedidoSelecionado = null;
   let produtosCache = [];
   let quantidadesSelecionadas = {};
+
+  // --- Variáveis de paginação ---
+  let todosPedidos = [];
+  let paginaAtual = 1;
+  const itensPorPagina = 10;
 
   // --- 1. Carrega pedidos com status VALIDO ---
   const { ok, data } = await apiRequest("/api/pedidos/status/VALIDO", "GET", null, true, true);
@@ -21,34 +27,92 @@ document.addEventListener("DOMContentLoaded", async () => {
     return;
   }
 
-  corpoTabela.innerHTML = data
-    .map(
-      (pedido) => `
-        <tr data-id="${pedido.id}">
-          <td>${pedido.id}</td>
-          <td>${pedido.clienteId}</td>
-          <td>${pedido.employeeId || "-"}</td>
-          <td>${pedido.status}</td>
-          <td>R$ ${pedido.valorTotal?.toFixed(2) || "0.00"}</td>
-        </tr>`
-    )
-    .join("");
+  // guarda todos os pedidos e renderiza a primeira página
+  todosPedidos = data;
+  renderizarTabela();
 
-  // --- 2. Selecionar pedido ---
-  document.querySelectorAll("#corpoTabela tr").forEach((linha) => {
-    linha.addEventListener("click", () => {
-      document.querySelectorAll("#corpoTabela tr").forEach((l) => l.classList.remove("selecionada"));
-      linha.classList.add("selecionada");
-      pedidoSelecionado = linha.getAttribute("data-id");
-      btnAdicionar.disabled = false;
+  // --- Função para renderizar a tabela com base na página atual ---
+  function renderizarTabela() {
+    corpoTabela.innerHTML = "";
+
+    const inicio = (paginaAtual - 1) * itensPorPagina;
+    const fim = inicio + itensPorPagina;
+    const pedidosPagina = todosPedidos.slice(inicio, fim);
+
+    corpoTabela.innerHTML = pedidosPagina
+      .map(
+        (pedido) => `
+          <tr data-id="${pedido.id}">
+            <td>${pedido.id}</td>
+            <td>${pedido.clienteId}</td>
+            <td>${pedido.employeeId || "-"}</td>
+            <td>${pedido.status}</td>
+            <td>R$ ${pedido.valorTotal?.toFixed(2) || "0.00"}</td>
+          </tr>`
+      )
+      .join("");
+
+    // Reaplica eventos de seleção
+    document.querySelectorAll("#corpoTabela tr").forEach((linha) => {
+      linha.addEventListener("click", () => {
+        document.querySelectorAll("#corpoTabela tr").forEach((l) => l.classList.remove("selecionada"));
+        linha.classList.add("selecionada");
+        pedidoSelecionado = linha.getAttribute("data-id");
+        btnAdicionar.disabled = false;
+      });
     });
-  });
+
+    renderizarPaginacao();
+  }
+
+  // --- Função para renderizar os botões de paginação ---
+  function renderizarPaginacao() {
+    paginacao.innerHTML = "";
+    const totalPaginas = Math.ceil(todosPedidos.length / itensPorPagina);
+
+    // Botão Anterior
+    const liAnterior = document.createElement("li");
+    liAnterior.className = `page-item ${paginaAtual === 1 ? "disabled" : ""}`;
+    liAnterior.innerHTML = `<button class="page-link">Anterior</button>`;
+    liAnterior.onclick = () => {
+      if (paginaAtual > 1) {
+        paginaAtual--;
+        renderizarTabela();
+      }
+    };
+    paginacao.appendChild(liAnterior);
+
+    // Páginas numéricas (máximo 5)
+    const inicio = Math.max(1, paginaAtual - 2);
+    const fim = Math.min(totalPaginas, inicio + 4);
+    for (let i = inicio; i <= fim; i++) {
+      const li = document.createElement("li");
+      li.className = `page-item ${i === paginaAtual ? "active" : ""}`;
+      li.innerHTML = `<button class="page-link">${i}</button>`;
+      li.onclick = () => {
+        paginaAtual = i;
+        renderizarTabela();
+      };
+      paginacao.appendChild(li);
+    }
+
+    // Botão Próximo
+    const liProximo = document.createElement("li");
+    liProximo.className = `page-item ${paginaAtual === totalPaginas ? "disabled" : ""}`;
+    liProximo.innerHTML = `<button class="page-link">Próximo</button>`;
+    liProximo.onclick = () => {
+      if (paginaAtual < totalPaginas) {
+        paginaAtual++;
+        renderizarTabela();
+      }
+    };
+    paginacao.appendChild(liProximo);
+  }
 
   // --- 3. Abrir modal com lista de produtos ---
   btnAdicionar.addEventListener("click", async () => {
     if (!pedidoSelecionado) return alert("Selecione um pedido primeiro.");
 
-    // Busca produtos apenas uma vez
     if (produtosCache.length === 0) {
       const res = await apiRequest("/produtos", "GET", null, true, true);
       if (!res.ok) {
@@ -58,11 +122,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       produtosCache = res.data;
     }
 
-    // Limpa estado anterior
     quantidadesSelecionadas = {};
     listaProdutos.innerHTML = "";
 
-    // Monta cards de produtos
     produtosCache.forEach((produto) => {
       listaProdutos.innerHTML += `
         <div class="col-12">
@@ -78,7 +140,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         </div>`;
     });
 
-    // Adiciona eventos + e −
     document.querySelectorAll(".produto-card").forEach((card) => {
       const id = card.getAttribute("data-id");
       const input = card.querySelector(".qtdInput");
@@ -114,12 +175,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       return;
     }
 
-    // corrigido: inclui o /api para bater com @RequestMapping("/api/pedidos")
     const response = await apiRequest(`/api/pedidos/${pedidoSelecionado}/itens`, "POST", itensSelecionados, true, true);
 
-
     if (!response.ok) {
-      // tentar ler corpo de erro e logar (se apiRequest retornar o Response)
       try {
         const text = await response.text();
         console.error("Erro ao adicionar itens - body:", text);

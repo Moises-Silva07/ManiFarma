@@ -227,12 +227,13 @@ public class PedidoService {
         dto.setReceita(pedido.getReceita());
         dto.setValorTotal(pedido.getValorTotal() != null ? pedido.getValorTotal() : 0.0);
 
-        if (pedido.getCliente() != null) {
-            dto.setClienteId(pedido.getCliente().getId());
-        }
+        dto.setClienteId(pedido.getCliente().getId());
+        dto.setClienteNome(pedido.getCliente().getNome());
+        dto.setClienteTelefone(pedido.getCliente().getTelefone());
 
         if (pedido.getEmployee() != null) {
             dto.setEmployeeId(pedido.getEmployee().getId());
+            dto.setEmployeeNome(pedido.getEmployee().getNome());
         }
 
         if (pedido.getItens() != null) {

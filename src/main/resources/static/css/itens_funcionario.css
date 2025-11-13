@@ -1,3 +1,23 @@
+.pagination .page-link {
+  color: #101820;      
+  border-color: #FEE715;
+}
+
+.pagination .page-item.active .page-link {
+  background-color: #FEE715;
+  border-color: #FEE715;
+  color: #101820;                      
+}
+
+.pagination .page-link:hover {
+  background-color: #FEE715;
+  color: #101820;
+}
+
+tr.selecionada {
+  background-color: #adadad !important; 
+}
+
 h2 {
   text-align: center;
   color:#FEE715;

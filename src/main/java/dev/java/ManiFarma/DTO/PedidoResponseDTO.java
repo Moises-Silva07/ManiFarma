@@ -12,7 +12,10 @@ public class PedidoResponseDTO {
     private StatusPedido status;
     private String receita;
     private Long clienteId;
+    private String clienteNome;
+    private String clienteTelefone;
     private Long employeeId;
+    private String employeeNome;
     private Double valorTotal;
     private List<PedidoProdutoResponseDTO> itens;
 
@@ -78,5 +81,29 @@ public class PedidoResponseDTO {
 
     public void setValorTotal(Double valorTotal) {
         this.valorTotal = valorTotal;
+    }
+
+    public String getClienteNome() {
+        return clienteNome;
+    }
+
+    public void setClienteNome(String clienteNome) {
+        this.clienteNome = clienteNome;
+    }
+
+    public String getClienteTelefone() {
+        return clienteTelefone;
+    }
+
+    public void setClienteTelefone(String clienteTelefone) {
+        this.clienteTelefone = clienteTelefone;
+    }
+
+    public String getEmployeeNome() {
+        return employeeNome;
+    }
+
+    public void setEmployeeNome(String employeeNome) {
+        this.employeeNome = employeeNome;
     }
 }

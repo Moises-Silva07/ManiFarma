@@ -1,149 +1,93 @@
-// URL base da API
-const apiUrl = "http://localhost:8080";
+// Função genérica para modais (alertas e confirmações)
+function showModal({
+  title = "Mensagem",
+  message = "",
+  confirmText = "OK",
+  cancelText = null,
+  type = "info" // success | danger | warning | info | confirm
+}) {
+  return new Promise((resolve) => {
+    // Caso seja um modal de confirmação
+    if (cancelText || type === "confirm") {
+      const modalEl = document.getElementById("modalConfirm");
+      const modalBody = document.getElementById("modalConfirmMessage");
+      const modalTitle = modalEl.querySelector(".modal-title");
+      const confirmBtn = document.getElementById("modalConfirmYes");
 
+      modalTitle.textContent = title;
+      modalBody.textContent = message;
 
-async function apiRequest(endpoint, method, body = null, auth = false, debug = true) {
-    
-    // --- Início da Depuração ---
-    if (debug) console.clear();
-    if (debug) {
-        console.log("%c--- INICIANDO NOVA REQUISIÇÃO API ---", "font-weight: bold;");
-        console.log(`1. Parâmetros recebidos: endpoint='${endpoint}', method='${method}'`);
-        console.log("2. Corpo recebido (antes de converter para JSON):", body);
+      const modal = new bootstrap.Modal(modalEl);
+      modal.show();
+
+      confirmBtn.onclick = () => {
+        modal.hide();
+        resolve(true);
+      };
+
+      modalEl.addEventListener(
+        "hidden.bs.modal",
+        () => resolve(false),
+        { once: true }
+      );
+
+      return;
     }
-    // --- Fim da Depuração ---
 
-    const headers = { "Content-Type": "application/json" }; // Define o cabeçalho HTTP padrão — dizendo que o corpo da requisição é JSON.
+    // Caso contrário, modal simples de alerta
+    const modalEl = document.getElementById("modalAlert");
+    const modalTitle = document.getElementById("modalAlertTitle");
+    const modalBody = document.getElementById("modalAlertMessage");
+    const header = modalEl.querySelector(".modal-header");
 
-    if (auth) {
-        const token = localStorage.getItem("token"); // Tenta buscar o token de autenticação salvo no navegador.
+    modalTitle.textContent = title;
+    modalBody.textContent = message;
 
-        
-        if (!token) {
-            console.warn("Nenhum token encontrado no localStorage. A requisição pode falhar."); // Se não existir
-        } else {
-            headers["Authorization"] = `Bearer ${token}`; // Se existir, adiciona o cabeçalho Authorization: Bearer <token>.
-        }
+    // Define cor do cabeçalho conforme o tipo
+    header.className = "modal-header text-white";
+    switch (type) {
+      case "success":
+        header.classList.add("bg-success");
+        break;
+      case "danger":
+        header.classList.add("bg-danger");
+        break;
+      case "warning":
+        header.classList.add("bg-warning", "text-dark");
+        break;
+      default:
+        header.classList.add("bg-primary");
     }
 
-    const options = { method, headers }; // Monta o objeto options que o fetch() usará: método e cabeçalhos.
-    if (body) options.body = JSON.stringify(body); // Se houver corpo, ele é convertido para JSON.
-
-    try {
-        const fullUrl = `${apiUrl}${endpoint}`; // Junta a URL base com o endpoint (exemplo: http://localhost:8080/api/users).
-
-        // --- Depuração Adicional ---
-        if (debug) {
-            console.log(`3. URL completa que será chamada: ${fullUrl}`);
-            console.log("4. Objeto 'options' final enviado para o fetch:", options);
-        }
-        // --- Fim da Depuração Adicional ---
-
-        const resposta = await fetch(fullUrl, options); // Faz a requisição HTTP e espera a resposta do servidor.
-
-        // --- Depuração da Resposta ---
-        if (debug) {
-            console.log(`5. Resposta recebida do servidor: ${resposta.status} ${resposta.statusText}`); // Mostra o código e o texto da resposta (ex: 200 OK ou 404 Not Found).
-        }
-        // --- Fim da Depuração da Resposta ---
-
-        if (resposta.status === 204) { // 204 = sem conteúdo
-            return { ok: resposta.ok, data: null }; // A função devolve data: null para evitar erro ao tentar converter JSON vazio.
-        }
-
-
-        let data = null;
-        try {
-            // Tenta ler como JSON
-            const text = await resposta.text(); 
-            data = text ? JSON.parse(text) : null;
-        } catch {
-            data = null; // fallback seguro
-        }
-
-        return { ok: resposta.ok, data }; // ok: indica se a requisição deu certo (true/false); // data: dados retornados pela API.
-
-
-    } catch (erro) { // Se algo falhar (como o servidor estar offline), o catch captura o erro e devolve uma resposta padronizada avisando o usuário.
-        
-        console.error("%c!!! ERRO CRÍTICO CAPTURADO PELO CATCH !!!", "color: red; font-weight: bold; font-size: 14px;");
-        console.error("O erro que causou a falha na conexão foi:", erro);
-
-        return {
-            ok: false,
-            data: {
-                mensagem: "Erro na conexão com o servidor.",
-                erro: erro.message // <-- incluído para depuração
-            }
-        };
-    }
+    new bootstrap.Modal(modalEl).show();
+    resolve(true);
+  });
 }
 
-// API VIACEP
-function limpa_formulário_cep() {
-            //Limpa valores do formulário de cep.
-            document.getElementById('rua').value=("");
-            document.getElementById('bairro').value=("");
-            document.getElementById('cidade').value=("");
-            document.getElementById('uf').value=("");
-            
-    }
+// Função global para exibir toasts (mensagens rápidas)
+function showToast(message, type = "info") {
+  const toastEl = document.getElementById("mainToast");
+  const toastBody = document.getElementById("toastBody");
 
-    function meu_callback(conteudo) {
-        if (!("erro" in conteudo)) {
-            //Atualiza os campos com os valores.
-            document.getElementById('rua').value=(conteudo.logradouro);
-            document.getElementById('bairro').value=(conteudo.bairro);
-            document.getElementById('cidade').value=(conteudo.localidade);
-            document.getElementById('uf').value=(conteudo.uf);
-            
-        } //end if.
-        else {
-            //CEP não Encontrado.
-            limpa_formulário_cep();
-            alert("CEP não encontrado.");
-        }
-    }
+  toastBody.textContent = message;
 
-function pesquisacep(valor) {
+  // Define a cor de fundo conforme o tipo
+  toastEl.className = "toast align-items-center border-0 text-white";
+  switch (type) {
+    case "success":
+      toastEl.classList.add("bg-success");
+      break;
+    case "danger":
+      toastEl.classList.add("bg-danger");
+      break;
+    case "warning":
+      toastEl.classList.add("bg-warning", "text-dark");
+      break;
+    default:
+      toastEl.classList.add("bg-primary");
+  }
 
-        //Nova variável "cep" somente com dígitos.
-        var cep = valor.replace(/\D/g, '');
-
-        //Verifica se campo cep possui valor informado.
-        if (cep != "") {
-
-            //Expressão regular para validar o CEP.
-            var validacep = /^[0-9]{8}$/;
-
-            //Valida o formato do CEP.
-            if(validacep.test(cep)) {
-
-                //Preenche os campos com "..." enquanto consulta webservice.
-                document.getElementById('rua').value="...";
-                document.getElementById('bairro').value="...";
-                document.getElementById('cidade').value="...";
-                document.getElementById('uf').value="...";
-                
-
-                //Cria um elemento javascript.
-                var script = document.createElement('script');
-
-                //Sincroniza com o callback.
-                script.src = 'https://viacep.com.br/ws/'+ cep + '/json/?callback=meu_callback';
-
-                //Insere script no documento e carrega o conteúdo.
-                document.body.appendChild(script);
-
-            } //end if.
-            else {
-                //cep é inválido.
-                limpa_formulário_cep();
-                alert("Formato de CEP inválido.");
-            }
-        } //end if.
-        else {
-            //cep sem valor, limpa formulário.
-            limpa_formulário_cep();
-        }
-    };
+  // Exibe o toast com delay de 3 segundos
+  const toast = new bootstrap.Toast(toastEl, { delay: 3000 });
+  toast.show();
+}
