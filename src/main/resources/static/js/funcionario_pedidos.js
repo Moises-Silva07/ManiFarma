@@ -5,7 +5,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   const paginacao = document.getElementById("paginacao");
 
   if (!funcionarioId) {
-    alert("Funcionário não identificado. Faça login novamente.");
+    showModal({
+      title: "Atenção",
+      message: "Funcionário não identificado. Faça login novamente.",
+      type: "warning",
+    });
     window.location.href = "/html/login/login.html";
     return;
   }
@@ -43,7 +47,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       linha.innerHTML = `
         <td>${pedido.id}</td>
         <td>
-          ${pedido.employeeId ? `${pedido.employeeId} (${pedido.employeeNome})` : "—"}
+          ${pedido.employeeId ? `${pedido.employeeId} - ${pedido.employeeNome}` : "—"}
         </td>
         <td>
           <span class="badge ${pedido.status === "CONCLUIDO" ? "bg-success" :

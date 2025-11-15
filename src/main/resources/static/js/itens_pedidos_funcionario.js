@@ -44,8 +44,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         (pedido) => `
           <tr data-id="${pedido.id}">
             <td>${pedido.id}</td>
-            <td>${pedido.clienteId}</td>
-            <td>${pedido.employeeId || "-"}</td>
+            <td>${pedido.clienteId ? `${pedido.clienteId} - ${pedido.clienteNome}` : "—"}</td>
+            <td>${pedido.employeeId ? `${pedido.employeeId} - ${pedido.employeeNome}` : "—"}</td>
             <td>${pedido.status}</td>
             <td>R$ ${pedido.valorTotal?.toFixed(2) || "0.00"}</td>
           </tr>`
@@ -116,7 +116,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (produtosCache.length === 0) {
       const res = await apiRequest("/produtos", "GET", null, true, true);
       if (!res.ok) {
-        alert("Erro ao carregar produtos.");
+        showModal({
+            title: "Erro",
+            message: "Erro ao carregar produtos.",
+            type: "danger",
+        });
         return;
       }
       produtosCache = res.data;
@@ -165,27 +169,46 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 
   // --- 4. Confirmar e enviar ao backend ---
-  btnConfirmarItens.addEventListener("click", async () => {
+btnConfirmarItens.addEventListener("click", async () => {
+
     const itensSelecionados = Object.entries(quantidadesSelecionadas)
-      .filter(([_, qtd]) => qtd > 0)
-      .map(([produtoId, quantidade]) => ({ produtoId: Number(produtoId), quantidade }));
+        .filter(([_, qtd]) => qtd > 0)
+        .map(([produtoId, quantidade]) => ({ produtoId: Number(produtoId), quantidade }));
 
+    // --- Validação: nenhum item selecionado ---
     if (itensSelecionados.length === 0) {
-      alert("Selecione ao menos 1 item!");
-      return;
+        return showModal({
+            title: "Atenção",
+            message: "Selecione ao menos 1 item para adicionar ao pedido.",
+            type: "warning",
+        });
     }
 
-    const response = await apiRequest(`/api/pedidos/${pedidoSelecionado}/itens`, "POST", itensSelecionados, true, true);
+    // --- Envia para o backend ---
+    const response = await apiRequest(
+        `/api/pedidos/${pedidoSelecionado}/itens`,
+        "POST",
+        itensSelecionados,
+        true,
+        true
+    );
 
+    // --- Erro no backend ---
     if (!response.ok) {
-      try {
-        const text = await response.text();
-        console.error("Erro ao adicionar itens - body:", text);
-      } catch (e) {
-        console.error("Erro ao adicionar itens - sem body legível");
-      }
-      alert("Erro ao adicionar itens ao pedido! Veja console para detalhes.");
-      return;
+        return showModal({
+            title: "Erro",
+            message: "Não foi possível adicionar os itens ao pedido.",
+            type: "danger",
+        });
     }
+
+    // --- Sucesso ---
+    showModal({
+        title: "Sucesso!",
+        message: "Itens adicionados ao pedido com sucesso!",
+        type: "success",
+    });
+
+    modal.hide(); // Fecha o modal de itens
   });
 });
