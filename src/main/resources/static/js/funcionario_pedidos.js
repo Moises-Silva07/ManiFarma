@@ -1,3 +1,5 @@
+let pedidosOriginais = []; // manter todos os pedidos 
+
 document.addEventListener("DOMContentLoaded", async () => {
 
   const corpoTabela = document.getElementById("corpoTabela");
@@ -5,10 +7,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   const paginacao = document.getElementById("paginacao");
 
   if (!funcionarioId) {
-    showModal({
-      title: "Atenção",
+    await showModal({
+      title: "Aviso",
       message: "Funcionário não identificado. Faça login novamente.",
-      type: "warning",
+      type: "warning"
     });
     window.location.href = "/html/login/login.html";
     return;
@@ -32,7 +34,51 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   todosPedidos = data;
+  pedidosOriginais = [...data];
   renderizarTabela();
+
+
+  // ==============================
+  // FILTRAR PEDIDOS
+  // ==============================
+  document.getElementById("btnAplicarFiltro").addEventListener("click", () => {
+      const tipo = document.getElementById("tipoFiltro").value;
+      const valor = Number(document.getElementById("valorFiltro").value);
+
+      if (!valor) {
+          showModal({
+              title: "Aviso",
+              message: "Digite um ID válido para filtrar.",
+              type: "warning"
+          });
+          return;
+      }
+
+      let filtrados = pedidosOriginais;
+
+      if (tipo === "pedido") {
+          filtrados = filtrados.filter(p => p.id === valor);
+      }
+      if (tipo === "cliente") {
+          filtrados = filtrados.filter(p => p.clienteId === valor);
+      }
+      if (tipo === "funcionario") {
+          filtrados = filtrados.filter(p => p.employeeId === valor);
+      }
+
+      todosPedidos = filtrados;
+      paginaAtual = 1;
+      renderizarTabela();
+  });
+
+  // LIMPAR FILTRO
+  document.getElementById("btnLimparFiltro").addEventListener("click", () => {
+      todosPedidos = [...pedidosOriginais];
+      paginaAtual = 1;
+      document.getElementById("valorFiltro").value = "";
+      renderizarTabela();
+  });
+
 
   // --- Função para renderizar tabela ---
   function renderizarTabela() {
@@ -200,40 +246,91 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 });
 
-// Função para alterar status do pedido 
+
+// Função alterar Status
 async function alterarStatus(id, novoStatus) {
-  if (!confirm(`Deseja realmente marcar o pedido ${id} como ${novoStatus}?`)) return;
+  const confirmar = await showModal({
+    title: "Confirmar Ação",
+    message: `Deseja realmente marcar o pedido ${id} como ${novoStatus}?`,
+    type: "confirm"
+  });
+
+  if (!confirmar) return;
 
   const { ok } = await apiRequest(`/api/pedidos/${id}/status`, "PUT", { status: novoStatus }, true, true);
+
   if (ok) {
-    alert(`Pedido ${id} atualizado para ${novoStatus}`);
-    location.reload();
+    await showModal({
+      title: "Sucesso!",
+      message: `Pedido ${id} atualizado para ${novoStatus}.`,
+      type: "success"
+    });
+
+    
   } else {
-    alert("Erro ao atualizar o pedido.");
+    showModal({
+      title: "Erro",
+      message: "Erro ao atualizar o pedido.",
+      type: "danger"
+    });
   }
 }
 
-// Função para atribuir o funcionário ao pedido
+// Função Atribuir Funcionario
 async function atribuirFuncionario(pedidoId, funcionarioId) {
-  const { ok } = await apiRequest(`/api/pedidos/${pedidoId}/atribuir`, "PUT", { employeeId: funcionarioId }, true, true);
+  const { ok } = await apiRequest(`/api/pedidos/${pedidoId}/atribuir`,
+    "PUT",
+    { employeeId: funcionarioId },
+    true,
+    true
+  );
+
   if (ok) {
-    alert("Pedido atribuído com sucesso!");
-    location.reload();
+    await showModal({
+      title: "Atribuição Realizada",
+      message: `O pedido ${pedidoId} agora está sob sua responsabilidade.`,
+      type: "success"
+    });
+
   } else {
-    alert("Erro ao atribuir o pedido.");
+    showModal({
+      title: "Erro",
+      message: "Erro ao atribuir o pedido.",
+      type: "danger"
+    });
   }
 }
 
-// Função para gerar o link de pagamento
+// Função para gerar o link de cotação
 async function enviarCotacao(pedidoId) {
-  if (!confirm(`Deseja gerar o link de cotação e enviar ao cliente do pedido #${pedidoId}?`)) return;
+  const confirmar = await showModal({
+    title: "Gerar Cotação",
+    message: `Deseja gerar e enviar a cotação do pedido #${pedidoId}?`,
+    type: "confirm"
+  });
 
-  const { ok, data } = await apiRequest(`/api/pedidos/${pedidoId}/enviar-cotacao`, "POST", null, true, true);
+  if (!confirmar) return;
+
+  const { ok, data } = await apiRequest(
+    `/api/pedidos/${pedidoId}/enviar-cotacao`,
+    "POST",
+    null,
+    true,
+    true
+  );
 
   if (ok) {
-    alert("Link de cotação gerado e e-mail enviado com sucesso!");
-    location.reload();
+    await showModal({
+      title: "Cotação Enviada",
+      message: "O link foi gerado e enviado ao cliente!",
+      type: "success"
+    });
   } else {
-    alert("Erro ao gerar link de cotação: " + (data || ""));
+    showModal({
+      title: "Erro",
+      message: "Erro ao gerar/enviar a cotação: " + (data || ""),
+      type: "danger"
+    });
   }
 }
+

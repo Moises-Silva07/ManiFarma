@@ -1,3 +1,5 @@
+let itensOriginais = []; // salva todos os itens sem filtro
+
 // ==============================================
 // VARIÁVEIS GLOBAIS
 // ==============================================
@@ -26,6 +28,7 @@ async function carregarItens() {
 
   if (ok && Array.isArray(data)) {
     todosItens = data;
+    itensOriginais = [...data]; // salva lista para restaurar depois
     msg.textContent = "";
     paginaAtual = 1;
     renderizarTabela();
@@ -264,4 +267,51 @@ document.getElementById("btnSalvarItem").addEventListener("click", async () => {
       type: "danger"
     });
   }
+});
+
+// ==============================================
+// 10. FILTRO DE ITENS POR ID
+// ==============================================
+
+document.getElementById("btnAplicarFiltro").addEventListener("click", () => {
+  const tipo = document.getElementById("tipoFiltro").value;
+  const valor = document.getElementById("valorFiltro").value.trim();
+
+  if (!valor) {
+    return showModal({
+      title: "Atenção",
+      message: "Digite um ID para filtrar.",
+      type: "warning"
+    });
+  }
+
+  let filtrados = [];
+
+  if (tipo === "item") {
+    filtrados = itensOriginais.filter(i => i.id == valor);
+  }
+
+  if (filtrados.length === 0) {
+    showModal({
+      title: "Nenhum resultado",
+      message: "Nenhum item encontrado com esse ID.",
+      type: "info"
+    });
+  }
+
+  todosItens = filtrados;
+  paginaAtual = 1;
+  renderizarTabela();
+});
+
+
+// ==============================================
+// 11. LIMPAR FILTRO E RESTAURAR LISTA
+// ==============================================
+
+document.getElementById("btnLimparFiltro").addEventListener("click", () => {
+  todosItens = [...itensOriginais];
+  paginaAtual = 1;
+  renderizarTabela();
+  document.getElementById("valorFiltro").value = "";
 });

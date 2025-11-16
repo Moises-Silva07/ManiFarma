@@ -236,6 +236,8 @@ public class PedidoService {
             dto.setEmployeeNome(pedido.getEmployee().getNome());
         }
 
+        dto.setLinkPagamento(pedido.getLinkPagamento());
+
         if (pedido.getItens() != null) {
             dto.setItens(pedido.getItens().stream().map(item -> {
                 PedidoProdutoResponseDTO itemDto = new PedidoProdutoResponseDTO();

@@ -30,11 +30,18 @@ document.addEventListener("DOMContentLoaded", async () => {
            </button>`
         : "Nenhuma";
 
+        const pagamentoCell = pedido.linkPagamento
+          ? `<a href="${pedido.linkPagamento}" target="_blank" class="btn btn-success btn-sm">
+              💳 Pagar Agora
+            </a>`
+          : "Aguardando cotação";
+
       row.innerHTML = `
         <td>${pedido.id}</td>
         <td>${pedido.descricao}</td>
         <td>${pedido.status || "Pendente"}</td>
         <td>${receitaCell}</td>
+        <td>${pagamentoCell}</td>
       `;
       
       tabela.appendChild(row);

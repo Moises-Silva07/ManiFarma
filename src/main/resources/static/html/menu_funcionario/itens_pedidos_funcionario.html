@@ -48,6 +48,36 @@
             <div class="container mt-4">
                 <h2>Produtos x Pedidos</h2>
 
+                <div class="card p-3 mb-4 shadow-sm">
+                    <h5>Filtrar Pedidos</h5>
+
+                    <div class="row g-3 mt-2">
+                        <div class="col-md-4">
+                            <label class="form-label">Filtrar por</label>
+                            <select id="tipoFiltro" class="form-select">
+                                <option value="pedido">ID do Pedido</option>
+                                <option value="cliente">ID do Cliente</option>
+                                <option value="funcionario">ID do Funcionário</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label">Digite o ID</label>
+                            <input type="number" id="valorFiltro" class="form-control" placeholder="Ex: 12">
+                        </div>
+
+                        <div class="col-md-4 d-flex align-items-end">
+                            <button id="btnAplicarFiltro" class="btn btn-primary w-100">
+                                🔍 Aplicar Filtro
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="mt-2 text-end">
+                        <button id="btnLimparFiltro" class="btn btn-secondary btn-sm">Limpar Filtro</button>
+                    </div>
+                </div>
+
                 <div class="table-responsive">
                     <table class="table table-bordered table-hover align-middle" id="tabelaPedidos">
                         <thead class="table-dark">

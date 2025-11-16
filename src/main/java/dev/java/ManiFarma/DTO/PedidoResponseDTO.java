@@ -19,6 +19,8 @@ public class PedidoResponseDTO {
     private Double valorTotal;
     private List<PedidoProdutoResponseDTO> itens;
 
+    private String linkPagamento;
+
     public Long getId() {
         return id;
     }
@@ -106,4 +108,7 @@ public class PedidoResponseDTO {
     public void setEmployeeNome(String employeeNome) {
         this.employeeNome = employeeNome;
     }
+
+    public String getLinkPagamento() { return linkPagamento; }
+    public void setLinkPagamento(String linkPagamento) { this.linkPagamento = linkPagamento; }
 }

@@ -28,8 +28,52 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   // guarda todos os pedidos e renderiza a primeira página
+  let pedidosOriginais = []; // manter todos os pedidos 
+
   todosPedidos = data;
+  pedidosOriginais = [...data];
   renderizarTabela();
+
+  // ==============================
+  // FILTRAR PEDIDOS
+  // ==============================
+  document.getElementById("btnAplicarFiltro").addEventListener("click", () => {
+      const tipo = document.getElementById("tipoFiltro").value;
+      const valor = Number(document.getElementById("valorFiltro").value);
+
+      if (!valor) {
+          showModal({
+              title: "Aviso",
+              message: "Digite um ID válido para filtrar.",
+              type: "warning"
+          });
+          return;
+      }
+
+      let filtrados = pedidosOriginais;
+
+      if (tipo === "pedido") {
+          filtrados = filtrados.filter(p => p.id === valor);
+      }
+      if (tipo === "cliente") {
+          filtrados = filtrados.filter(p => p.clienteId === valor);
+      }
+      if (tipo === "funcionario") {
+          filtrados = filtrados.filter(p => p.employeeId === valor);
+      }
+
+      todosPedidos = filtrados;
+      paginaAtual = 1;
+      renderizarTabela();
+  });
+
+  // LIMPAR FILTRO
+  document.getElementById("btnLimparFiltro").addEventListener("click", () => {
+      todosPedidos = [...pedidosOriginais];
+      paginaAtual = 1;
+      document.getElementById("valorFiltro").value = "";
+      renderizarTabela();
+  });
 
   // --- Função para renderizar a tabela com base na página atual ---
   function renderizarTabela() {
