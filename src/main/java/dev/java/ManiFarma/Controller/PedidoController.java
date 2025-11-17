@@ -39,7 +39,7 @@ public class PedidoController {
 
 
     // CRIAR PEDIDO - Cliente envia apenas descrição + imagem
-
+    // Este método já possui um bom tratamento try...catch
     @PostMapping(consumes = {"multipart/form-data"})
     public ResponseEntity<?> criarPedido(
             @RequestParam("descricao") String descricao,
@@ -88,7 +88,7 @@ public class PedidoController {
 
 
     //  VISUALIZAR/BAIXAR IMAGEM DA RECEITA
-
+    // Este método já possui um bom tratamento try...catch
     @GetMapping("/{id}/receita")
     public ResponseEntity<?> visualizarReceita(@PathVariable Long id) {
         try {
@@ -140,21 +140,23 @@ public class PedidoController {
 
 
     // LISTAR TODOS OS PEDIDOS
-
+    // Este método já possui um bom tratamento try...catch
     @GetMapping
-    public ResponseEntity<List<PedidoResponseDTO>> listarTodosPedidos() {
+    public ResponseEntity<?> listarTodosPedidos() {
         try {
             List<PedidoResponseDTO> pedidos = pedidoService.getAllPedidos();
             return ResponseEntity.ok(pedidos);
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            Map<String, String> error = new HashMap<>();
+            error.put("error", "Erro ao listar todos os pedidos: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
         }
     }
 
 
     //  BUSCAR PEDIDO POR ID
-
+    // Este método já possui um bom tratamento try...catch
     @GetMapping("/{id}")
     public ResponseEntity<?> buscarPedidoPorId(@PathVariable Long id) {
         try {
@@ -176,7 +178,7 @@ public class PedidoController {
 
 
     //  BUSCAR PEDIDOS POR CLIENTE
-
+    // Este método já possui um bom tratamento try...catch
     @GetMapping("/cliente/{clienteId}")
     public ResponseEntity<?> buscarPedidosPorCliente(@PathVariable Long clienteId) {
         try {
@@ -191,9 +193,31 @@ public class PedidoController {
         }
     }
 
+    // ==========================================================
+    // 2. NOVO ENDPOINT ADICIONADO AQUI
+    // ==========================================================
+    @GetMapping("/funcionario/{employeeId}")
+    public ResponseEntity<?> buscarPedidosPorFuncionario(@PathVariable Long employeeId) {
+        try {
+            List<PedidoResponseDTO> pedidos = pedidoService.getPedidosPorFuncionario(employeeId);
+            return ResponseEntity.ok(pedidos);
+
+        } catch (EntityNotFoundException e) { // Captura se o ID do funcionário não existir
+            Map<String, String> error = new HashMap<>();
+            error.put("error", e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Map<String, String> error = new HashMap<>();
+            error.put("error", "Erro ao buscar pedidos do funcionário: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+        }
+    }
+
 
     //  ENVIAR COTAÇÃO - Funcionário gera link e envia email
-
+    // Este método já possui um bom tratamento try...catch
     @PostMapping("/{id}/enviar-cotacao")
     public ResponseEntity<?> enviarCotacao(@PathVariable Long id) {
         try {
@@ -210,6 +234,13 @@ public class PedidoController {
             error.put("error", e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
 
+        } catch (RuntimeException e) { // Captura erros de negócio (ex: pedido sem valor)
+            e.printStackTrace();
+            Map<String, Object> error = new HashMap<>();
+            error.put("success", false);
+            error.put("error", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+
         } catch (Exception e) {
             e.printStackTrace();
             Map<String, Object> error = new HashMap<>();
@@ -221,7 +252,7 @@ public class PedidoController {
 
 
     //  ATRIBUIR FUNCIONÁRIO AO PEDIDO
-
+    // Este método já possui um bom tratamento try...catch
     @PutMapping("/{id}/atribuir")
     public ResponseEntity<?> atribuirFuncionario(
             @PathVariable Long id,
@@ -260,7 +291,7 @@ public class PedidoController {
 
 
     // ALTERAR STATUS DO PEDIDO
-
+    // Este método já possui um bom tratamento try...catch
     @PutMapping("/{id}/status")
     public ResponseEntity<?> alterarStatus(
             @PathVariable Long id,
@@ -304,21 +335,49 @@ public class PedidoController {
         }
     }
 
-    // Endpoit para listar pedidos pelo status
+    // Endpoint para listar pedidos pelo status
+    // Este método já possui um bom tratamento try...catch
     @GetMapping("/status/{status}")
-    public ResponseEntity<List<PedidoResponseDTO>> listarPedidosPorStatus(@PathVariable String status) {
-        List<PedidoResponseDTO> pedidos = pedidoService.getPedidosPorStatus(status);
-        return ResponseEntity.ok(pedidos);
+    public ResponseEntity<?> listarPedidosPorStatus(@PathVariable String status) {
+        try {
+            List<PedidoResponseDTO> pedidos = pedidoService.getPedidosPorStatus(status);
+            return ResponseEntity.ok(pedidos);
+        
+        } catch (IllegalArgumentException e) { // Captura se o status for inválido (ex: "ABCDE")
+            Map<String, String> error = new HashMap<>();
+            error.put("error", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Map<String, String> error = new HashMap<>();
+            error.put("error", "Erro ao listar pedidos por status: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+        }
     }
 
     // Endpoint para puxar o id pedido para adicionar o item
+    // Este método já possui um bom tratamento try...catch
     @PostMapping("/{pedidoId}/itens")
     @Transactional
-    public ResponseEntity<PedidoResponseDTO> adicionarItensAoPedido(
+    public ResponseEntity<?> adicionarItensAoPedido(
             @PathVariable Long pedidoId,
             @RequestBody List<PedidoProdutoRequestDTO> itens) {
+        
+        try {
+            PedidoResponseDTO atualizado = pedidoService.adicionarItensAoPedido(pedidoId, itens);
+            return ResponseEntity.ok(atualizado);
 
-        PedidoResponseDTO atualizado = pedidoService.adicionarItensAoPedido(pedidoId, itens);
-        return ResponseEntity.ok(atualizado);
+        } catch (EntityNotFoundException e) { // Captura se o Pedido ID ou algum Produto ID não existir
+            Map<String, String> error = new HashMap<>();
+            error.put("error", e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+        
+        } catch (Exception e) {
+            e.printStackTrace();
+            Map<String, String> error = new HashMap<>();
+            error.put("error", "Erro ao adicionar itens ao pedido: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+        }
     }
 }

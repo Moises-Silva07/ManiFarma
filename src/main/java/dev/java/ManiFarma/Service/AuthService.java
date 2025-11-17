@@ -9,9 +9,9 @@ import dev.java.ManiFarma.Entity.User;
 import dev.java.ManiFarma.Repository.UserRepository;
 import dev.java.ManiFarma.utils.JwtUtil;
 import org.springframework.stereotype.Service;
-import org.springframework.security.authentication.AuthenticationManager; // Importe AuthenticationManager
+import org.springframework.security.authentication.AuthenticationManager; 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication; // Importe Authentication
+import org.springframework.security.core.Authentication; 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Optional;
@@ -22,18 +22,19 @@ public class AuthService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
-    private final AuthenticationManager authenticationManager; // Injete AuthenticationManager
+    private final AuthenticationManager authenticationManager; 
 
-    public AuthService(UserRepository userRepository, JwtUtil jwtUtil, AuthenticationManager authenticationManager) { // Adicione ao construtor
+    public AuthService(UserRepository userRepository, JwtUtil jwtUtil, AuthenticationManager authenticationManager) { 
         this.userRepository = userRepository;
         this.passwordEncoder = new BCryptPasswordEncoder();
         this.jwtUtil = jwtUtil;
-        this.authenticationManager = authenticationManager; // Inicialize
+        this.authenticationManager = authenticationManager; 
     }
 
     public UserResponseDTO register(UserRegisterRequestDTO request) {
         if (userRepository.existsByEmail(request.getEmail())) {
-            throw new RuntimeException("Email já cadastrado");
+            // CORRIGIDO: Lança uma exceção 400 (Bad Request)
+            throw new IllegalArgumentException("Email já cadastrado");
         }
 
         User newUser;
@@ -70,6 +71,7 @@ public class AuthService {
 
     public UserResponseDTO login(LoginRequest request) {
         //para autenticar o usuário
+        // Este método 'authenticate' lança AuthenticationException se o login falhar
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getSenha())
         );

@@ -216,6 +216,21 @@ public class PedidoService {
                 .collect(Collectors.toList());
     }
 
+    // ==========================================================
+    // 1. NOVO MÉTODO ADICIONADO AQUI
+    // ==========================================================
+    public List<PedidoResponseDTO> getPedidosPorFuncionario(Long employeeId) {
+        // Verifica se o funcionário existe (opcional, mas boa prática)
+        if (!employeeRepository.existsById(employeeId)) {
+             throw new EntityNotFoundException("Funcionário não encontrado com ID: " + employeeId);
+        }
+        
+        return pedidoRepository.findByEmployeeId(employeeId)
+                .stream()
+                .map(this::toDTO)
+                .collect(Collectors.toList());
+    }
+
 
     // CONVERSÃO PARA DTO
 
@@ -262,6 +277,11 @@ public class PedidoService {
     public void gerarLinkEEnviarEmail(Long pedidoId) {
         Pedido pedido = pedidoRepository.findById(pedidoId)
                 .orElseThrow(() -> new EntityNotFoundException("Pedido não encontrado: " + pedidoId));
+        
+        // ADICIONADO: Validação para impedir geração de link sem valor
+        if (pedido.getValorTotal() == null || pedido.getValorTotal() <= 0) {
+            throw new RuntimeException("Não é possível gerar cotação: O pedido #" + pedidoId + " está com valor total R$0,00 ou nulo.");
+        }
 
         // Gera o link de pagamento
         String linkPagamento = paymentService.criarLinkDePagamento(pedido);
@@ -311,8 +331,9 @@ public class PedidoService {
             System.out.println("📝 Status do pedido #" + pedidoId + " alterado para: " + statusEnum);
 
         } catch (IllegalArgumentException e) {
+            // ERRO 400
             throw new IllegalArgumentException("Status inválido enviado: " + novoStatus +
-                    ". Valores aceitos: PENDENTE, ENVIODECOTACAO, PAGO, PREPARACAO, PRONTO, ENTREGUE, CANCELADO");
+                    ". Valores aceitos: PENDENTE, VALIDO, ENVIODECOTACAO, PAGO, CONCLUIDO, CANCELADO");
         }
     }
 
@@ -322,6 +343,7 @@ public class PedidoService {
         try {
             statusEnum = StatusPedido.valueOf(status.toUpperCase());
         } catch (IllegalArgumentException e) {
+            // ERRO 400
             throw new IllegalArgumentException("Status inválido: " + status);
         }
 

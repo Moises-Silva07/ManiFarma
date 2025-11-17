@@ -10,7 +10,11 @@ import dev.java.ManiFarma.Repository.ProdutoRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;
+// ADICIONE ESTE IMPORT
+import jakarta.persistence.EntityNotFoundException;
 
+import org.springframework.stereotype.Service;
+// ... (outros imports)
 @Service
 public class ProdutoService {
 
@@ -29,7 +33,8 @@ public class ProdutoService {
 
     public ProdutoResponseDTO buscarPorId(Long id) {
         Produto entity = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
+                // CORRIGIDO:
+                .orElseThrow(() -> new EntityNotFoundException("Produto não encontrado com ID: " + id));
         return new ProdutoResponseDTO(entity.getId(), entity.getNome(), entity.getPreco());
     }
 
@@ -43,7 +48,8 @@ public class ProdutoService {
 
     public ProdutoResponseDTO atualizar(Long id, ProdutoRequestDTO dto) {
         Produto entity = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
+                // CORRIGIDO:
+                .orElseThrow(() -> new EntityNotFoundException("Produto não encontrado com ID: " + id));
         entity.setNome(dto.getNome());
         entity.setPreco(dto.getPreco());
         Produto atualizado = repository.save(entity);
@@ -52,7 +58,8 @@ public class ProdutoService {
 
     public void deletar(Long id) {
         if (!repository.existsById(id)) {
-            throw new RuntimeException("Produto não encontrado");
+            // CORRIGIDO:
+            throw new EntityNotFoundException("Produto não encontrado com ID: " + id);
         }
         repository.deleteById(id);
     }

@@ -6,7 +6,7 @@ import dev.java.ManiFarma.Entity.Cliente;
 import dev.java.ManiFarma.Entity.Employee;
 import dev.java.ManiFarma.Entity.User;
 import dev.java.ManiFarma.Repository.UserRepository;
-import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.EntityNotFoundException; // Este import já deve existir
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -77,8 +77,6 @@ public class UserService {
         return dto;
     }
 
-    // --- MÉTODOS EXISTENTES (findAll, findById, updateUser, etc.) ---
-    // (O resto dos seus métodos como findAllUsers, findUserById, updateUser, etc., permanecem aqui sem alterações)
 
     public List<UserResponseDTO> findAllUsers() {
         return userRepository.findAll().stream()
@@ -126,13 +124,19 @@ public class UserService {
     }
 
     public void updatePassword(Long id, String senhaAtual, String novaSenha) {
+        // 1. Busca o usuário. Se não achar, lança "EntityNotFoundException" (causa o Erro 404)
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado com o ID: " + id));
 
+        // 2. VERIFICA SE A SENHA ATUAL BATE (usando o encoder)
         if (!passwordEncoder.matches(senhaAtual, user.getSenha())) {
-            throw new RuntimeException("Senha atual incorreta!");
+            
+            // 3. Se não bater, lança "IllegalArgumentException" (causa o Erro 400)
+            throw new IllegalArgumentException("Senha atual incorreta!");
         }
 
+        // 4. Se chegou aqui, a senha atual estava correta.
+        // Codifica a nova senha e salva no banco.
         user.setSenha(passwordEncoder.encode(novaSenha));
         userRepository.save(user);
     }
