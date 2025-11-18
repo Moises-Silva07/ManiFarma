@@ -1,0 +1,91 @@
+/* Fundo geral do main */
+main {
+  background-color: #101820;
+  color: #FEE715;
+  padding: 40px;
+  min-height: 90vh;
+}
+
+/* Cabeçalho do main (logo + texto) */
+.main-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 40px;
+  border-bottom: 2px solid #FEE715;
+  padding-bottom: 20px;
+}
+
+.main-logo {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+}
+
+.main-header h1 {
+  font-size: 1.8rem;
+  color: #FEE715;
+  margin: 0;
+}
+
+.main-header p {
+  color: #cfcfcf;
+  font-size: 0.95rem;
+}
+
+/* Container dos módulos */
+.container-programa {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+/* Cada bloco */
+.campo-programa {
+  background: #101820;
+  border: 1px solid #FEE715;
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.campo-programa:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.campo-programa h2 {
+  margin-bottom: 10px;
+  color: #FEE715;
+  font-size: 1.2rem;
+}
+
+/* Botão */
+.btn-acesso {
+  display: inline-block;
+  background-color: #FEE715;
+  color: #101820;
+  padding: 8px 14px;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+  font-weight: 500;
+}
+
+.btn-acesso:hover {
+  background-color: #FEE715;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .main-header {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .main-logo {
+    width: 60px;
+    height: 60px;
+  }
+}

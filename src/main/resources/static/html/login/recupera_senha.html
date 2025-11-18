@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="/css/global/global_login.css">  
+    <link rel="stylesheet" href="/css/recupera_senha.css">
+
+    <title>Recuperação de Senha</title>
+</head>
+<body>
+<main>
+    <section aria-label="Formulário Recuperar Senha">
+        <div class="container">
+
+            <h1>Recuperar Senha</h1>
+            <p>Digite seu email cadastrado para receber um link <br>de redefinição de senha.</p>
+
+            <form id="form">
+
+                <div class="field">
+                    <label for="email">E-mail:</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+
+                <div class="container-btn">
+                    <button type="submit" class="btn">Enviar</button>
+                    
+                    <a href="/html/login/login.html" class="btn">Login</a>
+                </div>
+                
+            </form>
+        </div>
+
+        <div class="message">
+            <p id="message" role="alert"></p>
+        </div>
+
+    </section>
+</main>
+
+    <footer>
+        <p>&copy; 2025 - Todos os direitos reservados - ManiFarma</p>
+    </footer>
+   
+    <script src="/js/main.js" defer></script>
+    <script src="/js/recuperar_senha.js" defer></script>
+</body>
+</html>

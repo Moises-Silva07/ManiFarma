@@ -1,0 +1,35 @@
+/* Link "esqueceu a senha" */
+.forgot {
+  font-size: 0.9em;
+  color: #FEE715;
+  text-decoration: none;
+  margin-bottom: 10px;
+  margin-top: 2px;
+  align-self: flex-end; /* joga para a direita */
+}
+
+.forgot:hover {
+  text-decoration: underline;
+}
+
+/* Link de criar conta */
+p {
+  margin-top: 20px;
+  font-size: 0.9em;
+  color: #FEE715;
+}
+
+.signup {
+  color: #28a745;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.signup:hover {
+  text-decoration: underline;
+}
+
+footer {
+  font-size: 16px;
+}
+

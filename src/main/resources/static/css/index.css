@@ -1,0 +1,33 @@
+/* Reset global */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+:root {
+  --bg-color: #101820;
+  --primary-color: #FEE715;
+  --success-color: #28a745;
+}
+
+body {
+  height: 100vh;
+  background: #101820;
+}
+
+.navbar {
+    background-color: #FEE715;
+    padding: 20px;
+}
+
+.carousel-item {
+    height: 500px;
+    width: 100%;
+}
+
+/* Rodapé */
+footer {
+ 
+}

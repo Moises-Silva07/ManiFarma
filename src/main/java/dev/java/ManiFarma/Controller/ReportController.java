@@ -1,0 +1,52 @@
+package dev.java.ManiFarma.Controller;
+
+import dev.java.ManiFarma.DTO.ClientReportDTO;
+import dev.java.ManiFarma.DTO.EmployeeReportDTO;
+import dev.java.ManiFarma.DTO.ReportSummaryDTO;
+import dev.java.ManiFarma.Entity.Pedido;
+import dev.java.ManiFarma.Service.ReportService;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/reports")
+public class ReportController {
+
+    private final ReportService service;
+
+    public ReportController(ReportService service) {
+        this.service = service;
+    }
+
+    @GetMapping("/summary")
+    public ResponseEntity<ReportSummaryDTO> summary() {
+        return ResponseEntity.ok(service.getSummary());
+    }
+
+    @GetMapping("/orders")
+    public ResponseEntity<List<Pedido>> orders(
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to) {
+        return ResponseEntity.ok(service.getOrdersBetween(from, to));
+    }
+
+    @GetMapping("/clients/top")
+    public ResponseEntity<List<ClientReportDTO>> topClients(
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to,
+            @RequestParam(defaultValue = "10") int limit) {
+        return ResponseEntity.ok(service.getTopClients(from, to, limit));
+    }
+
+    @GetMapping("/employees/top")
+    public ResponseEntity<List<EmployeeReportDTO>> topEmployees(
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to,
+            @RequestParam(defaultValue = "10") int limit) {
+        return ResponseEntity.ok(service.getTopEmployees(from, to, limit));
+    }
+}

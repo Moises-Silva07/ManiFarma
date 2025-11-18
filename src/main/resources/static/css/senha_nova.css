@@ -1,0 +1,34 @@
+
+.container p {
+  font-size: 13px;
+  color: #28a745;
+  
+  padding-bottom: 20px;
+}
+
+.container-btn {
+  padding-top: 10px;
+  display: flex;
+  justify-content: center;
+  gap: 5%; 
+  align-items: center;
+  width: 100%;
+}
+
+.btn {
+  width: 100%;
+  text-decoration: none;
+  padding: 12px;
+  background: #FEE715;
+  color: #101820;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  border: none;
+  font-size: 1em;
+  transition: 0.3s;
+}
+
+.btn:hover {
+  background: #92850c;
+}

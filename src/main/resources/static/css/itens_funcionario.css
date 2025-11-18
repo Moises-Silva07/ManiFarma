@@ -1,0 +1,56 @@
+.pagination .page-link {
+  color: #101820;      
+  border-color: #FEE715;
+}
+
+.pagination .page-item.active .page-link {
+  background-color: #FEE715;
+  border-color: #FEE715;
+  color: #101820;                      
+}
+
+.pagination .page-link:hover {
+  background-color: #FEE715;
+  color: #101820;
+}
+
+tr.selecionada {
+  background-color: #adadad !important; 
+}
+
+h2 {
+  text-align: center;
+  color:#FEE715;
+  padding-bottom: 10px;
+}
+
+.button-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.button {
+  width: 100%;
+  padding: 12px;
+  margin: 20px 20px 0px 20px;
+  background: #FEE715;
+  color: #101820;
+  border: none; 
+  cursor: pointer; /* Muda cursor para mãozinha */
+  font-size: 1em;
+  font-weight: bold;
+  transition: 0.3s;  /* Suaviza animações */
+}
+
+.button:hover {
+  background: #92850c;
+}
+
+.button:focus {
+  outline: 2px solid #FEE715;
+  outline-offset: 2px;
+}
+
+tr.selecionada {
+  background-color: rgb(116, 116, 116) !important;
+}

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="/css/global/global_login.css">
+    <link rel="stylesheet" href="/css/senha_nova.css">
+
+    <title>Senha Nova</title>
+</head>
+<body>
+    <main>
+        <section aria-label="Formulário Senha Nova">
+            <div class="container">
+
+                <h1>Redefinir Senha</h1>
+                <p>Crie uma nova senha para sua conta.</p>
+
+                <form id="form">
+
+                    <div class="field">
+                        <label for="novaSenha">Nova Senha:</label>
+                        <input type="password" id="novaSenha" name="novaSenha" required > <!-- REQUIRED: Obriga o preenchimento do campo -->
+                    </div>
+                
+                    <div class="field">
+                        <label for="novaSenha">Confirmar Nova Senha:</label>
+                        <input type="password" id="novaSenha" name="novaSenha" required>
+                    </div>
+                    
+                    <div class="container-btn">
+                        <button type="submit" class="btn">Cadastrar</button>
+                    
+                        <a href="/html/login/login.html" class="btn">Login</a>
+                    </div>
+
+                </form>
+            </div>
+
+            <div class="message">
+                <p id="message" role="alert"></p>
+            </div>
+            
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 - Todos os direitos reservados - ManiFarma</p>
+    </footer>
+
+    <script src="/js/main.js" defer></script>
+    <script src="#" defer></script>
+</body>
+</html>

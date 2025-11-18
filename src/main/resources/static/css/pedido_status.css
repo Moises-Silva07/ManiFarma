@@ -1,0 +1,31 @@
+.modal-header {
+  background-color: #FEE715;
+}
+
+h2 {
+  text-align: center;
+  color:#FEE715;
+  padding-bottom: 10px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+table, th, td {
+  border: 1px solid #FEE715;
+  text-align: center;
+  padding: 10px;
+}
+
+th {
+  background: #101820;
+  color: #FEE715;
+}
+
+tbody {
+  color: #e6e6e6;
+}
+
