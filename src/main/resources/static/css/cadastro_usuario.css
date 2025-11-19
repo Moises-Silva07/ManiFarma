@@ -23,3 +23,33 @@
 .btn:hover {
   background: #92850c;
 }
+
+@media (max-width: 768px) {
+  .container-btn {
+    flex-direction: column;
+    gap: 15px;
+    width: 90%;
+    margin: 0 auto;
+  }
+
+  .btn {
+    width: 100%;
+    font-size: 0.95em;
+    padding: 14px;
+  }
+}
+
+/* Telas até 480px (smartphones pequenos) */
+@media (max-width: 480px) {
+  .container-btn {
+    gap: 12px;
+    width: 100%;
+    padding: 0 10px;
+  }
+
+  .btn {
+    font-size: 0.9em;
+    padding: 12px;
+    border-radius: 6px;
+  }
+}

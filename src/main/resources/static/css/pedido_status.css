@@ -29,3 +29,33 @@ tbody {
   color: #e6e6e6;
 }
 
+@media (max-width: 768px) {
+
+  h2 {
+    font-size: 1.4em;
+    padding-bottom: 8px;
+  }
+
+  table, th, td {
+    font-size: 0.9em;
+    padding: 8px;
+  }
+
+  table {
+    display: block;
+    overflow-x: auto; /* Adiciona scroll horizontal se necessário */
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 480px) {
+
+  h2 {
+    font-size: 1.2em;
+  }
+
+  table, th, td {
+    font-size: 0.8em;
+    padding: 6px;
+  }
+}

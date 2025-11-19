@@ -36,5 +36,32 @@ button:focus {
   outline: 2px solid #FEE715;
   outline-offset: 2px;
 }
+@media (max-width: 768px) {
+  .container-btn {
+    flex-direction: column;
+    gap: 15px;
+    width: 90%;
+    margin: 0 auto;
+  }
 
+  .btn {
+    width: 100%;
+    padding: 14px;
+    font-size: 0.95em;
+  }
+}
 
+/* Celulares pequenos */
+@media (max-width: 480px) {
+  .container-btn {
+    gap: 12px;
+    width: 100%;
+    padding: 0 10px;
+  }
+
+  .btn {
+    padding: 12px;
+    font-size: 0.9em;
+    border-radius: 6px;
+  }
+}

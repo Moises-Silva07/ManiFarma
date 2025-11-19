@@ -37,3 +37,51 @@ textarea {
   background: #92850c;
 }
 
+@media (max-width: 768px) {
+
+  label {
+    font-size: 0.95em;
+  }
+
+  input {
+    font-size: 0.95em;
+    padding: 8px;
+  }
+
+  textarea {
+    height: 120px;
+    font-size: 0.95em;
+    padding: 8px;
+  }
+
+  .btn {
+    width: 100%;
+    padding: 10px;
+    font-size: 0.95em;
+  }
+}
+
+@media (max-width: 480px) {
+
+  label {
+    font-size: 0.85em;
+  }
+
+  input {
+    font-size: 0.85em;
+    padding: 7px;
+  }
+
+  textarea {
+    height: 100px;
+    font-size: 0.85em;
+    padding: 7px;
+  }
+
+  .btn {
+    width: 100%;
+    padding: 10px;
+    font-size: 0.85em;
+    border-radius: 6px;
+  }
+}

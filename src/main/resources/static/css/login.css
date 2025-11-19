@@ -33,3 +33,42 @@ footer {
   font-size: 16px;
 }
 
+@media (max-width: 768px) {
+
+  .forgot {
+    font-size: 0.85em;
+    align-self: center; /* Centraliza no mobile para não ficar apertado */
+  }
+
+  p {
+    font-size: 0.85em;
+    text-align: center;
+  }
+
+  footer {
+    font-size: 14px;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+
+  .forgot {
+    font-size: 0.8em;
+    margin-top: 5px;
+    align-self: center;
+  }
+
+  p {
+    font-size: 0.8em;
+    margin-top: 15px;
+  }
+
+  .signup {
+    font-size: 0.9em;
+  }
+
+  footer {
+    font-size: 13px;
+  }
+}

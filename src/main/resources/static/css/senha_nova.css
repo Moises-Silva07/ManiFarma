@@ -32,3 +32,52 @@
 .btn:hover {
   background: #92850c;
 }
+@media (max-width: 768px) {
+
+  .container p {
+    font-size: 12px;
+    text-align: center;
+  }
+
+  .container-btn {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .btn {
+    width: 90%;
+    font-size: 0.95em;
+  }
+}
+
+/* Telas até 480px (celulares médios/pequenos) */
+@media (max-width: 480px) {
+
+  .container p {
+    font-size: 11px;
+    padding-bottom: 16px;
+  }
+
+  .container-btn {
+    gap: 10px;
+  }
+
+  .btn {
+    width: 100%;
+    padding: 10px;
+    font-size: 0.9em;
+  }
+}
+
+/* Telas muito pequenas (até 360px) */
+@media (max-width: 360px) {
+
+  .container p {
+    font-size: 10px;
+  }
+
+  .btn {
+    font-size: 0.85em;
+    padding: 9px;
+  }
+}

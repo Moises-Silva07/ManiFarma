@@ -1,17 +1,43 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Relatórios de Pedidos - ManiFarma</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Relatórios & Dashboard - ManiFarma</title>
+
     <link rel="stylesheet" href="../../css/relatorios_pedido.css">
+
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 <nav class="navbar">
-    <h1 class="logo">📊 Relatórios - ManiFarma</h1>
+    <h1 class="logo">📊 ManiFarma — Relatórios e Dashboard</h1>
 </nav>
 
 <main class="container">
+    <section class="card filtro">
+        <h2>Filtro de Data</h2>
+        <div class="filtro-row">
+            <div class="campo">
+                <label for="fromDate">De</label>
+                <input id="fromDate" type="date" />
+            </div>
+            <div class="campo">
+                <label for="toDate">Até</label>
+                <input id="toDate" type="date" />
+            </div>
+            <div class="campo">
+                <label for="limit">Mostrar top</label>
+                <input id="limit" type="number" min="1" max="20" value="5" />
+            </div>
+            <div class="acoes">
+                <button id="btnAplicar">Aplicar</button>
+                <button id="btnReset">Reset</button>
+            </div>
+        </div>
+    </section>
+
     <section class="card resumo">
         <h2>Resumo Geral</h2>
         <div class="grid">
@@ -40,49 +66,229 @@
                 <p id="cancelados">0</p>
             </div>
         </div>
+        <p class="muted" id="ultimaAtualizacao">—</p>
     </section>
 
-    <section class="card">
-        <h2>Última Atualização</h2>
-        <p id="ultimaAtualizacao">Carregando...</p>
+    <section class="card dashboard">
+        <h2>Dashboard</h2>
+        <div class="chart-grid">
+            <div class="chart-card">
+                <h3>Distribuição por Status</h3>
+                <canvas id="statusChart"></canvas>
+            </div>
+            <div class="chart-card">
+                <h3>Top Clientes</h3>
+                <canvas id="clientsChart"></canvas>
+            </div>
+            <div class="chart-card">
+                <h3>Top Atendentes</h3>
+                <canvas id="employeesChart"></canvas>
+            </div>
+        </div>
     </section>
-
-    <button id="btnAtualizar">🔄 Atualizar Relatório</button>
 </main>
 
 <footer>
-    <p>© 2025 ManiFarma - Sistema de Relatórios</p>
+    <p>© 2025 ManiFarma</p>
 </footer>
 
+
+<script src="/js/validarToken.js"></script>
+
 <script>
-    const API_URL = "http://localhost:8080/api/reports/summary";
+    // Verifica se o usuário está logado com Token
+    validarToken(); 
 
-    async function carregarRelatorio() {
-        try {
-            const resposta = await fetch(API_URL);
-            if (!resposta.ok) throw new Error("Erro ao buscar os dados.");
-            const dados = await resposta.json();
 
-            document.getElementById("totalPedidos").textContent = dados.totalPedidos;
-            document.getElementById("receitaTotal").textContent = `R$ ${dados.receitaTotal.toFixed(2)}`;
-            document.getElementById("pendentes").textContent = dados.pendentes;
-            document.getElementById("pagos").textContent = dados.pagos;
-            document.getElementById("concluidos").textContent = dados.concluidos;
-            document.getElementById("cancelados").textContent = dados.cancelados;
+    // =========== CONFIGURAÇÃO DOS ENDPOINTS ===========
+    const API_SUMMARY = "/api/reports/summary";
+    const API_TOP_CLIENTS = "/api/reports/top-clients";      // ?from=YYYY-MM-DD&to=YYYY-MM-DD&limit=N
+    const API_TOP_EMPLOYEES = "/api/reports/top-employees";// ?from=YYYY-MM-DD&to=YYYY-MM-DD&limit=N
 
-            const data = new Date();
-            document.getElementById("ultimaAtualizacao").textContent = data.toLocaleString("pt-BR");
+    // Chart instances
+    let statusChart = null;
+    let clientsChart = null;
+    let employeesChart = null;
 
-        } catch (erro) {
-            console.error("Erro ao carregar relatório:", erro);
-            document.getElementById("ultimaAtualizacao").textContent = "Erro ao carregar os dados.";
-        }
+    // util: format BRL
+    function fmtBRL(value) {
+      return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
     }
 
-    document.getElementById("btnAtualizar").addEventListener("click", carregarRelatorio);
+    // fetch summary and update UI
+    async function loadSummary() {
+      try {
+        const res = await fetch(API_SUMMARY);
+        if (!res.ok) throw new Error('Falha ao carregar resumo');
+        const data = await res.json();
 
-    // Carrega automaticamente ao abrir
-    carregarRelatorio();
+        document.getElementById('totalPedidos').textContent = data.totalPedidos ?? 0;
+        document.getElementById('receitaTotal').textContent = fmtBRL(Number(data.receitaTotal ?? 0));
+        document.getElementById('pendentes').textContent = data.pendentes ?? 0;
+        document.getElementById('pagos').textContent = data.pagos ?? 0;
+        document.getElementById('concluidos').textContent = data.concluidos ?? 0;
+        document.getElementById('cancelados').textContent = data.cancelados ?? 0;
+
+        document.getElementById('ultimaAtualizacao').textContent = 'Atualizado: ' + (new Date()).toLocaleString('pt-BR');
+
+        // update status chart
+        updateStatusChart({
+          pendentes: data.pendentes ?? 0,
+          pagos: data.pagos ?? 0,
+          concluidos: data.concluidos ?? 0,
+          cancelados: data.cancelados ?? 0
+        });
+
+      } catch (err) {
+        console.error(err);
+        document.getElementById('ultimaAtualizacao').textContent = 'Erro ao carregar resumo';
+      }
+    }
+
+    // fetch top clients
+    async function loadTopClients(from, to, limit) {
+      const params = new URLSearchParams();
+      if (from) params.set('from', from);
+      if (to) params.set('to', to);
+      if (limit) params.set('limit', limit);
+      const url = API_TOP_CLIENTS + (params.toString() ? '?' + params.toString() : '');
+
+      try {
+        const res = await fetch(url);
+        if (!res.ok) throw new Error('Falha ao carregar top clients');
+        const list = await res.json();
+        // expected: array with elements having nome and totalValor or similar
+        const labels = list.map(item => item.nome ?? item.name ?? ('Cliente ' + item.id));
+        const values = list.map(item => Number(item.totalValor ?? item.valor ?? item.total ?? 0));
+        updateBarChart(clientsChart, 'clientsChart', labels, values, 'Receita (R$)');
+      } catch (err) {
+        console.error(err);
+        updateBarChart(clientsChart, 'clientsChart', [], [], 'Receita (R$)');
+      }
+    }
+
+    // fetch top employees
+    async function loadTopEmployees(from, to, limit) {
+      const params = new URLSearchParams();
+      if (from) params.set('from', from);
+      if (to) params.set('to', to);
+      if (limit) params.set('limit', limit);
+      const url = API_TOP_EMPLOYEES + (params.toString() ? '?' + params.toString() : '');
+
+      try {
+        const res = await fetch(url);
+        if (!res.ok) throw new Error('Falha ao carregar top employees');
+        const list = await res.json();
+        const labels = list.map(item => item.nome ?? item.name ?? ('Emp ' + item.id));
+        const values = list.map(item => Number(item.totalValor ?? item.valor ?? item.total ?? 0));
+        updateBarChart(employeesChart, 'employeesChart', labels, values, 'Receita (R$)');
+      } catch (err) {
+        console.error(err);
+        updateBarChart(employeesChart, 'employeesChart', [], [], 'Receita (R$)');
+      }
+    }
+
+    // ====== CHART HELPERS ======
+    function updateStatusChart(counts) {
+      const ctx = document.getElementById('statusChart').getContext('2d');
+      const labels = ['Pendentes', 'Pagos', 'Concluídos', 'Cancelados'];
+      const data = [counts.pendentes || 0, counts.pagos || 0, counts.concluidos || 0, counts.cancelados || 0];
+
+      if (statusChart) statusChart.destroy();
+      statusChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+          labels,
+          datasets: [{
+            data,
+            backgroundColor: ['#f39c12', '#2ecc71', '#3498db', '#e74c3c']
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: { legend: { position: 'bottom' } }
+        }
+      });
+    }
+
+    function updateBarChart(chartInstance, canvasId, labels, values, labelName) {
+      const ctx = document.getElementById(canvasId).getContext('2d');
+
+      if (chartInstance) chartInstance.destroy();
+
+      return (canvasId === 'clientsChart' ? clientsChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [{
+            label: labelName,
+            data: values,
+            backgroundColor: 'rgba(254,231,21,0.9)'
+          }]
+        },
+        options: {
+          indexAxis: 'y',
+          responsive: true,
+          plugins: {
+            legend: { display: false }
+          },
+          scales: {
+            x: { ticks: { callback: (v)=> 'R$ ' + Number(v).toLocaleString('pt-BR') } }
+          }
+        }
+      }) : employeesChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [{
+            label: labelName,
+            data: values,
+            backgroundColor: 'rgba(52,152,219,0.9)'
+          }]
+        },
+        options: {
+          indexAxis: 'y',
+          responsive: true,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { ticks: { callback: (v)=> 'R$ ' + Number(v).toLocaleString('pt-BR') } }
+          }
+        }
+      }));
+    }
+
+    // ====== CONTROLES DO FILTRO ======
+    document.getElementById('btnAplicar').addEventListener('click', applyFilter);
+    document.getElementById('btnReset').addEventListener('click', resetFilter);
+
+    function getFilterValues() {
+      const from = document.getElementById('fromDate').value || null;
+      const to = document.getElementById('toDate').value || null;
+      const limit = parseInt(document.getElementById('limit').value || '5', 10);
+      return { from, to, limit };
+    }
+
+    async function applyFilter() {
+      const { from, to, limit } = getFilterValues();
+      // reload all data with filter
+      await loadSummary(); // summary does not depend on dates in this implementation
+      await loadTopClients(from, to, limit);
+      await loadTopEmployees(from, to, limit);
+    }
+
+    async function resetFilter() {
+      document.getElementById('fromDate').value = '';
+      document.getElementById('toDate').value = '';
+      document.getElementById('limit').value = '5';
+      await applyFilter();
+    }
+
+    // inicialização
+    (async function init() {
+      await loadSummary();
+      await loadTopClients(null, null, 5);
+      await loadTopEmployees(null, null, 5);
+    })();
 </script>
 </body>
 </html>

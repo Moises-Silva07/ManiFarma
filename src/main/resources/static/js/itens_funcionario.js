@@ -1,3 +1,6 @@
+// Verifica se o usuário está logado com Token
+// validarToken(); 
+
 let itensOriginais = []; // salva todos os itens sem filtro
 
 // ==============================================

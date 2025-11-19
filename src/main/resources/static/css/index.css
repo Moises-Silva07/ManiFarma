@@ -1,33 +1,185 @@
-/* Reset global */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, Helvetica, sans-serif;
-}
-
 :root {
-  --bg-color: #101820;
-  --primary-color: #FEE715;
-  --success-color: #28a745;
+  --bg-dark: #101820;
+  --primary: #FEE715;
+  --light-bg: #f8f9fa;
+  --text-dark: #101820;
 }
 
 body {
-  height: 100vh;
-  background: #101820;
+  background: var(--bg-dark);
+  color: #fff;
+  font-family: Arial, sans-serif;
 }
 
-.navbar {
-    background-color: #FEE715;
-    padding: 20px;
+.custom-navbar {
+  background: var(--primary);
 }
 
-.carousel-item {
-    height: 500px;
-    width: 100%;
+.custom-navbar .navbar-brand,
+.custom-navbar .nav-link {
+  color: var(--text-dark) !important;
+  font-weight: 600;
 }
 
-/* Rodapé */
-footer {
- 
+/* HERO */
+.hero {
+  height: 80vh;
+  background: linear-gradient(rgba(16,24,32,0.85), rgba(16,24,32,0.85)), url('/img/hero_farmacia.jpg') center/cover no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.hero-title {
+  font-size: 3rem;
+  color: var(--primary);
+  font-weight: bold;
+}
+
+.hero-subtitle {
+  font-size: 1.25rem;
+  color: #ffffffcc;
+}
+
+.btn-hero {
+  background: var(--primary);
+  color: var(--text-dark);
+  padding: 12px 28px;
+  border-radius: 8px;
+  transition: background 0.3s;
+}
+
+.btn-hero:hover {
+  background: #e5d300;
+}
+
+.btn-outline-hero {
+  border: 2px solid var(--primary);
+  color: var(--primary);
+  padding: 12px 28px;
+  border-radius: 8px;
+  transition: background 0.3s, color 0.3s;
+}
+
+.btn-outline-hero:hover {
+  background: var(--primary);
+  color: var(--text-dark);
+}
+
+/* Seção Como Funciona */
+#como-funciona {
+  background: var(--light-bg);
+  color: var(--text-dark);
+}
+
+.step-icon {
+  font-size: 2rem;
+  width: 60px;
+  height: 60px;
+  line-height: 60px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: var(--text-dark);
+  margin: 0 auto 15px;
+  font-weight: bold;
+}
+
+/* Categorias */
+#categorias {
+  background: var(--bg-dark);
+}
+
+.categoria-card {
+  padding: 20px;
+}
+
+.categoria-icon {
+  font-size: 2.5rem;
+}
+
+/* Benefícios */
+.benefit h5 {
+  color: var(--primary);
+  margin-bottom: 10px;
+}
+
+/* Sobre nós */
+#sobre-nos {
+  background: var(--bg-dark);
+}
+
+/* FAQ */
+.accordion-button {
+  background: var(--primary);
+  color: var(--text-dark);
+}
+
+.accordion-button:not(.collapsed) {
+  background: darkgoldenrod;
+}
+
+/* Contato */
+section.py-4 {
+  background: var(--bg-dark);
+}
+
+/* ------ Rodapé ------ */
+.footer {
+  background-color: #0e141a;
+  color: #FEE715;
+  padding: 40px 20px 20px;
+  margin-top: 50px;
+  font-family: Arial, sans-serif;
+}
+
+.footer-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 30px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.footer-col h3,
+.footer-col h4 {
+  margin-bottom: 10px;
+  color: #FEE715;
+}
+
+.footer-col p {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9em;
+}
+
+.footer-col ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-col ul li {
+  margin-bottom: 8px;
+}
+
+.footer-col a {
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.7);
+  transition: color 0.3s;
+}
+
+.footer-col a:hover {
+  color: #FEE715;
+}
+
+.footer-divider {
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  margin: 30px auto;
+  width: 90%;
+}
+
+.footer-bottom {
+  text-align: center;
+  font-size: 0.85em;
+  color: rgba(255, 255, 255, 0.6);
 }

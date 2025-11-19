@@ -1,4 +1,6 @@
-// Verifica se o usuário está logado
+// Verifica se o usuário está logado com Token
+validarToken(); 
+
 document.addEventListener("DOMContentLoaded", async () => {
   const clienteId = localStorage.getItem("userId");
   const tabela = document.getElementById("tabelaPedidos");

@@ -31,3 +31,40 @@
 .btn:hover {
   background: #92850c;
 }
+
+@media (max-width: 768px) {
+
+  .container p {
+    font-size: 12px;
+    text-align: center;
+  }
+
+  .container-btn {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .btn {
+    width: 90%;
+    font-size: 0.95em;
+    padding: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+
+  .container p {
+    font-size: 11px;
+  }
+
+  .container-btn {
+    width: 100%;
+    gap: 10px;
+  }
+
+  .btn {
+    width: 100%;
+    font-size: 0.9em;
+    padding: 10px;
+  }
+}

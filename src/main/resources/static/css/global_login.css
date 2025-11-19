@@ -130,3 +130,63 @@ footer {
       font-size: 13px;
     }
 }
+
+@media (max-width: 768px) {
+  .container h1 {
+    font-size: 1.6rem;
+    text-align: center;
+  }
+
+  .field {
+    width: 100%;
+  }
+
+  .field label {
+    font-size: 14px;
+  }
+
+  .field input {
+    padding: 8px;
+    font-size: 0.95em;
+  }
+
+  .excluirConta__container {
+    padding-top: 30px;
+    text-align: center;
+  }
+
+  .excluirConta__container h2 {
+    font-size: 1.4rem;
+  }
+
+  .excluirConta__container p {
+    font-size: 0.95rem;
+    padding: 0 10px;
+  }
+}
+
+/* Celulares pequenos */
+@media (max-width: 480px) {
+  .container h1 {
+    font-size: 1.4rem;
+    padding-bottom: 8px;
+  }
+
+  .field label {
+    font-size: 13px;
+  }
+
+  .field input {
+    padding: 7px;
+    font-size: 0.9em;
+    border-radius: 6px;
+  }
+
+  .excluirConta__container h2 {
+    font-size: 1.2rem;
+  }
+
+  .excluirConta__container p {
+    font-size: 0.9rem;
+  }
+}

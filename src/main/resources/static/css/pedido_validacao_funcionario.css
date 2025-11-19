@@ -20,3 +20,16 @@ h2 {
   color:#FEE715;
   padding-bottom: 10px;
 }
+@media (max-width: 768px) {
+  h2 {
+    font-size: 1.4em;
+    padding-bottom: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  h2 {
+    font-size: 1.2em;
+    padding-bottom: 6px;
+  }
+}

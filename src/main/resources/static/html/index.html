@@ -1,79 +1,248 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-
-    <link rel="stylesheet" href="/css/index.css">
-
-    <title>ManiFarma</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ManiFarma Manipulação</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/index.css" />
 </head>
 <body>
-    <!-- Start nav bar -->
-    <nav class="navbar navbar-expand-lg">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="/html/index.html">ManiFarma</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg custom-navbar">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="#">ManiFarma</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="#como-funciona">Como funciona</a></li>
+          <li class="nav-item"><a class="nav-link" href="#categorias">Categorias</a></li>
+          <li class="nav-item"><a class="nav-link" href="#faq">Perguntas</a></li>
+          <li class="nav-item"><a class="nav-link" href="/html/login/login.html">Login</a></li>
+          <li class="nav-item"><a class="nav-link" href="/html/login/cadastro_usuario.html">Cadastro</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero / Banner Principal -->
+  <section class="hero d-flex align-items-center justify-content-center text-center">
+    <div class="hero-content">
+      <h1 class="hero-title">Bem-vindo à ManiFarma Manipulação</h1>
+      <p class="hero-subtitle">Envie sua receita e receba um orçamento personalizado.</p>
+      <div class="mt-4">
+        <button id="btn-orcar" class="btn btn-hero me-3">Pedir Orçamento</button>
+        <a href="/html/login/cadastro_usuario.html" class="btn btn-outline-hero">Criar Conta</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Como Funciona -->
+  <section id="como-funciona" class="py-5 bg-light text-dark">
+    <div class="container">
+      <h2 class="mb-4 text-center">Como funciona</h2>
+      <div class="row g-4">
+        <div class="col-md-4 text-center">
+          <div class="step-icon">1</div>
+          <h5>Envie sua receita</h5>
+          <p>Envie uma foto ou PDF da sua receita diretamente pelo nosso site.</p>
+        </div>
+        <div class="col-md-4 text-center">
+          <div class="step-icon">2</div>
+          <h5>Receba orçamento</h5>
+          <p>Receba o orçamento gratuitamente por WhatsApp ou e-mail.</p>
+        </div>
+        <div class="col-md-4 text-center">
+          <div class="step-icon">3</div>
+          <h5>Compre online</h5>
+          <p>Aprove sua fórmula, faça o pagamento e receba em casa.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Categorias de Fórmulas -->
+  <section id="categorias" class="py-5 text-center text-white">
+    <div class="container">
+      <h2 class="mb-5">Nossas categorias</h2>
+      <div class="row g-4">
+        <div class="col-md-2 col-6 categoria-card">
+          <div class="categoria-icon">🌿</div>
+          <p>Fitoterápicos</p>
+        </div>
+        <div class="col-md-2 col-6 categoria-card">
+          <div class="categoria-icon">💊</div>
+          <p>Alopáticos</p>
+        </div>
+        <div class="col-md-2 col-6 categoria-card">
+          <div class="categoria-icon">🧴</div>
+          <p>Dermatológicos</p>
+        </div>
+        <div class="col-md-2 col-6 categoria-card">
+          <div class="categoria-icon">🥇</div>
+          <p>Suplementos</p>
+        </div>
+        <div class="col-md-2 col-6 categoria-card">
+          <div class="categoria-icon">🌀</div>
+          <p>Medicina Integrativa</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Benefícios -->
+  <section class="py-5 bg-light text-dark">
+    <div class="container">
+      <h2 class="text-center mb-4">Por que escolher a ManiFarma?</h2>
+      <div class="row g-4">
+        <div class="col-md-4 benefit">
+          <h5>Doses personalizadas</h5>
+          <p>Tratamento sob medida para você, ajustado por farmacêuticos especializados.</p>
+        </div>
+        <div class="col-md-4 benefit">
+          <h5>Economia & eficiência</h5>
+          <p>Menor desperdício e fórmula ideal para suas necessidades.</p>
+        </div>
+        <div class="col-md-4 benefit">
+          <h5>Formas variadas</h5>
+          <p>Cápsulas, cremes, líquidos — conforme o que foi prescrito.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sobre Nós -->
+  <section id="sobre-nos" class="py-5 text-white">
+    <div class="container">
+      <h2 class="text-center mb-4">Quem somos</h2>
+      <p class="text-center">Na ManiFarma, somos farmacêuticos especializados e comprometidos com a qualidade. Nossos laboratórios seguem padrões rigorosos de boas práticas para garantir segurança e eficácia para você.</p>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="py-5 bg-light text-dark">
+    <div class="container">
+      <h2 class="mb-4 text-center">Perguntas frequentes</h2>
+      <div class="accordion" id="faqAccordion">
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="faq1-heading">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+              O que é uma fórmula manipulada?
             </button>
+          </h2>
+          <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+            <div class="accordion-body">
+              Fórmulas manipuladas são preparadas individualmente por um farmacêutico, conforme a prescrição, com dose e base personalizada.
+            </div>
+          </div>
+        </div>
 
-            <div class="collapse navbar-collapse" id="navbarNavDropdown">
-                <ul class="navbar-nav ms-auto"> <!-- ms-auto = Os links vão pra direita -->
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="faq2-heading">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+              Preciso pagar para pedir orçamento?
+            </button>
+          </h2>
+          <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+            <div class="accordion-body">
+              Não, o orçamento é gratuito e sem compromisso, assim como no modelo da Raia. :contentReference[oaicite:10]{index=10}
+            </div>
+          </div>
+        </div>
 
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Início</a>
-                    </li>
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="faq3-heading">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+              Como envio a minha receita?
+            </button>
+          </h2>
+          <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+            <div class="accordion-body">
+              Você pode enviar uma foto ou PDF da sua receita diretamente pelo site. :contentReference[oaicite:11]{index=11}
+            </div>
+          </div>
+        </div>
 
-                    <li class="nav-item">
-                        <a class="nav-link active" href="/html/login/cadastro_usuario.html">Cadastro</a>
-                    </li>
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="faq4-heading">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+              Posso repetir pedidos antigos?
+            </button>
+          </h2>
+          <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+            <div class="accordion-body">
+              Sim — se você já fez uma fórmula conosco, pode repetir pedidos conforme nossa política (dependendo do tipo de manipulação e regulamentações).
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-                    <li class="nav-item">
-                        <a class="nav-link active" href="/html/login/login.html">Login</a>
-                    </li>
- 
+  <!-- Contato / Suporte -->
+  <section class="py-4 text-center text-white">
+    <div class="container">
+      <h5>Precisa de ajuda?</h5>
+      <p>Fale com a gente por e-mail, chat ou telefone.</p>
+      <a href="mailto:suporte@manifarma.com" class="btn btn-outline-light">Entrar em contato</a>
+    </div>
+  </section>
+
+  <!-- Start Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+
+            <div class="footer-col">
+                <h3>ManiFarma</h3>
+                <p>Cuidando da sua saúde com tecnologia e confiança.</p>
+            </div>
+
+            <div class="footer-col">
+                <h4>Links</h4>
+                <ul>
+                    <li><a href="/html/index.html">Início</a></li>
+                    <li><a href="/html/menu_usuario/pedido_usuario.html">Enviar Pedido</a></li>
+                    <li><a href="/html/menu_usuario/pedido_status.html">Meus Pedidos</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+            <h4>Guia</h4>
+            <ul>
+                <li><a href="#">Como Funciona</a></li>
+                <li><a href="#">Suporte</a></li>
+                <li><a href="#">Contato</a></li>
+            </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Redes Sociais</h4>
+                <ul>
+                    <li><a href="#">Instagram</a></li>
+                    <li><a href="#">Facebook</a></li>
+                    <li><a href="#">LinkedIn</a></li>
                 </ul>
             </div>
         </div>
-    </nav>
-    <!-- End nav bar -->
-        
-    <div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel">
-        <div class="carousel-inner">
 
-            <div class="carousel-item active" data-bs-interval="10000">
-                <img src="/img/canada.jpeg" class="d-block w-100" alt="...">
-            </div>
+        <hr class="footer-divider">
 
-            <div class="carousel-item" data-bs-interval="2000">
-                <img src="/img/Canada_Falls.jpg" class="d-block w-100" alt="...">
-            </div>
-
-            <div class="carousel-item">
-                <img src="/img/canadá.jpeg" class="d-block w-100" alt="...">
-            </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 - Todos os direitos reservados - <strong>ManiFarma</strong></p>
         </div>
-
-        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-        </button>
-
-        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-        </button>
-    </div>
-        
-
-
-    <footer>
-        <p>&copy; 2025 - Todos os direitos reservados - ManiFarma</p>
     </footer>
+    <!-- End Footer -->
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
 
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    document.getElementById('btn-orcar').addEventListener('click', () => {
+        // Simular redirecionamento para a página de envio de receita / orçamento
+        window.location.href = '/html/login/cadastro_usuario.html'; // ou outro endpoint
+    });
+
+  </script>
 </body>
 </html>

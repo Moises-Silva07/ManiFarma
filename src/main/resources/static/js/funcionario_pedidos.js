@@ -1,3 +1,6 @@
+// Verifica se o usuário está logado com Token
+validarToken(); 
+
 let pedidosOriginais = []; // manter todos os pedidos 
 
 document.addEventListener("DOMContentLoaded", async () => {

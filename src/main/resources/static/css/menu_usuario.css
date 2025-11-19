@@ -133,3 +133,23 @@ main {
     flex-direction: column;
   }
 }
+
+@media (max-width: 768px) {
+
+  body {
+    height: auto; /* Evita cortes em telas menores */
+  }
+
+  .navbar-nav {
+    padding: 0 20px; /* Reduz o espaçamento lateral */
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+
+  .navbar-nav {
+    padding: 0 10px;  /* Ainda menor para celulares */
+    font-size: 0.9em;
+  }
+}

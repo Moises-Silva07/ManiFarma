@@ -89,3 +89,29 @@ main {
     height: 60px;
   }
 }
+
+@media (max-width: 768px) {
+
+  .navbar-nav {
+    margin: 15px 0; /* Diminui o espaçamento em telas menores */
+    text-align: center;
+  }
+
+  .container-programa {
+    padding: 15px; /* Reduz o padding para caber melhor */
+    font-size: 0.95em;
+  }
+}
+
+@media (max-width: 480px) {
+
+  .navbar-nav {
+    margin: 10px 0;
+    font-size: 0.9em;
+  }
+
+  .container-programa {
+    padding: 10px;
+    font-size: 0.85em;
+  }
+}

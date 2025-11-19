@@ -71,3 +71,84 @@
 #btnAdicionarItens {
   background-color: #FEE715;
 }
+
+@media (max-width: 768px) {
+
+  .produto-card {
+    flex-direction: column;
+    text-align: center;
+    gap: 15px;
+  }
+
+  .qtd-control {
+    gap: 5px;
+  }
+
+  .qtd-control input {
+    width: 40px;
+  }
+
+  .qtd-control button {
+    width: 28px;
+    height: 28px;
+  }
+
+  .container h2 {
+    font-size: 1.4em;
+  }
+}
+
+@media (max-width: 480px) {
+
+  .produto-card {
+    padding: 10px;
+  }
+
+  .qtd-control button {
+    width: 26px;
+    height: 26px;
+    font-size: 0.9em;
+  }
+
+  .qtd-control input {
+    width: 35px;
+    font-size: 0.9em;
+  }
+
+  .container h2 {
+    font-size: 1.2em;
+  }
+}
+
+@media (max-width: 768px) {
+
+  /* Botões: empilha ao invés de lado a lado */
+  .button-container {
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .button {
+    width: 90%;
+    margin: 10px 0;
+  }
+
+  h2 {
+    font-size: 1.4em;
+    padding-bottom: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+
+  .button {
+    width: 100%;
+    font-size: 0.95em;
+    padding: 10px;
+  }
+
+  h2 {
+    font-size: 1.2em;
+  }
+}

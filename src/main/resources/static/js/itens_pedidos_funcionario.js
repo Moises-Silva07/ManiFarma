@@ -1,3 +1,6 @@
+// Verifica se o usuário está logado com Token
+validarToken(); 
+
 document.addEventListener("DOMContentLoaded", async () => {
   const corpoTabela = document.getElementById("corpoTabela");
   const btnAdicionar = document.getElementById("btnAdicionarItens");

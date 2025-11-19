@@ -35,20 +35,25 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
-                // Tirar o comentario para rotas autorizadas
 
+                // Isso faz com que qualquer rota fora da lista abaixo exija token JWT válido.
                 //.authorizeHttpRequests(authorize -> authorize
                 //        .requestMatchers(
                 //                "/api/auth/**",
-                 //               "/api/reports/**",
-                 //               "/api/receitas/**",
-                 //               "/api/viacep/**",
-                 //               "/h2-console/**",
-                  //              "/error"
-                   //     ).permitAll()
-                   //     .anyRequest().authenticated()
+                //                "/api/reports/**",
+                //                "/api/receitas/**",
+                //                "/api/viacep/**",
+                //                "/html/**",
+                //                "/h2-console/**",
+                //                "/error",
+                //                "/css/**",
+                //                "/js/**",
+                //                "/img/**"
+                //        ).permitAll()
+                //        .anyRequest().authenticated()
+                //)
 
-                // manter para alterar o front tranquilo
+                // MANTER TUDO LIBERADO PARA TESTAR O FRONT
                 .authorizeHttpRequests(authorize -> authorize
                         .anyRequest().permitAll()
                 )

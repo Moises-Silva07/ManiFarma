@@ -54,3 +54,33 @@ h2 {
 tr.selecionada {
   background-color: rgb(116, 116, 116) !important;
 }
+
+@media (max-width: 768px) {
+  .navbar {
+    padding: 15px;
+    text-align: center;
+  }
+
+  .carousel-item {
+    height: 300px; /* reduz altura do carrossel */
+  }
+
+  footer {
+    text-align: center;
+    padding: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar {
+    padding: 12px;
+  }
+
+  .carousel-item {
+    height: 220px; /* ainda menor para celulares */
+  }
+
+  footer {
+    padding: 10px;
+  }
+}

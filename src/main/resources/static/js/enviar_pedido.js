@@ -1,4 +1,7 @@
-// Verifica se o usuário está logado
+// Verifica se o usuário está logado com Token
+validarToken(); 
+
+// Verifica se o usuário está logado por ID
 const userId = localStorage.getItem("userId");
 if (!userId) {
     showModal({
