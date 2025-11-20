@@ -1,5 +1,5 @@
 // Verifica se o usuário está logado com Token
-// validarToken(); 
+validarToken();
 
 let itensOriginais = []; // salva todos os itens sem filtro
 
@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", carregarItens);
 async function carregarItens() {
   const msg = document.getElementById("message");
 
-  const { ok, data } = await apiRequest("/produtos", "GET");
+  const { ok, data } = await apiRequest("/produtos", "GET", null, true);
 
   if (ok && Array.isArray(data)) {
     todosItens = data;
@@ -192,7 +192,7 @@ async function excluirItem() {
 
   if (!confirmar) return;
 
-  const { ok } = await apiRequest(`/produtos/${id}`, "DELETE");
+  const { ok } = await apiRequest(`/produtos/${id}`, "DELETE", null, true);
 
   if (ok) {
     showModal({
@@ -247,9 +247,9 @@ document.getElementById("btnSalvarItem").addEventListener("click", async () => {
   let resposta;
 
   if (modoEdicao) {
-    resposta = await apiRequest(`/produtos/${idEdicao}`, "PUT", { nome, preco });
+    resposta = await apiRequest(`/produtos/${idEdicao}`, "PUT", { nome, preco }, true);
   } else {
-    resposta = await apiRequest(`/produtos`, "POST", { nome, preco });
+    resposta = await apiRequest(`/produtos`, "POST", { nome, preco }, true);
   }
 
   if (resposta.ok) {

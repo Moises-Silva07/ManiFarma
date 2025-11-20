@@ -13,22 +13,30 @@ async function apiRequest(endpoint, method, body = null, auth = false, debug = t
     }
     // --- Fim da Depuração ---
 
-    const headers = { "Content-Type": "application/json" }; // Define o cabeçalho HTTP padrão — dizendo que o corpo da requisição é JSON.
+    const headers = {};
 
-    if (auth) {
-        const token = localStorage.getItem("token"); // Tenta buscar o token de autenticação salvo no navegador.
-
-        
-        if (!token) {
-            console.warn("Nenhum token encontrado no localStorage. A requisição pode falhar."); // Se não existir
-        } else {
-            headers["Authorization"] = `Bearer ${token}`; // Se existir, adiciona o cabeçalho Authorization: Bearer <token>.
-        }
+    // Só coloca Content-Type se NÃO for FormData
+    if (!(body instanceof FormData)) {
+        headers["Content-Type"] = "application/json";
     }
 
-    const options = { method, headers }; // Monta o objeto options que o fetch() usará: método e cabeçalhos.
-    if (body) options.body = JSON.stringify(body); // Se houver corpo, ele é convertido para JSON.
+    if (auth) {
+        const token = localStorage.getItem("token");
+        if (token) headers["Authorization"] = `Bearer ${token}`;
+    }
 
+    const options = { method, headers };
+
+    // Se for JSON → converte
+    // Se for FormData → usa diretamente
+    if (body) {
+        if (body instanceof FormData) {
+            options.body = body;
+        } else {
+            options.body = JSON.stringify(body);
+        }
+    }
+    
     try {
         const fullUrl = `${apiUrl}${endpoint}`; // Junta a URL base com o endpoint (exemplo: http://localhost:8080/api/users).
 

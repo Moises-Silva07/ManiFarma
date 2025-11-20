@@ -37,26 +37,26 @@ public class SecurityConfig {
 
 
                 // Isso faz com que qualquer rota fora da lista abaixo exija token JWT válido.
-                //.authorizeHttpRequests(authorize -> authorize
-                //        .requestMatchers(
-                //                "/api/auth/**",
-                //                "/api/reports/**",
-                //                "/api/receitas/**",
-                //                "/api/viacep/**",
-                //                "/html/**",
-                //                "/h2-console/**",
-                //                "/error",
-                //                "/css/**",
-                //                "/js/**",
-                //                "/img/**"
-                //        ).permitAll()
-                //        .anyRequest().authenticated()
-                //)
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers(
+                                "/api/auth/**",
+                                "/api/reports/**",
+                                "/api/receitas/**",
+                                "/api/viacep/**",
+                                "/html/**",
+                                "/h2-console/**",
+                                "/error",
+                                "/css/**",
+                                "/js/**",
+                                "/favicon.ico/**"
+                        ).permitAll()
+                        .anyRequest().authenticated()
+                )
 
                 // MANTER TUDO LIBERADO PARA TESTAR O FRONT
-                .authorizeHttpRequests(authorize -> authorize
-                        .anyRequest().permitAll()
-                )
+                //.authorizeHttpRequests(authorize -> authorize
+                //        .anyRequest().permitAll()
+                //)
 
                 .exceptionHandling(ex -> ex
                         .authenticationEntryPoint((request, response, authException) -> {

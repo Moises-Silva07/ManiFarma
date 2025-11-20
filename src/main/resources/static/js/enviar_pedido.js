@@ -2,15 +2,15 @@
 validarToken(); 
 
 // Verifica se o usuário está logado por ID
-const userId = localStorage.getItem("userId");
-if (!userId) {
-    showModal({
-            title: "Atenção",
-            message: "Usuário não identificado. Faça login novamente.",
-            type: "warning",
-        });
-    window.location.href = "/html/login/login.html";
-}
+// const userId = localStorage.getItem("userId");
+// if (!userId) {
+//     showModal({
+//             title: "Atenção",
+//             message: "Usuário não identificado. Faça login novamente.",
+//             type: "warning",
+//         });
+//     window.location.href = "/html/login/login.html";
+// }
 
 document.getElementById("form").addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -41,12 +41,9 @@ document.getElementById("form").addEventListener("submit", async (e) => {
   }
 
   try {
-    const resposta = await fetch("http://localhost:8080/api/pedidos", {
-      method: "POST",
-      body: formData, // não define headers, o browser faz isso automaticamente
-    });
-
-    const data = await resposta.json();
+    const resposta = await apiRequest("/api/pedidos", "POST", formData, true);
+    
+    const data = resposta.data;
 
     if (resposta.ok) {
       showModal({
