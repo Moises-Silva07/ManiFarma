@@ -5,17 +5,50 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Relatórios & Dashboard - ManiFarma</title>
 
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="/css/global/global_menu_funcionario.css">
     <link rel="stylesheet" href="../../css/relatorios_pedido.css">
 
     <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-<nav class="navbar">
-    <h1 class="logo">📊 ManiFarma — Relatórios e Dashboard</h1>
-</nav>
+<!-- Start nav bar -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <a href="/html/menu_funcionario/menu_funcionario.html">
+                <img  class="navbar-brand" src="/img/logo.png" alt="logo ManiFarma" title="Início">
+             </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav ms-auto"> <!-- ms-auto = Os links vão pra direita -->
+
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">Início</a>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Pedidos
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/html/menu_funcionario/pedido_validacao_funcionario.html">Validar Pedidos</a></li>
+                            <li><a class="dropdown-item" href="/html/menu_funcionario/itens_pedidos_funcionario.html">Orçamento</a></li>
+                            <li><a class="dropdown-item" href="/html/menu_funcionario/itens_funcionario.html">Itens</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- End nav bar -->
 
 <main class="container">
+  <h1 class="logo">📊 ManiFarma — Relatórios e Dashboard</h1>
     <section class="card filtro">
         <h2>Filtro de Data</h2>
         <div class="filtro-row">
@@ -89,9 +122,11 @@
 </main>
 
 <footer>
-    <p>© 2025 ManiFarma</p>
+    <div> </div>
 </footer>
 
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
 
 <script src="/js/validarToken.js"></script>
 

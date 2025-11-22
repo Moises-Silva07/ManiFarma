@@ -30,10 +30,16 @@ body {
   padding: 20px;
   text-align: center;
   box-shadow: 0 2px 5px var(--shadow);
+  margin-bottom: 21px;
 }
 
+.navbar-brand {
+  height: 70px;
+}
+
+
 .logo {
-  color: var(--bg-color);
+  color: var(--primary-color);
   font-size: 1.6rem;
   font-weight: bold;
 }
@@ -159,12 +165,8 @@ button:hover { filter: brightness(0.95); }
 
 /* footer */
 footer {
-  text-align: center;
-  padding: 12px;
-  color: var(--text-muted);
-  font-size: 0.9rem;
-  background-color: #0d141b;
-  border-top: 1px solid #222;
+  padding: 12px;  
+
 }
 /* ================================
         RESPONSIVIDADE

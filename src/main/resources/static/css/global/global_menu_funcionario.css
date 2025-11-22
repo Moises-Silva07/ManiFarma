@@ -55,62 +55,8 @@ form {
   color: #FEE715;
 }
 
-/* ------ Rodapé ------ */
-.footer {
-  background-color: #0e141a;
-  color: #FEE715;
-  padding: 40px 20px 20px;
-  margin-top: 50px;
-  font-family: Arial, sans-serif;
-}
+/* footer */
+footer {
+  padding: 12px;  
 
-.footer-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 30px;
-  max-width: 1100px;
-  margin: 0 auto;
-}
-
-.footer-col h3,
-.footer-col h4 {
-  margin-bottom: 10px;
-  color: #FEE715;
-}
-
-.footer-col p {
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 0.9em;
-}
-
-.footer-col ul {
-  list-style: none;
-  padding: 0;
-}
-
-.footer-col ul li {
-  margin-bottom: 8px;
-}
-
-.footer-col a {
-  text-decoration: none;
-  color: rgba(255, 255, 255, 0.7);
-  transition: color 0.3s;
-}
-
-.footer-col a:hover {
-  color: #FEE715;
-}
-
-.footer-divider {
-  border: none;
-  border-top: 1px solid rgba(255, 255, 255, 0.2);
-  margin: 30px auto;
-  width: 90%;
-}
-
-.footer-bottom {
-  text-align: center;
-  font-size: 0.85em;
-  color: rgba(255, 255, 255, 0.6);
 }
