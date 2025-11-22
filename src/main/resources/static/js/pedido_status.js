@@ -64,8 +64,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         msgErro.classList.add("d-none");
 
         try {
-          // Usa URL completa (garante compatibilidade mesmo fora do localhost)
-          const response = await fetch(`http://localhost:8080/api/pedidos/${pedidoId}/receita`);
+          const token = localStorage.getItem("token");
+
+          const response = await fetch(`http://localhost:8080/api/pedidos/${pedidoId}/receita`, {
+            method: "GET",
+            headers: {
+              "Authorization": `Bearer ${token}` // ✔ ENVIA O TOKEN
+            }
+          });
 
           if (!response.ok) {
             const data = await response.json().catch(() => ({}));

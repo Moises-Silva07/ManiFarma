@@ -1,3 +1,7 @@
+.navbar-brand {
+  height: 70px;
+}
+
 .pagination .page-link {
   color: #101820;      
   border-color: #FEE715;

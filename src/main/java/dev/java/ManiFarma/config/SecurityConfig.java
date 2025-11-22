@@ -47,6 +47,7 @@ public class SecurityConfig {
                                 "/h2-console/**",
                                 "/error",
                                 "/css/**",
+                                "/img/**",
                                 "/js/**",
                                 "/favicon.ico/**"
                         ).permitAll()

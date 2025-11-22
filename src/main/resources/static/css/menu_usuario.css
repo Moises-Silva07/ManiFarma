@@ -1,3 +1,7 @@
+.navbar-brand {
+  height: 70px;
+}
+
 /* Fundo geral */
 main {
   background-color: #101820;
