@@ -37,12 +37,12 @@
 
                 <div class="field">
                     <label for="cep">CEP:</label>
-                    <input type="text" id="cep" name="cep" onblur="pesquisacep(this.value)" required>
+                    <input type="text" id="cep" name="cep" onblur="pesquisarCEP(this.value)" required>
                 </div>
 
                 <div class="field">
                     <label for="telefone">Telefone:</label>
-                    <input type="tel" id="telefone" name="telefone" required placeholder="(99) 99999-9999" pattern="\(\d{2}\)\s\d{5}-\d{4}">
+                    <input type="tel" id="telefone" name="telefone" required placeholder="(99) 99999-9999">
                 </div>
 
                 <div class="field">
@@ -59,6 +59,11 @@
                     <button type="submit" class="btn">Cadastrar</button>
                     <a href="/html/login/login.html" class="btn">Login</a>
                 </div>
+
+                <input type="hidden" id="rua">
+                <input type="hidden" id="bairro">
+                <input type="hidden" id="cidade">
+                <input type="hidden" id="uf">
             </form>
         </div>
 

@@ -12,6 +12,28 @@ if (!userId) {
     window.location.href = "/html/login/login.html";
 }
 
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// VALIDADORES E FORMATADORES
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+function validarEmail(email) {
+    const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return regex.test(email);
+}
+
+function validarCPF(cpf) {
+    return /^\d{11}$/.test(cpf.replace(/\D/g, ""));
+}
+
+function validarCEP(cep) {
+    return /^[0-9]{8}$/.test(cep.replace(/\D/g, ""));
+}
+
+function validarTelefone(tel) {
+    const regex = /^\(\d{2}\)\s\d{4,5}-\d{4}$/;
+    return regex.test(tel);
+}
+
 // CARREGAR DADOS DO CLIENTE (Funcionando)
 document.addEventListener("DOMContentLoaded", async () => {
     const resposta = await apiRequest(`/api/users/${userId}`, "GET", null, true);
@@ -37,84 +59,153 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 });
 
-// ATUALIZAR DADOS (Funcioando)
+// ATUALIZAR DADOS (Corrigido com validações funcionando)
 document.getElementById("form-dados").addEventListener("submit", async (e) => {
     e.preventDefault();
 
+    // PEGAR OS VALORES AQUI  ✔ (ANTES DO BODY)
+    const nome = document.getElementById("nome").value.trim();
+    const cpf = document.getElementById("cpf").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const telefone = document.getElementById("telefone").value.trim();
+    const cep = document.getElementById("cep").value.trim();
+    const rua = document.getElementById("rua").value.trim();
+    const bairro = document.getElementById("bairro").value.trim();
+    const cidade = document.getElementById("cidade").value.trim();
+    const estado = document.getElementById("uf").value.trim();
+
+    // ━━━━━ Validações ━━━━━
+    if (!validarEmail(email)) {
+        return showModal({
+            title: "E-mail inválido",
+            message: "Digite um e-mail válido.",
+            type: "warning",
+        });
+    }
+
+    if (!validarCPF(cpf)) {
+        return showModal({
+            title: "CPF inválido",
+            message: "Digite somente números (11 dígitos).",
+            type: "warning",
+        });
+    }
+
+    if (!validarTelefone(telefone)) {
+        return showModal({
+            title: "Telefone inválido",
+            message: "Use o formato (99) 99999-9999",
+            type: "warning",
+        });
+    }
+
+    if (!validarCEP(cep)) {
+        return showModal({
+            title: "CEP inválido",
+            message: "Digite 8 números.",
+            type: "warning",
+        });
+    }
+
+    if (rua === "" || rua === "...") {
+        return showModal({
+            title: "CEP não validado",
+            message: "Não foi possível validar o endereço pelo CEP informado.",
+            type: "danger",
+        });
+    }
+
+    // JSON FINAL PARA ENVIAR
     const body = {
-        nome: document.getElementById("nome").value,
-        cpf: document.getElementById("cpf").value,
-        email: document.getElementById("email").value,
-        telefone: document.getElementById("telefone").value,
-        cep: document.getElementById("cep").value,
-        rua: document.getElementById("rua").value,
-        bairro: document.getElementById("bairro").value,
-        cidade: document.getElementById("cidade").value,
-        estado: document.getElementById("uf").value,
-        
+        nome,
+        cpf,
+        email,
+        telefone,
+        cep,
+        rua,
+        bairro,
+        cidade,
+        estado
     };
 
-    const resposta = await apiRequest(`/api/users/${userId}`, "PUT", body, true, true);
+    const resposta = await apiRequest(`/api/users/${userId}`, "PUT", body, true);
+
     if (resposta.ok) {
-        showModal({
+        return showModal({
             title: "Sucesso!",
             message: "Dados atualizados com sucesso!",
             type: "success"
         });
     } else {
-        showModal({
+        return showModal({
             title: "Erro",
-            message: "Erro ao atualizar dados.",
+            message: resposta.data?.message || "Erro ao atualizar dados.",
             type: "danger",
         });
-        console.error(resposta.data);
     }
 });
 
-// ATUALIZAR SENHA (Funcionando)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// ATUALIZAR SENHA (VALIDAÇÃO + RESPOSTAS PERSONALIZADAS)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 document.getElementById("form-senha").addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    const senhaAtual = document.getElementById("senhaAtual").value;
-    const novaSenha = document.getElementById("novaSenha").value;
-    const confirma = document.getElementById("confirmaSenha").value;
+    const senhaAtual = document.getElementById("senhaAtual").value.trim();
+    const novaSenha = document.getElementById("novaSenha").value.trim();
+    const confirma = document.getElementById("confirmaSenha").value.trim();
 
+    if (!senhaAtual) {
+        return showModal({
+            title: "Atenção",
+            message: "Digite sua senha atual.",
+            type: "warning"
+        });
+    }
 
-    // Expressão regular para validar:
+    // Senha forte
     const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#%])[A-Za-z\d@$!%*?&#%]{8,}$/;
-
-
     if (!regex.test(novaSenha)) {
-        document.getElementById("message").textContent = "A senha deve ter no mínimo 8 caracteres, incluindo letra maiúscula (A-Z), minúscula(a-z), número(1-9) e caractere especial(@$!%*?&).";
-        return;
+        return showModal({
+            title: "Senha inválida",
+            message: "A nova senha deve ter 8 caracteres, contendo letra maiúscula, minúscula, número e caractere especial.",
+            type: "warning"
+        });
     }
 
     if (novaSenha !== confirma) {
-        showModal({
+        return showModal({
             title: "Atenção",
             message: "As senhas não coincidem.",
             type: "warning",
         });
-        return;
     }
 
     const body = { senhaAtual, novaSenha };
     const resposta = await apiRequest(`/api/users/${userId}/senha`, "PUT", body, true);
 
     if (resposta.ok) {
-        showModal({
+        return showModal({
             title: "Sucesso!",
             message: "Senha alterada com sucesso!",
             type: "success"
         });
-    } else {
-        showModal({
-            title: "Erro",
-            message: "Erro ao alterar senha.",
-            type: "danger",
-        });
-        console.error(resposta.data);
     }
+
+    // Se backend retornar senha atual incorreta
+    if (resposta.status === 400 || resposta.status === 401) {
+        return showModal({
+            title: "Senha incorreta",
+            message: "A senha atual não confere.",
+            type: "danger"
+        });
+    }
+
+    return showModal({
+        title: "Erro",
+        message: "Erro ao alterar senha.",
+        type: "danger",
+    });
 });
 
 
@@ -190,48 +281,66 @@ function limpa_formulário_cep() {
     }
 
 function pesquisacep(valor) {
+    var cep = valor.replace(/\D/g, '');
 
-        //Nova variável "cep" somente com dígitos.
-        var cep = valor.replace(/\D/g, '');
+    if (cep !== "") {
+        var validacep = /^[0-9]{8}$/;
 
-        //Verifica se campo cep possui valor informado.
-        if (cep != "") {
+        if (validacep.test(cep)) {
 
-            //Expressão regular para validar o CEP.
-            var validacep = /^[0-9]{8}$/;
+            // Preenche com "..."
+            document.getElementById('rua').value = "...";
+            document.getElementById('bairro').value = "...";
+            document.getElementById('cidade').value = "...";
+            document.getElementById('uf').value = "...";
 
-            //Valida o formato do CEP.
-            if(validacep.test(cep)) {
+            // 🔥 REMOVE scripts anteriores para evitar duplicação
+            const scriptsAntigos = document.querySelectorAll("script[data-viacep]");
+            scriptsAntigos.forEach(s => s.remove());
 
-                //Preenche os campos com "..." enquanto consulta webservice.
-                document.getElementById('rua').value="...";
-                document.getElementById('bairro').value="...";
-                document.getElementById('cidade').value="...";
-                document.getElementById('uf').value="...";
-                
+            // 🔥 Cria o script ViaCEP
+            var script = document.createElement('script');
+            script.setAttribute("data-viacep", "true");
+            script.src = 'https://viacep.com.br/ws/' + cep + '/json/?callback=meu_callback';
 
-                //Cria um elemento javascript.
-                var script = document.createElement('script');
-
-                //Sincroniza com o callback.
-                script.src = 'https://viacep.com.br/ws/'+ cep + '/json/?callback=meu_callback';
-
-                //Insere script no documento e carrega o conteúdo.
-                document.body.appendChild(script);
-
-            } //end if.
-            else {
-                //cep é inválido.
+            // 🔥 Timeout para caso o servidor não responda
+            const timeout = setTimeout(() => {
+                script.remove(); // remove o script para evitar callback tardio
                 limpa_formulário_cep();
                 showModal({
-                    title: "Erro",
-                    message: "Formato de CEP inválido.",
+                    title: "Erro no CEP",
+                    message: "Falha ao consultar o ViaCEP. O servidor pode estar fora do ar.",
                     type: "danger"
                 });
-            }
-        } //end if.
-        else {
-            //cep sem valor, limpa formulário.
+            }, 4000); // 4 segundos
+
+            // 🔥 Se o script carregar COM sucesso, o callback vai ser executado
+            script.onload = () => clearTimeout(timeout);
+
+            // 🔥 Se ocorrer erro de carregamento (servidor offline)
+            script.onerror = () => {
+                clearTimeout(timeout);
+                limpa_formulário_cep();
+                showModal({
+                    title: "Erro no CEP",
+                    message: "Não foi possível conectar ao serviço ViaCEP.",
+                    type: "danger"
+                });
+            };
+
+            // Carrega o script
+            document.body.appendChild(script);
+
+        } else {
             limpa_formulário_cep();
+            showModal({
+                title: "Erro",
+                message: "Formato de CEP inválido.",
+                type: "danger"
+            });
         }
-    };
+
+    } else {
+        limpa_formulário_cep();
+    }
+}

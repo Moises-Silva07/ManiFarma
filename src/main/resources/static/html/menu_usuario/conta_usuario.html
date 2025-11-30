@@ -27,16 +27,13 @@
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
                 <ul class="navbar-nav ms-auto"> <!-- ms-auto = Os links vão pra direita -->
 
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Pedidos
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="/html/menu_usuario/pedido_usuario.html">Enviar Pedido</a></li>
-                            <li><a class="dropdown-item" href="/html/menu_usuario/pedido_status.html">Meus Pedidos</a></li>
-                        </ul>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/html/menu_usuario/pedido_usuario.html">Enviar Pedido</a>
                     </li>
 
+                    <li class="nav-item">
+                        <a class="nav-link" href="/html/menu_usuario/pedido_status.html">Meus Pedidos</a>
+                    </li>
 
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -45,7 +42,7 @@
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="/html/menu_usuario/conta_usuario.html">Conta</a></li>
                             <li><a class="dropdown-item" href="/html/index.html">Sair</a></li>
-                            
+   
                         </ul>
                     </li>
                 </ul>
@@ -83,7 +80,7 @@
 
                     <div class="field">
                         <label for="cep">Cep:</label>
-                        <input type="text" id="cep" name="cep" maxlength="9" minlength="9" onblur="pesquisacep(this.value);" required>
+                        <input type="text" id="cep" name="cep" maxlength="8" minlength="8" onblur="pesquisacep(this.value);" required>
 
                         <label>Rua:</label>
                         <input name="rua" type="text" id="rua" maxlength="80">
