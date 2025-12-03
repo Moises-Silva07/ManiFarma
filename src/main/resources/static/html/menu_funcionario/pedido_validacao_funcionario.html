@@ -61,6 +61,7 @@
                                 <option value="pedido">ID do Pedido</option>
                                 <option value="cliente">ID do Cliente</option>
                                 <option value="funcionario">ID do Funcionário</option>
+                                <option value="status">Status do Pedido</option>
                             </select>
                         </div>
 
@@ -74,6 +75,19 @@
                                 🔍 Aplicar Filtro
                             </button>
                         </div>
+
+                        <div class="col-md-4 d-none" id="filtroStatusContainer">
+                        <label class="form-label">Status</label>
+                        <select id="valorStatus" class="form-select">
+                            <option value="">Selecione...</option>
+                            <option value="PENDENTE">Pendente</option>
+                            <option value="VALIDO">Válido</option>
+                            <option value="ENVIODECOTACAO">Enviado Cotação</option>
+                            <option value="PAGO">Pago</option>
+                            <option value="CONCLUIDO">Concluído</option>
+                            <option value="CANCELADO">Cancelado</option>
+                        </select>
+                    </div>
                     </div>
 
                     <div class="mt-2 text-end">

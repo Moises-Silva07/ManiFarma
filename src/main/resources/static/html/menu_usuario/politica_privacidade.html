@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -9,7 +10,43 @@
     <link rel="stylesheet" href="/css/global/global_menu.css">
     <link rel="stylesheet" href="/css/pedido_usuario.css">
 
-    <title>Enviar Pedido Usuário</title>
+    <title>Política de Privacidade</title>
+
+    <style>
+        .politica-container {
+            max-width: 900px;
+            margin: 40px auto;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.08);
+        }
+
+        .politica-container h1 {
+            font-size: 26px;
+            margin-bottom: 25px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .politica-container h2 {
+            font-size: 20px;
+            margin-top: 25px;
+            font-weight: 600;
+        }
+
+        .politica-container p {
+            line-height: 1.6;
+            margin-bottom: 12px;
+            color: #444;
+        }
+
+        footer {
+            text-align: center;
+            margin: 50px 0 20px 0;
+            color: #666;
+        }
+    </style>
 </head>
 <body>
     <!-- Start nav bar -->
@@ -51,73 +88,57 @@
     </nav>
     <!-- End nav bar -->
 
-    <main>
-        <section aria-label="Formulário Enviar Pedido">
-            <div class="container">
+    <!-- Conteúdo da Política -->
+    <div class="politica-container">
 
-                <form id="form">
+        <h1>Política de Privacidade - ManiFarma</h1>
 
-                    <label for="descricao">Descrição do Pedido: </label>
-                    <textarea name="descricao" id="descricao" required></textarea>
+        <p>Esta Política descreve como o ManiFarma coleta, utiliza, armazena e protege os dados pessoais dos usuários.</p>
 
-                    <label for="receita">Anexar Receita (PDF/Imagem): </label>
-                    <input type="file" id="receita" name="receita" accept=".jpg, .jpeg, .png, .pdf" required>
+        <h2>1. Coleta de Informações</h2>
+        <p>
+            Coletamos informações fornecidas diretamente pelo usuário durante o cadastro, incluindo nome, CPF, 
+            endereço, telefone e e-mail. Essas informações são utilizadas exclusivamente para a operação dos 
+            serviços oferecidos pela plataforma.
+        </p>
 
-                    <button type="submit" class="btn">Enviar Pedido</button>
+        <h2>2. Uso das Informações</h2>
+        <p>Os dados coletados são utilizados para:</p>
+        <p>
+            • Criar e manter sua conta;<br>
+            • Processar pedidos e compras;<br>
+            • Identificar o usuário para retirada ou entrega de medicamentos;<br>
+            • Validar prescrições quando necessário;<br>
+            • Cumprir exigências legais e obrigações fiscais de estabelecimentos farmacêuticos.
+        </p>
 
-                </form>
-            </div>
+        <h2>3. Armazenamento e Segurança</h2>
+        <p>
+            Os dados são armazenados com medidas de segurança adequadas e nunca são vendidos ou compartilhados com terceiros, 
+            exceto quando necessário para operação do serviço (ex.: pagamentos) ou quando exigido por lei.
+        </p>
 
-            <div class="message">
-                <p id="message" role="alert"></p>
-            </div>
+        <h2>4. Desativação da Conta</h2>
+        <p>
+            Por motivos legais e fiscais, o ManiFarma não realiza exclusão completa e irreversível dos dados. 
+            O usuário poderá solicitar a <strong>desativação da conta</strong>, o que impede novos logins e bloqueia o acesso.
+        </p>
 
-        </section>
-    </main>
+        <h2>5. Alteração de E-mail</h2>
+        <p>
+            Alterações no e-mail exigem novo login do usuário para geração de um novo token de autenticação, 
+            garantindo segurança da conta.
+        </p>
 
-    <!-- IMPORTA OS MODAIS GLOBAIS -->
-    <div id="modals-container">
-        <div class="modal fade" id="modalAlert" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content border-0">
-                    <div class="modal-header bg-primary text-white">
-                        <h5 class="modal-title" id="modalAlertTitle">Aviso</h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                        </div>
-                        <div class="modal-body" id="modalAlertMessage"></div>
-                        <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <h2>6. Consentimento</h2>
+        <p>
+            Ao utilizar o ManiFarma, o usuário concorda com esta Política de Privacidade e com a forma como seus 
+            dados são tratados.
+        </p>
 
-        <div class="modal fade" id="modalConfirm" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content border-0">
-                    <div class="modal-header bg-danger text-white">
-                        <h5 class="modal-title">Confirmação</h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                        </div>
-                        <div class="modal-body" id="modalConfirmMessage"></div>
-                        <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="button" id="modalConfirmYes" class="btn btn-danger">Confirmar</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- TOAST CONTAINER -->
-        <div class="toast-container position-fixed bottom-0 end-0 p-3">
-            <div id="mainToast" class="toast align-items-center border-0" role="alert" aria-live="assertive" aria-atomic="true">
-                <div class="d-flex">
-                <div id="toastBody" class="toast-body"></div>
-                <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast"></button>
-                </div>
-            </div>
-        </div>
+        <p>Em caso de dúvidas, entre em contato pelo suporte da plataforma.</p>
     </div>
+
 
     <!-- Start Footer -->
     <footer class="footer">
@@ -165,12 +186,7 @@
     <!-- End Footer -->
 
 
-    <script src="/js/validarToken.js"></script>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
-
-    <script src="/js/main.js"></script>
-    <script src="/js/modal.js"></script>
-    <script src="/js/enviar_pedido.js"></script>
+    
 </body>
 </html>

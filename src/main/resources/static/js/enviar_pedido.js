@@ -48,7 +48,7 @@ document.getElementById("form").addEventListener("submit", async (e) => {
     if (resposta.ok) {
       showModal({
             title: "Sucesso!",
-            message: "Pedido enviado com sucesso!" + " " + `Acompanhe os seus pedidos em "Meus Pedidos". `,
+            message: `Pedido número: ${data.pedido.id} enviado com sucesso!` + " " + `Acompanhe em "Meus Pedidos". `,
             type: "success"
         });
 

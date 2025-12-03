@@ -34,7 +34,12 @@ function validarTelefone(tel) {
     return regex.test(tel);
 }
 
+
+// ★ VARIÁVEL GLOBAL PARA GUARDAR O E-MAIL ORIGINAL
+let emailOriginal = "";
+
 // CARREGAR DADOS DO CLIENTE (Funcionando)
+
 document.addEventListener("DOMContentLoaded", async () => {
     const resposta = await apiRequest(`/api/users/${userId}`, "GET", null, true);
     if (resposta.ok) {
@@ -49,6 +54,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         document.getElementById("cidade").value = dados.cidade || "";
         document.getElementById("uf").value = dados.estado || "";
         
+        // ★ Guarda o e-mail original
+        emailOriginal = dados.email;
+
     } else {
         showModal({
             title: "Erro",
@@ -60,6 +68,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 // ATUALIZAR DADOS (Corrigido com validações funcionando)
+
 document.getElementById("form-dados").addEventListener("submit", async (e) => {
     e.preventDefault();
 
@@ -131,6 +140,25 @@ document.getElementById("form-dados").addEventListener("submit", async (e) => {
     const resposta = await apiRequest(`/api/users/${userId}`, "PUT", body, true);
 
     if (resposta.ok) {
+        // ★ SE O E-MAIL FOI ALTERADO
+        if (email !== emailOriginal) {
+
+            showModal({
+                title: "Dados atualizados",
+                message: `Seu e-mail foi alterado. Você precisa fazer login novamente para gerar uma nova sessão. Redirecionando em 10 segundos...`,
+                type: "warning"
+            });
+
+            // ★ Aguarda 5 segundos e limpa o login
+            setTimeout(() => {
+                localStorage.clear();
+                window.location.href = "/html/login/login.html";
+            }, 10000);
+
+            return;
+        }
+
+        // Caso não tenha alterado o e-mail
         return showModal({
             title: "Sucesso!",
             message: "Dados atualizados com sucesso!",

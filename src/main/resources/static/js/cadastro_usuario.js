@@ -267,3 +267,29 @@ async function pesquisarCEP(valor) {
         });
     }
 }
+
+// ABRIR MODAL
+document.getElementById("abrirPolitica").addEventListener("click", (e) => {
+    e.preventDefault();
+    document.getElementById("modal-politica").classList.remove("hidden");
+});
+
+// FECHAR MODAL
+document.getElementById("fecharPolitica").addEventListener("click", () => {
+    document.getElementById("modal-politica").classList.add("hidden");
+});
+
+// BLOQUEAR CADASTRO SE NÃO ACEITAR
+document.getElementById("form").addEventListener("submit", function(e) {
+    const aceitou = document.getElementById("aceitarTermos").checked;
+
+    if (!aceitou) {
+        e.preventDefault();
+        showModal({
+            title: "Termos necessários",
+            message: "Você precisa aceitar a Política de Privacidade para criar sua conta.",
+            type: "warning"
+        });
+        return;
+    }
+});

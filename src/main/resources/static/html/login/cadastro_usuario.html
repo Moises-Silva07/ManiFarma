@@ -55,6 +55,14 @@
                     <input type="password" id="confirmaSenha" name="confirmaSenha" required>
                 </div>
 
+                <div class="field termos-container">
+                    <label class="checkbox-termos">
+                        <input type="checkbox" id="aceitarTermos">
+                        Eu li e aceito a 
+                        <a href="#" id="abrirPolitica">Política de Privacidade</a>.
+                    </label>
+                </div>
+
                 <div class="container-btn">
                     <button type="submit" class="btn">Cadastrar</button>
                     <a href="/html/login/login.html" class="btn">Login</a>
@@ -73,6 +81,58 @@
 
     </section>
 </main>
+
+<!-- Modal Política de Privacidade -->
+<div id="modal-politica" class="modal-termos hidden">
+    <div class="modal-content-termos">
+        <h2>Política de Privacidade - ManiFarma</h2>
+
+        <div class="texto-politica">
+            <p><strong>1. Coleta de Informações</strong></p>
+            <p>
+                O ManiFarma coleta informações fornecidas diretamente pelo usuário no momento do cadastro, 
+                incluindo nome, e-mail, CPF, endereço e telefone. Essas informações são utilizadas exclusivamente 
+                para identificação, entrega de pedidos e comunicação relacionada à plataforma.
+            </p>
+
+            <p><strong>2. Uso dos Dados</strong></p>
+            <p>
+                Os dados são utilizados para:
+                <br>• Criar e manter a conta do usuário;
+                <br>• Processar pedidos e compras;
+                <br>• Validar prescrições quando necessário;
+                <br>• Cumprir obrigações legais de estabelecimentos farmacêuticos.
+            </p>
+
+            <p><strong>3. Armazenamento e Segurança</strong></p>
+            <p>
+                Os dados são armazenados de forma segura e nunca serão vendidos ou compartilhados com terceiros, 
+                exceto quando exigido por lei ou para operação essencial (ex.: gateway de pagamento).
+            </p>
+
+            <p><strong>4. Sobre Exclusão e Desativação de Conta</strong></p>
+            <p>
+                O ManiFarma não realiza <strong>exclusão completa e irreversível dos dados</strong> por questões legais 
+                e fiscais. O usuário poderá solicitar a <strong>desativação da conta</strong>, tornando-a inacessível e 
+                impedindo novos logins.
+            </p>
+
+            <p><strong>5. Alterações de E-mail</strong></p>
+            <p>
+                Por motivos de segurança, ao alterar o e-mail, o usuário será desconectado e deverá realizar login 
+                novamente para gerar um novo token de autenticação.
+            </p>
+
+            <p><strong>6. Consentimento</strong></p>
+            <p>
+                Ao criar uma conta e aceitar esta Política de Privacidade, o usuário concorda com a forma como 
+                seus dados são coletados, utilizados e armazenados.
+            </p>
+        </div>
+
+        <button id="fecharPolitica" class="btn">Fechar</button>
+    </div>
+</div>
 
 <footer>
     <p>&copy; 2025 - Todos os direitos reservados - ManiFarma</p>

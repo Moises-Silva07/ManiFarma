@@ -7,8 +7,12 @@ body {
   background-color: #FEE715;
 }
 
+.navbar-brand {
+  padding: 0 60px;
+}
+
 .navbar-nav {
-  padding: 0 40px;
+  padding: 0 60px;
 }
 
 .container {

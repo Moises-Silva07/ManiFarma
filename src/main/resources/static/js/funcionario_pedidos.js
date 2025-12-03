@@ -47,11 +47,21 @@ document.addEventListener("DOMContentLoaded", async () => {
   document.getElementById("btnAplicarFiltro").addEventListener("click", () => {
       const tipo = document.getElementById("tipoFiltro").value;
       const valor = Number(document.getElementById("valorFiltro").value);
+      const valorStatus = document.getElementById("valorStatus").value;
 
-      if (!valor) {
+      if (tipo !== "status" && !valor) {
           showModal({
               title: "Aviso",
               message: "Digite um ID válido para filtrar.",
+              type: "warning"
+          });
+          return;
+      }
+
+      if (tipo === "status" && !valorStatus) {
+          showModal({
+              title: "Aviso",
+              message: "Selecione um status.",
               type: "warning"
           });
           return;
@@ -68,17 +78,45 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (tipo === "funcionario") {
           filtrados = filtrados.filter(p => p.employeeId === valor);
       }
+      if (tipo === "status") {
+          filtrados = filtrados.filter(p => p.status === valorStatus);
+      }
+      if (tipo === "funcionario") {
+          filtrados = filtrados.filter(p => p.employeeId !== null && p.employeeId == valor);
+      }
 
       todosPedidos = filtrados;
       paginaAtual = 1;
       renderizarTabela();
   });
 
+  document.getElementById("tipoFiltro").addEventListener("change", () => {
+      const tipo = document.getElementById("tipoFiltro").value;
+
+      const campoId = document.getElementById("valorFiltro");
+      const campoStatus = document.getElementById("filtroStatusContainer");
+
+      if (tipo === "status") {
+          campoId.parentElement.classList.add("d-none");
+          campoStatus.classList.remove("d-none");
+      } else {
+          campoId.parentElement.classList.remove("d-none");
+          campoStatus.classList.add("d-none");
+      }
+  });
+
   // LIMPAR FILTRO
   document.getElementById("btnLimparFiltro").addEventListener("click", () => {
       todosPedidos = [...pedidosOriginais];
       paginaAtual = 1;
+
+      document.getElementById("tipoFiltro").value = ""; 
       document.getElementById("valorFiltro").value = "";
+      document.getElementById("valorStatus").value = "";
+
+      document.getElementById("filtroStatusContainer").classList.add("d-none");
+      document.getElementById("valorFiltro").parentElement.classList.remove("d-none");
+
       renderizarTabela();
   });
 

@@ -49,6 +49,7 @@ async function apiRequest(endpoint, method, body = null, auth = false, debug = t
 
         const resposta = await fetch(fullUrl, options); // Faz a requisição HTTP e espera a resposta do servidor.
 
+        
         // --- Depuração da Resposta ---
         if (debug) {
             console.log(`5. Resposta recebida do servidor: ${resposta.status} ${resposta.statusText}`); // Mostra o código e o texto da resposta (ex: 200 OK ou 404 Not Found).

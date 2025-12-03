@@ -1,41 +1,61 @@
 document.getElementById("form").addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    // Pegando os valores corretos do formulário
-    const nome = document.getElementById("nomeCompleto").value;
-    const email = document.getElementById("nomeAcesso").value;
-    const senha = document.getElementById("senha").value;
-    const confirmaSenha = document.getElementById("confirmaSenha").value;
-    const role = document.getElementById("cargo").value;
+    const nome = document.getElementById("nomeCompleto").value.trim();
+    const email = document.getElementById("nomeAcesso").value.trim();
+    const senha = document.getElementById("senha").value.trim();
+    const confirmaSenha = document.getElementById("confirmaSenha").value.trim();
+    const role = document.getElementById("cargo").value.trim();
 
-    // Validação de senha
-    if (senha !== confirmaSenha) {
-        document.getElementById("message").textContent = "As senhas não conferem!";
+    const msg = document.getElementById("message");
+
+    // --- Validações básicas -----------------------------
+
+    if (!nome || nome.length < 3) {
+        msg.textContent = "O nome deve ter pelo menos 3 caracteres.";
         return;
     }
 
-    // 4. Preparação para a API.
+    if (!email || !email.includes("@") || !email.includes(".")) {
+        msg.textContent = "Digite um e-mail válido.";
+        return;
+    }
+
+    if (!role) {
+        msg.textContent = "Selecione um cargo.";
+        return;
+    }
+
+    if (senha.length < 6) {
+        msg.textContent = "A senha deve ter no mínimo 6 caracteres.";
+        return;
+    }
+
+    if (senha !== confirmaSenha) {
+        msg.textContent = "As senhas não conferem!";
+        return;
+    }
+
+    //-----------------------------------------------------
+
     const endpoint = "/api/auth/register";
 
-    // Monta payload apenas com os campos necessários para Employee
     const payload = {
         nome,
         email,
         senha,
-        client: false,
-        role
+        client: false,  // indicando funcionário
+        role             // ADMIN / FARMACEUTICO / ATENDENTE
     };
 
-    // Faz a requisição para o backend
     const { ok, data } = await apiRequest(endpoint, "POST", payload);
 
-    // 6. Tratamento da Resposta.
     if (ok) {
-        document.getElementById("message").textContent = "Cadastro realizado com sucesso! Redirecionando para o login...";
+        msg.textContent = "Cadastro realizado com sucesso! Redirecionando para o login...";
         setTimeout(() => { 
             window.location.href = "/html/login/login.html"; 
         }, 2000);
     } else {
-        document.getElementById("message").textContent = data?.mensagem || "Cadastro inválido! Verifique os dados.";
+        msg.textContent = data?.mensagem || "Cadastro inválido! Verifique os dados.";
     }
 });

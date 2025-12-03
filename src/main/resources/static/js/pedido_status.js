@@ -32,11 +32,24 @@ document.addEventListener("DOMContentLoaded", async () => {
            </button>`
         : "Nenhuma";
 
-        const pagamentoCell = pedido.linkPagamento
-          ? `<a href="${pedido.linkPagamento}" target="_blank" class="btn btn-success btn-sm">
-              💳 Pagar Agora
-            </a>`
-          : "Aguardando cotação";
+        const pagamentoCell = (() => {
+          if (pedido.status === "CANCELADO") {
+            return `<span class="text-danger fw-bold">Cotação cancelada</span>`;
+          }
+
+          if (pedido.linkPagamento) {
+            return `
+              <a href="${pedido.linkPagamento}" target="_blank" class="btn btn-success btn-sm">
+                💳 Pagar Agora
+              </a>`;
+          }
+
+          if (pedido.status === "VALIDO") {
+            return `<span class="text-primary fw-bold">Cotação gerada, aguardando pagamento</span>`;
+          }
+
+          return "Aguardando cotação";
+        })();
 
       row.innerHTML = `
         <td>${pedido.id}</td>
