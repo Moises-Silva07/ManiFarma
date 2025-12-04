@@ -83,6 +83,40 @@ public class UserController {
         }
     }
 
+    @DeleteMapping("/me/anonymize")
+    public ResponseEntity<?> anonymizeCurrentUser(Authentication authentication) {
+        try {
+            String userEmail = authentication.getName(); // Pega o email do token
+            userService.anonymizeUserByEmail(userEmail);
+            return ResponseEntity.noContent().build();
+        } catch (EntityNotFoundException e) {
+            return buildErrorResponse(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (IllegalArgumentException e) {
+            return buildErrorResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+
+
+    @DeleteMapping("/{id}/anonymize")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public ResponseEntity<?> anonymizeUser(@PathVariable Long id) {
+        try {
+            userService.anonymizeUser(id);
+            return ResponseEntity.noContent().build();
+        } catch (EntityNotFoundException e) {
+            return buildErrorResponse(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (IllegalArgumentException e) {
+            // Captura o erro se tentarem anonimizar um funcionarios
+            return buildErrorResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+    private ResponseEntity<Map<String, String>> buildErrorResponse(String message, HttpStatus status) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", message);
+        return ResponseEntity.status(status).body(error);
+    }
+
     // --- Endpoints existentes ---
     @GetMapping
     public ResponseEntity<List<UserResponseDTO>> getAllUsers() {
@@ -135,17 +169,11 @@ public class UserController {
             String novaSenha = body.get("novaSenha");
             
             userService.updatePassword(id, senhaAtual, novaSenha);
-            
-            // ==========================================================
-            // MUDANÇA REALIZADA AQUI
-            // ==========================================================
-            // Antes: return ResponseEntity.noContent().build();
-            
-            // Agora: Retorna 200 OK com uma mensagem
             Map<String, String> successResponse = new HashMap<>();
             successResponse.put("message", "Senha atualizada com sucesso!");
             return ResponseEntity.ok(successResponse);
-            // ==========================================================
+
+            // TRATAMENTO DE ERROS
 
         } catch (EntityNotFoundException e) {
             // ERRO 404: Usuário não encontrado

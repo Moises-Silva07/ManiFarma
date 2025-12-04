@@ -6,77 +6,100 @@ import dev.java.ManiFarma.Entity.Cliente;
 import dev.java.ManiFarma.Entity.Employee;
 import dev.java.ManiFarma.Entity.User;
 import dev.java.ManiFarma.Repository.UserRepository;
-import jakarta.persistence.EntityNotFoundException; // Este import já deve existir
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import jakarta.persistence.EntityNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional; // Importante para garantir a consistência
 
 import java.util.List;
+import java.util.UUID; // Para gerar senhas aleatórias na anonimização
 import java.util.stream.Collectors;
 
 @Service
 public class UserService {
 
     private final UserRepository userRepository;
-    private final BCryptPasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder; // <<< Use a interface PasswordEncoder
 
-    public UserService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
+    // Injeta a interface no construtor
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
-    // --- LÓGICA DE DESATIVAÇÃO (SOFT DELETE) ---
-    // O método que antes deletava, agora desativa o usuário.
+    // --- LÓGICA DE DESATIVAÇÃO (SOFT DELETE - REVERSÍVEL) ---
+    @Transactional
     public void deactivateUser(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado com o ID: " + id));
-        user.setDisabled(true); // Altera a flag
+        user.setDisabled(true);
         userRepository.save(user);
     }
 
+    @Transactional
     public void deactivateUserByEmail(String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException("Usuário com o e-mail '" + email + "' não encontrado."));
         this.deactivateUser(user.getId());
     }
 
-    // --- NOVO MÉTODO PARA ATIVAR/DESATIVAR ---
+    // --- LÓGICA PARA ATIVAR/DESATIVAR (TOGGLE) ---
+    @Transactional
     public UserResponseDTO toggleUserActivation(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado com o ID: " + id));
 
-        user.setDisabled(!user.isDisabled()); // Inverte o valor da flag
-        User updatedUser = userRepository.save(user);
 
+        if (user.isAnonymized()) {
+            throw new IllegalStateException("Não é possível alterar o status de um usuário anonimizado.");
+        }
+
+        user.setDisabled(!user.isDisabled());
+        User updatedUser = userRepository.save(user);
         return toUserResponseDTO(updatedUser);
     }
 
-    // O método toUserResponseDTO agora precisa mapear a nova flag
-    private UserResponseDTO toUserResponseDTO(User user) {
-        UserResponseDTO dto = new UserResponseDTO();
-        dto.setId(user.getId());
-        dto.setNome(user.getNome());
-        dto.setEmail(user.getEmail());
-        dto.setClient(user.isClient());
-        dto.setDisabled(user.isDisabled()); // Mapeia o novo campo
+    @Transactional
+    public void anonymizeUser(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado com o ID: " + id));
 
-        if (user instanceof Cliente) {
-            Cliente cliente = (Cliente) user;
-            dto.setCpf(cliente.getCpf());
-            dto.setCep(cliente.getCep());
-            dto.setRua(cliente.getRua());
-            dto.setBairro(cliente.getBairro());
-            dto.setCidade(cliente.getCidade());
-            dto.setEstado(cliente.getEstado());
-            dto.setTelefone(cliente.getTelefone());
-        } else if (user instanceof Employee) {
-            Employee employee = (Employee) user;
-            dto.setRole(employee.getRole());
-            dto.setSalary(employee.getSalary());
-            dto.setShift(employee.getShift());
+        // Garante que a anonimização só se aplique a clientes
+        if (!(user instanceof Cliente)) {
+            throw new IllegalArgumentException("A anonimização de dados só é aplicável a clientes.");
         }
-        return dto;
+
+        Cliente cliente = (Cliente) user;
+
+        // 1. Anonimiza os dados pessoais
+        cliente.setNome("Usuário Anonimizado");
+        cliente.setEmail("user_" + cliente.getId() + "@anon.com"); // E-mail único para evitar conflitos
+        cliente.setSenha(passwordEncoder.encode(UUID.randomUUID().toString())); // Senha inválida e aleatória
+        cliente.setCpf("000.000.000-00");
+        cliente.setCep("00000-000");
+        cliente.setRua("Endereço Anonimizado");
+        cliente.setBairro("Bairro Anonimizado");
+        cliente.setCidade("Cidade Anonimizada");
+        cliente.setEstado("XX");
+        cliente.setTelefone("(00) 00000-0000");
+
+        // 2. Define as flags de estado permanente
+        cliente.setDisabled(true);
+        cliente.setAnonymized(true);
+
+        userRepository.save(cliente);
     }
 
+    @Transactional
+    public void anonymizeUserByEmail(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("Usuário com o e-mail '" + email + "' não encontrado."));
+
+        this.anonymizeUser(user.getId());
+    }
+
+
+    // --- MÉTODOS DE CONSULTA E ATUALIZAÇÃO ---
 
     public List<UserResponseDTO> findAllUsers() {
         return userRepository.findAll().stream()
@@ -90,10 +113,17 @@ public class UserService {
         return toUserResponseDTO(user);
     }
 
+    @Transactional
     public UserResponseDTO updateUser(Long id, UserRegisterRequestDTO request) {
         User existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado com o ID: " + id));
 
+        // Impede a atualização de um usuário anonimizado
+        if (existingUser.isAnonymized()) {
+            throw new IllegalStateException("Não é possível atualizar um usuário que foi anonimizado.");
+        }
+
+        // Lógica de atualização (seu código original)
         existingUser.setNome(request.getNome());
         existingUser.setEmail(request.getEmail());
 
@@ -101,8 +131,7 @@ public class UserService {
             existingUser.setSenha(passwordEncoder.encode(request.getSenha()));
         }
 
-        if (existingUser instanceof Cliente) {
-            Cliente cliente = (Cliente) existingUser;
+        if (existingUser instanceof Cliente cliente) {
             if (request.getCpf() != null) cliente.setCpf(request.getCpf());
             if (request.getCep() != null) cliente.setCep(request.getCep());
             if (request.getRua() != null) cliente.setRua(request.getRua());
@@ -112,8 +141,7 @@ public class UserService {
             if (request.getTelefone() != null) cliente.setTelefone(request.getTelefone());
         }
 
-        if (existingUser instanceof Employee) {
-            Employee employee = (Employee) existingUser;
+        if (existingUser instanceof Employee employee) {
             if (request.getRole() != null) employee.setRole(request.getRole());
             if (request.getSalary() != null) employee.setSalary(request.getSalary());
             if (request.getShift() != null) employee.setShift(request.getShift());
@@ -123,21 +151,47 @@ public class UserService {
         return toUserResponseDTO(updatedUser);
     }
 
+    @Transactional
     public void updatePassword(Long id, String senhaAtual, String novaSenha) {
-        // 1. Busca o usuário. Se não achar, lança "EntityNotFoundException" (causa o Erro 404)
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado com o ID: " + id));
 
-        // 2. VERIFICA SE A SENHA ATUAL BATE (usando o encoder)
+        if (user.isAnonymized()) {
+            throw new IllegalStateException("Não é possível alterar a senha de um usuário anonimizado.");
+        }
+
         if (!passwordEncoder.matches(senhaAtual, user.getSenha())) {
-            
-            // 3. Se não bater, lança "IllegalArgumentException" (causa o Erro 400)
             throw new IllegalArgumentException("Senha atual incorreta!");
         }
 
-        // 4. Se chegou aqui, a senha atual estava correta.
-        // Codifica a nova senha e salva no banco.
         user.setSenha(passwordEncoder.encode(novaSenha));
         userRepository.save(user);
+    }
+
+    // --- MÉTODO AUXILIAR DTO ---
+    // Ajustado para incluir o novo campo 'isAnonymized'
+    private UserResponseDTO toUserResponseDTO(User user) {
+        UserResponseDTO dto = new UserResponseDTO();
+        dto.setId(user.getId());
+        dto.setNome(user.getNome());
+        dto.setEmail(user.getEmail());
+        dto.setClient(user.isClient());
+        dto.setDisabled(user.isDisabled());
+        dto.setAnonymized(user.isAnonymized()); // Mapeia o novo campo
+
+        if (user instanceof Cliente cliente) {
+            dto.setCpf(cliente.getCpf());
+            dto.setCep(cliente.getCep());
+            dto.setRua(cliente.getRua());
+            dto.setBairro(cliente.getBairro());
+            dto.setCidade(cliente.getCidade());
+            dto.setEstado(cliente.getEstado());
+            dto.setTelefone(cliente.getTelefone());
+        } else if (user instanceof Employee employee) {
+            dto.setRole(employee.getRole());
+            dto.setSalary(employee.getSalary());
+            dto.setShift(employee.getShift());
+        }
+        return dto;
     }
 }

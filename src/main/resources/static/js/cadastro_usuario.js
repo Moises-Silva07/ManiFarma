@@ -46,6 +46,15 @@ function validarCEP(cep) {
 document.getElementById("form").addEventListener("submit", async (e) => {
     e.preventDefault();
 
+    // 🚨 NOVO — Verificar se usuário aceitou os termos
+    const msg = document.getElementById("message");
+    
+    const aceitou = document.getElementById("aceitarTermos").checked;
+    if (!aceitou) {
+        msg.textContent = "Você precisa aceitar a Política de Privacidade para criar sua conta.";
+        return;
+    }
+
     const nome = document.getElementById("nome").value.trim();
     const email = document.getElementById("email").value.trim();
     const cpf = document.getElementById("cpf").value.trim();
@@ -54,7 +63,7 @@ document.getElementById("form").addEventListener("submit", async (e) => {
     const senha = document.getElementById("senha").value.trim();
     const confirmaSenha = document.getElementById("confirmaSenha").value.trim();
 
-    const msg = document.getElementById("message");
+    
     msg.textContent = "";
 
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -279,17 +288,3 @@ document.getElementById("fecharPolitica").addEventListener("click", () => {
     document.getElementById("modal-politica").classList.add("hidden");
 });
 
-// BLOQUEAR CADASTRO SE NÃO ACEITAR
-document.getElementById("form").addEventListener("submit", function(e) {
-    const aceitou = document.getElementById("aceitarTermos").checked;
-
-    if (!aceitou) {
-        e.preventDefault();
-        showModal({
-            title: "Termos necessários",
-            message: "Você precisa aceitar a Política de Privacidade para criar sua conta.",
-            type: "warning"
-        });
-        return;
-    }
-});

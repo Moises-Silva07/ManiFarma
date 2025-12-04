@@ -9,9 +9,8 @@ public class UserResponseDTO {
     private String email;
     private boolean isClient;
     private String token;
-    private boolean isDisabled; // ADICIONE ESTA LINHA
-
-    // (Campos de Cliente e Employee)
+    private boolean isDisabled;
+    private boolean isAnonymized;
     private String cpf;
     private String cep;
     private String rua;

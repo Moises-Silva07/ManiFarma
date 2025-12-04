@@ -280,7 +280,7 @@ public class PedidoService {
         
         // ADICIONADO: Validação para impedir geração de link sem valor
         if (pedido.getValorTotal() == null || pedido.getValorTotal() <= 0) {
-            throw new RuntimeException("Não é possível gerar cotação: O pedido #" + pedidoId + " está com valor total R$0,00 ou nulo.");
+            throw new IllegalArgumentException("Não pode enviar cotação sem preço");
         }
 
         // Gera o link de pagamento

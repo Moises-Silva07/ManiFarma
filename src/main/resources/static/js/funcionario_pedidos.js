@@ -297,6 +297,30 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 // Função alterar Status
 async function alterarStatus(id, novoStatus) {
+
+  // 1 — Buscar detalhes do pedido antes
+  const { ok: okPedido, data: pedido } = await apiRequest(`/api/pedidos/${id}`, "GET", null, true, true);
+
+  if (!okPedido) {
+    return showModal({
+      title: "Erro",
+      message: "Não foi possível verificar o pedido.",
+      type: "danger"
+    });
+  }
+
+  const funcionarioLogado = Number(localStorage.getItem("userId"));
+
+  // 2 — BLOQUEIO: funcionário não assumiu ainda
+  if (!pedido.employeeId || pedido.employeeId !== funcionarioLogado) {
+    return showModal({
+      title: "Ação Bloqueada",
+      message: "Você precisa ASSUMIR o pedido antes de validar ou cancelar.",
+      type: "warning"
+    });
+  }
+
+  // 3 — Confirmação
   const confirmar = await showModal({
     title: "Confirmar Ação",
     message: `Deseja realmente marcar o pedido ${id} como ${novoStatus}?`,
@@ -305,6 +329,7 @@ async function alterarStatus(id, novoStatus) {
 
   if (!confirmar) return;
 
+  // 4 — Enviar ao back-end
   const { ok } = await apiRequest(`/api/pedidos/${id}/status`, "PUT", { status: novoStatus }, true, true);
 
   if (ok) {
@@ -314,7 +339,6 @@ async function alterarStatus(id, novoStatus) {
       type: "success"
     });
 
-    
   } else {
     showModal({
       title: "Erro",
@@ -323,6 +347,7 @@ async function alterarStatus(id, novoStatus) {
     });
   }
 }
+
 
 // Função Atribuir Funcionario
 async function atribuirFuncionario(pedidoId, funcionarioId) {
@@ -350,6 +375,7 @@ async function atribuirFuncionario(pedidoId, funcionarioId) {
 }
 
 // Função para gerar o link de cotação
+
 async function enviarCotacao(pedidoId) {
   const confirmar = await showModal({
     title: "Gerar Cotação",
@@ -373,12 +399,24 @@ async function enviarCotacao(pedidoId) {
       message: "O link foi gerado e enviado ao cliente!",
       type: "success"
     });
+
   } else {
+
+    // --- TRATAMENTO ESPECIAL DO ERRO ---
+    let mensagem = "Erro ao enviar cotação.";
+
+    // Back-end envia string → converter para texto amigável
+    if (typeof data === "string" && data.includes("sem valor")) {
+      mensagem = "❌ Não pode enviar cotação sem preço.";
+    }
+    if (data?.error) {
+      mensagem = data.error;
+    }
+
     showModal({
       title: "Erro",
-      message: "Erro ao gerar/enviar a cotação: " + (data || ""),
+      message: mensagem,
       type: "danger"
     });
   }
 }
-

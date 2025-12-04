@@ -29,8 +29,7 @@ public class EmailService {
             SimpleMailMessage message = new SimpleMailMessage();
             message.setFrom(fromEmail); 
 
-            // --- 1. CORREÇÃO DO DESTINATÁRIO ---
-            // Substitua a linha de teste pela linha original
+
             message.setTo(cliente.getEmail()); // <-- PARA: O email do cliente real
             
             // --- 2. (OPCIONAL) Limpeza do Assunto ---

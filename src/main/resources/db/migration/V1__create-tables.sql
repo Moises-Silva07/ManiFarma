@@ -13,8 +13,10 @@ CREATE TABLE users (
     email VARCHAR(255) UNIQUE NOT NULL,
     senha VARCHAR(255) NOT NULL,
     is_client BOOLEAN NOT NULL,
-    is_disabled BOOLEAN NOT NULL DEFAULT FALSE -- ADICIONE ESTA LINHA
+    is_disabled BOOLEAN NOT NULL DEFAULT FALSE ,-- ADICIONE ESTA LINHA
+    is_anonymized BOOLEAN NOT NULL DEFAULT FALSE
 );
+
 -- Tabela de clientes, usando o ID de users como chave primária e estrangeira
 CREATE TABLE clientes (
     id BIGINT NOT NULL PRIMARY KEY,
@@ -29,7 +31,6 @@ CREATE TABLE clientes (
 );
 
 -- Tabela de funcionários, usando o ID de users como chave primária e estrangeira
--- Corrigido: Não deve ter seu próprio BIGSERIAL
 CREATE TABLE employees (
     id BIGINT NOT NULL PRIMARY KEY,
     role VARCHAR(255),

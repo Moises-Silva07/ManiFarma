@@ -220,11 +220,11 @@ document.getElementById("form-senha").addEventListener("submit", async (e) => {
         });
     }
 
-    // Se backend retornar senha atual incorreta
-    if (resposta.status === 400 || resposta.status === 401) {
+    // Se o back-end retornar erro de senha incorreta (400)
+    if (resposta.status === 400) {
         return showModal({
             title: "Senha incorreta",
-            message: "A senha atual não confere.",
+            message: resposta.data?.error || "Senha atual incorreta!",
             type: "danger"
         });
     }
@@ -237,45 +237,92 @@ document.getElementById("form-senha").addEventListener("submit", async (e) => {
 });
 
 
-// DESATIVAR CONTA
-document.getElementById("btn-excluir-conta").addEventListener("click", async () => {
+// DESATIVAR CONTA (Desativado)
+
+// document.getElementById("btn-excluir-conta").addEventListener("click", async () => {
+//     const confirmar = await showModal({
+//         title: "Confirmação",
+//         message: "Tem certeza que deseja desativar sua conta?",
+//         type: "confirm"
+//     });
+
+//     if (!confirmar) return; // Usuário cancelou
+
+//     try {
+//         const resposta = await apiRequest(`/api/users/${userId}/toggle-activation`, "PATCH", null, true);
+
+//         if (resposta.ok) {
+//             showToast("Conta desativada com sucesso!", "success");
+
+//             // Espera 2 segundos e redireciona
+//             setTimeout(() => {
+//                 localStorage.clear();
+//                 window.location.href = "/html/index.html";
+//             }, 2000);
+//         } else {
+//             showModal({
+//                 title: "Erro",
+//                 message: "Não foi possível concluir a desativação da conta. Tente novamente.",
+//                 type: "danger"
+//             });
+//             console.error(resposta.data);
+//         }
+//     } catch (error) {
+//         console.error("Erro ao desativar conta:", error);
+//         showModal({
+//             title: "Erro inesperado",
+//             message: "Ocorreu um problema ao tentar desativar a conta.",
+//             type: "danger"
+//         });
+//     }
+// });
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// EXCLUIR PERMANENTEMENTE A CONTA (ANONIMIZAÇÃO)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+document.getElementById("btn-excluir-permanente").addEventListener("click", async () => {
+
     const confirmar = await showModal({
-        title: "Confirmação",
-        message: "Tem certeza que deseja desativar sua conta?",
+        title: "Excluir permanentemente?",
+        message: `
+            Essa ação não poderá ser desfeita.
+            Todas as suas informações pessoais serão removidas do sistema,
+            e sua conta não poderá ser recuperada.
+            Deseja continuar?
+        `,
         type: "confirm"
     });
 
-    if (!confirmar) return; // Usuário cancelou
+    if (!confirmar) return;
 
     try {
-        const resposta = await apiRequest(`/api/users/${userId}/toggle-activation`, "PATCH", null, true);
+        const resposta = await apiRequest(`/api/users/me/anonymize`, "DELETE", null, true);
 
         if (resposta.ok) {
-            showToast("Conta desativada com sucesso!", "success");
+            showToast("Sua conta foi excluída permanentemente.", "success");
 
-            // Espera 2 segundos e redireciona
             setTimeout(() => {
                 localStorage.clear();
                 window.location.href = "/html/index.html";
-            }, 2000);
+            }, 2500);
+
         } else {
             showModal({
                 title: "Erro",
-                message: "Não foi possível concluir a desativação da conta. Tente novamente.",
+                message: resposta.data?.error || "Não foi possível excluir a conta.",
                 type: "danger"
             });
-            console.error(resposta.data);
         }
+
     } catch (error) {
-        console.error("Erro ao desativar conta:", error);
+        console.error("Erro ao excluir permanentemente:", error);
         showModal({
             title: "Erro inesperado",
-            message: "Ocorreu um problema ao tentar desativar a conta.",
+            message: "Ocorreu um problema ao tentar excluir sua conta.",
             type: "danger"
         });
     }
 });
-
 
 
 // API VIACEP

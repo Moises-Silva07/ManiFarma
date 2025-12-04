@@ -70,7 +70,11 @@ async function apiRequest(endpoint, method, body = null, auth = false, debug = t
             data = null; // fallback seguro
         }
 
-        return { ok: resposta.ok, data }; // ok: indica se a requisição deu certo (true/false); // data: dados retornados pela API.
+        return { 
+            ok: resposta.ok,
+            status: resposta.status,
+            data 
+        }; // ok: indica se a requisição deu certo (true/false); // data: dados retornados pela API.
 
 
     } catch (erro) { // Se algo falhar (como o servidor estar offline), o catch captura o erro e devolve uma resposta padronizada avisando o usuário.
@@ -80,9 +84,10 @@ async function apiRequest(endpoint, method, body = null, auth = false, debug = t
 
         return {
             ok: false,
+            status: 0,
             data: {
                 mensagem: "Erro na conexão com o servidor.",
-                erro: erro.message // <-- incluído para depuração
+                erro: erro.message
             }
         };
     }
