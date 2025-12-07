@@ -1,11 +1,6 @@
 package dev.java.ManiFarma.Entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 
 @Entity
 public class PedidoProduto {
@@ -24,36 +19,27 @@ public class PedidoProduto {
 
     private Integer quantidade;
 
+    private Double dose;
+
+    @Enumerated(EnumType.STRING)
+    private Unidade unidade; // MG ou ML
+
     // Getters e Setters
-    public Long getId() {
-        return id;
-    }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public Pedido getPedido() { return pedido; }
+    public void setPedido(Pedido pedido) { this.pedido = pedido; }
 
-    public Pedido getPedido() {
-        return pedido;
-    }
+    public Produto getProduto() { return produto; }
+    public void setProduto(Produto produto) { this.produto = produto; }
 
-    public void setPedido(Pedido pedido) {
-        this.pedido = pedido;
-    }
+    public Integer getQuantidade() { return quantidade; }
+    public void setQuantidade(Integer quantidade) { this.quantidade = quantidade; }
 
-    public Produto getProduto() {
-        return produto;
-    }
+    public Double getDose() { return dose; }
+    public void setDose(Double dose) { this.dose = dose; }
 
-    public void setProduto(Produto produto) {
-        this.produto = produto;
-    }
-
-    public Integer getQuantidade() {
-        return quantidade;
-    }
-
-    public void setQuantidade(Integer quantidade) {
-        this.quantidade = quantidade;
-    }
+    public Unidade getUnidade() { return unidade; }
+    public void setUnidade(Unidade unidade) { this.unidade = unidade; }
 }

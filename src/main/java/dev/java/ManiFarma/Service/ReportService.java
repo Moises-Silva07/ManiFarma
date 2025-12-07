@@ -8,10 +8,10 @@ import dev.java.ManiFarma.Entity.StatusPedido;
 import dev.java.ManiFarma.Repository.PedidoRepository;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ReportService {
@@ -22,10 +22,6 @@ public class ReportService {
         this.pedidoRepository = pedidoRepository;
     }
 
-    /**
-     * Gera um resumo com estatísticas gerais dos pedidos:
-     * total de pedidos, receita total e contagem por status.
-     */
     public ReportSummaryDTO getSummary() {
         long totalPedidos = pedidoRepository.countAllOrders();
         Double receitaTotal = pedidoRepository.sumAllRevenue();
@@ -37,41 +33,53 @@ public class ReportService {
         long cancelados = pedidoRepository.countByStatus(StatusPedido.CANCELADO);
 
         return new ReportSummaryDTO(totalPedidos, receitaTotal, pendentes, pagos, concluidos, cancelados);
-
     }
 
-    /**
-     * Retorna todos os pedidos dentro de um intervalo de datas.
-     */
-    public List<Pedido> getOrdersBetween(LocalDate from, LocalDate to) {
-        LocalDateTime start = (from != null) ? from.atStartOfDay() : null;
-        LocalDateTime end = (to != null) ? to.atTime(LocalTime.MAX) : null;
-        return pedidoRepository.findOrdersBetween(start, end);
+    public List<Pedido> getOrdersBetween(LocalDateTime from, LocalDateTime to) {
+        return pedidoRepository.findOrdersBetween(from, to);
     }
 
-    /**
-     * Retorna os clientes com maior volume de pedidos ou receita.
-     */
-    public List<ClientReportDTO> getTopClients(LocalDate from, LocalDate to, int limit) {
-        LocalDateTime start = (from != null) ? from.atStartOfDay() : null;
-        LocalDateTime end = (to != null) ? to.atTime(LocalTime.MAX) : null;
+    public List<ClientReportDTO> getTopClients(LocalDateTime start, LocalDateTime end, int limit) {
+        if (start == null) {
+            start = LocalDateTime.of(2000, 1, 1, 0, 0, 0, 0); // Data padrão
+        }
+        if (end == null) {
+            end = LocalDateTime.now(); // Data atual
+        }
 
-        List<ClientReportDTO> clientes = pedidoRepository.findTopClients(start, end);
-        if (limit > 0 && clientes.size() > limit)
+        List<Object[]> results = pedidoRepository.findTopClients(start, end);
+
+        List<ClientReportDTO> clientes = results.stream()
+                .map(result -> new ClientReportDTO(
+                        (Long) result[0],  // id
+                        (String) result[1], // nome
+                        (String) result[2], // email
+                        (Long) result[3],   // número de pedidos
+                        (Double) result[4]  // total gasto
+                ))
+                .collect(Collectors.toList());
+
+        if (limit > 0 && clientes.size() > limit) {
             return clientes.subList(0, limit);
+        }
+
         return clientes;
     }
 
-    /**
-     * Retorna os funcionários com mais pedidos atendidos no período.
-     */
-    public List<EmployeeReportDTO> getTopEmployees(LocalDate from, LocalDate to, int limit) {
-        LocalDateTime start = (from != null) ? from.atStartOfDay() : null;
-        LocalDateTime end = (to != null) ? to.atTime(LocalTime.MAX) : null;
+    public List<EmployeeReportDTO> getTopEmployees(LocalDateTime start, LocalDateTime end, int limit) {
+        if (start == null) {
+            start = LocalDateTime.of(2000, 1, 1, 0, 0, 0, 0); // Data padrão
+        }
+        if (end == null) {
+            end = LocalDateTime.now(); // Data atual
+        }
 
         List<EmployeeReportDTO> funcionarios = pedidoRepository.findTopEmployees(start, end);
-        if (limit > 0 && funcionarios.size() > limit)
+
+        if (limit > 0 && funcionarios.size() > limit) {
             return funcionarios.subList(0, limit);
+        }
+
         return funcionarios;
     }
 }

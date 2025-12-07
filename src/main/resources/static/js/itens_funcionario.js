@@ -58,8 +58,8 @@ function renderizarTabela() {
 
   if (itensPagina.length === 0) {
     tabela.innerHTML = `
-      <tr><td colspan="3" class="text-center text-muted">
-        Nenhum item cadastrado.
+      <tr><td colspan="4" class="text-center text-muted">
+        Nenhum produto cadastrado.
       </td></tr>`;
     return;
   }
@@ -68,10 +68,14 @@ function renderizarTabela() {
     const linha = document.createElement("tr");
     linha.dataset.id = item.id;
 
+    const unidade = item.unidade || "—";
+    const precoPorUnidade = item.precoPorUnidade ?? item.preco ?? 0;
+
     linha.innerHTML = `
       <td>${item.id}</td>
       <td>${item.nome}</td>
-      <td>R$ ${item.preco.toFixed(2).replace('.', ',')}</td>
+      <td>${unidade}</td>
+      <td>R$ ${Number(precoPorUnidade).toFixed(4).replace('.', ',')}</td>
     `;
 
     linha.addEventListener("click", () => selecionarLinha(linha));
@@ -145,7 +149,6 @@ function renderizarPaginacao() {
 // ==============================================
 // 5. CRUD - CRIAR ITEM
 // ==============================================
-// Abrir modal no modo CRIAÇÃO
 function criarItem() {
   abrirModalItem(true);
 }
@@ -158,7 +161,7 @@ async function editarItem() {
   if (!linhaSelecionada) {
     return showModal({
       title: "Atenção",
-      message: "Selecione um item primeiro.",
+      message: "Selecione um produto primeiro.",
       type: "warning"
     });
   }
@@ -177,7 +180,7 @@ async function excluirItem() {
   if (!linhaSelecionada) {
     return showModal({
       title: "Atenção",
-      message: "Selecione um item para excluir.",
+      message: "Selecione um produto para excluir.",
       type: "warning",
     });
   }
@@ -186,7 +189,7 @@ async function excluirItem() {
 
   const confirmar = await showModal({
     title: "Confirmação",
-    message: "Tem certeza que deseja excluir este item?",
+    message: "Tem certeza que deseja excluir este produto?",
     type: "confirm"
   });
 
@@ -212,17 +215,20 @@ async function excluirItem() {
 
 
 // ==============================================
-// 8. FUNÇÃO QUE ABRE O MODAL DE CRIAÇÃO / EDIÇÃO
+// 8. ABRIR MODAL CRIAÇÃO / EDIÇÃO
 // ==============================================
 function abrirModalItem(criando, dados = null) {
   modoEdicao = !criando;
   idEdicao = dados ? dados.id : null;
 
   document.getElementById("tituloItemModal").textContent =
-    criando ? "Cadastrar Item" : "Editar Item";
+    criando ? "Cadastrar Produto" : "Editar Produto";
 
   document.getElementById("itemNome").value = dados ? dados.nome : "";
-  document.getElementById("itemPreco").value = dados ? dados.preco : "";
+  document.getElementById("itemUnidade").value = dados && dados.unidade ? dados.unidade : "MG";
+
+  const precoPorUnidade = dados ? (dados.precoPorUnidade ?? dados.preco ?? 0) : "";
+  document.getElementById("itemPrecoPorUnidade").value = precoPorUnidade;
 
   const modal = new bootstrap.Modal(document.getElementById("modalItemForm"));
   modal.show();
@@ -234,22 +240,28 @@ function abrirModalItem(criando, dados = null) {
 // ==============================================
 document.getElementById("btnSalvarItem").addEventListener("click", async () => {
   const nome = document.getElementById("itemNome").value.trim();
-  const preco = parseFloat(document.getElementById("itemPreco").value);
+  const unidade = document.getElementById("itemUnidade").value;
+  const precoPorUnidade = parseFloat(document.getElementById("itemPrecoPorUnidade").value);
 
-  if (!nome || isNaN(preco)) {
+  if (!nome || !unidade || isNaN(precoPorUnidade) || precoPorUnidade <= 0) {
     return showModal({
       title: "Erro",
-      message: "Preencha todos os campos corretamente.",
+      message: "Preencha nome, unidade e um preço por unidade válido.",
       type: "warning"
     });
   }
 
-  let resposta;
+  const payload = {
+    nome: document.getElementById("itemNome").value,
+    unidade: document.getElementById("itemUnidade").value,
+    preco: precoPorUnidade
+  };
 
+  let resposta;
   if (modoEdicao) {
-    resposta = await apiRequest(`/produtos/${idEdicao}`, "PUT", { nome, preco }, true);
+    resposta = await apiRequest(`/produtos/${idEdicao}`, "PUT", payload, true);
   } else {
-    resposta = await apiRequest(`/produtos`, "POST", { nome, preco }, true);
+    resposta = await apiRequest(`/produtos`, "POST", payload, true);
   }
 
   if (resposta.ok) {
@@ -261,16 +273,16 @@ document.getElementById("btnSalvarItem").addEventListener("click", async () => {
 
     carregarItens();
 
-    // fechar modal
     bootstrap.Modal.getInstance(document.getElementById("modalItemForm")).hide();
   } else {
     showModal({
       title: "Erro",
-      message: "Não foi possível salvar o item.",
+      message: "Não foi possível salvar o produto.",
       type: "danger"
     });
   }
 });
+
 
 // ==============================================
 // 10. FILTRO DE ITENS POR ID
@@ -297,7 +309,7 @@ document.getElementById("btnAplicarFiltro").addEventListener("click", () => {
   if (filtrados.length === 0) {
     showModal({
       title: "Nenhum resultado",
-      message: "Nenhum item encontrado com esse ID.",
+      message: "Nenhum produto encontrado com esse ID.",
       type: "info"
     });
   }

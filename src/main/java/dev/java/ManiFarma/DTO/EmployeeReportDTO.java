@@ -1,28 +1,55 @@
 package dev.java.ManiFarma.DTO;
 
 public class EmployeeReportDTO {
+
     private Long employeeId;
     private String employeeName;
-    private long ordersHandled;
-    private Double totalValueHandled; // Double porque Pedido.valorTotal é Double
+    private Long ordersHandled;
+    private Double totalValueHandled;
 
-    public EmployeeReportDTO() {}
+    public EmployeeReportDTO() {
+        this.totalValueHandled = 0.0;
+    }
 
-    // Construtor usado pela JPQL "new ... "
-    public EmployeeReportDTO(Long employeeId, String employeeName, long ordersHandled, Double totalValueHandled) {
+    public EmployeeReportDTO(Long employeeId,
+                             String employeeName,
+                             Long ordersHandled,
+                             Double totalValueHandled) {
         this.employeeId = employeeId;
         this.employeeName = employeeName;
         this.ordersHandled = ordersHandled;
-        this.totalValueHandled = totalValueHandled;
+        this.totalValueHandled = (totalValueHandled != null) ? totalValueHandled : 0.0;
     }
 
-    // getters / setters
-    public Long getEmployeeId(){return employeeId;}
-    public void setEmployeeId(Long id){this.employeeId = id;}
-    public String getEmployeeName(){return employeeName;}
-    public void setEmployeeName(String n){this.employeeName=n;}
-    public long getOrdersHandled(){return ordersHandled;}
-    public void setOrdersHandled(long c){this.ordersHandled=c;}
-    public Double getTotalValueHandled(){return totalValueHandled;}
-    public void setTotalValueHandled(Double v){this.totalValueHandled=v;}
+    public Long getEmployeeId() {
+        return employeeId;
+    }
+
+    public void setEmployeeId(Long employeeId) {
+        this.employeeId = employeeId;
+    }
+
+    public String getEmployeeName() {
+        return employeeName;
+    }
+
+    public void setEmployeeName(String employeeName) {
+        this.employeeName = employeeName;
+    }
+
+    public Long getOrdersHandled() {
+        return ordersHandled;
+    }
+
+    public void setOrdersHandled(Long ordersHandled) {
+        this.ordersHandled = ordersHandled;
+    }
+
+    public Double getTotalValueHandled() {
+        return totalValueHandled;
+    }
+
+    public void setTotalValueHandled(Double totalValueHandled) {
+        this.totalValueHandled = totalValueHandled;
+    }
 }

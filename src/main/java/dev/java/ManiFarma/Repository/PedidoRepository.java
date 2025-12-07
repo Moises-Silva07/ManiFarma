@@ -23,18 +23,33 @@ public interface PedidoRepository extends JpaRepository<Pedido, Long> {
     @Query("select count(p) from Pedido p where p.status = :status")
     long countByStatus(@Param("status") dev.java.ManiFarma.Entity.StatusPedido status);
 
-    @Query("select new dev.java.ManiFarma.DTO.ClientReportDTO(c.id, c.nome, c.email, count(p), coalesce(sum(p.valorTotal),0)) " +
-            "from Pedido p join p.cliente c " +
-            "where (:from is null or p.createdAt >= :from) and (:to is null or p.createdAt <= :to) " +
-            "group by c.id, c.nome, c.email order by sum(p.valorTotal) desc")
-    List<ClientReportDTO> findTopClients(@Param("from") LocalDateTime from, @Param("to") LocalDateTime to);
+    @Query(value = """
+            SELECT c.id, u.nome, u.email, COUNT(p.id), COALESCE(SUM(p.valorTotal), 0.0)
+            FROM Pedido p
+            JOIN p.cliente c
+            JOIN c.usuario u
+            WHERE p.createdAt BETWEEN :start AND :end
+            GROUP BY c.id, u.nome, u.email
+            ORDER BY SUM(p.valorTotal) DESC
+            """, nativeQuery = true)
+    List<Object[]> findTopClients(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
 
-    @Query("select new dev.java.ManiFarma.DTO.EmployeeReportDTO(e.id, e.nome, count(p), coalesce(sum(p.valorTotal),0)) " +
-            "from Pedido p join p.employee e " +
-            "where (:from is null or p.createdAt >= :from) and (:to is null or p.createdAt <= :to) " +
-            "group by e.id, e.nome order by count(p) desc")
-    List<EmployeeReportDTO> findTopEmployees(@Param("from") LocalDateTime from, @Param("to") LocalDateTime to);
+    @Query("""
+            SELECT new dev.java.ManiFarma.DTO.EmployeeReportDTO(e.id, e.nome, COUNT(p), COALESCE(SUM(p.valorTotal), 0.0))
+            FROM Pedido p 
+            JOIN p.employee e
+            WHERE p.createdAt BETWEEN :start AND :end
+            GROUP BY e.id 
+            ORDER BY SUM(p.valorTotal) DESC
+            """)
+    List<EmployeeReportDTO> findTopEmployees(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
 
-    @Query("select p from Pedido p where (:from is null or p.createdAt >= :from) and (:to is null or p.createdAt <= :to) order by p.createdAt desc")
+    @Query("""
+           SELECT p
+           FROM Pedido p
+           WHERE (:from IS NULL OR p.createdAt >= :from)
+             AND (:to IS NULL OR p.createdAt <= :to)
+           ORDER BY p.createdAt DESC
+           """)
     List<Pedido> findOrdersBetween(@Param("from") LocalDateTime from, @Param("to") LocalDateTime to);
 }

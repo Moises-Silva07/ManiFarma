@@ -19,9 +19,6 @@ public class Pedido {
     @Column(updatable = false)
     private LocalDateTime createdAt;
 
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
-
     @Enumerated(EnumType.STRING)
     private StatusPedido status;
 
@@ -85,4 +82,7 @@ public class Pedido {
 
     public String getCaminhoReceita() { return caminhoReceita; }
     public void setCaminhoReceita(String caminhoReceita) { this.caminhoReceita = caminhoReceita; }
+
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 }

@@ -2,7 +2,6 @@ package dev.java.ManiFarma.Entity;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import jakarta.persistence.*;
 
 @Entity
@@ -13,7 +12,12 @@ public class Produto {
     private Long id;
 
     private String nome;
+
+    @Column(name = "preco")
     private Double preco;
+
+    @Enumerated(EnumType.STRING)
+    private Unidade unidade;
 
     @OneToMany(mappedBy = "produto")
     private List<PedidoProduto> pedidos = new ArrayList<>();
@@ -28,11 +32,9 @@ public class Produto {
     public Double getPreco() { return preco; }
     public void setPreco(Double preco) { this.preco = preco; }
 
-    public List<PedidoProduto> getPedidos() {
-        return pedidos;
-    }
+    public Unidade getUnidade() { return unidade; }
+    public void setUnidade(Unidade unidade) { this.unidade = unidade; }
 
-    public void setPedidos(List<PedidoProduto> pedidos) {
-        this.pedidos = pedidos;
-    }
+    public List<PedidoProduto> getPedidos() { return pedidos; }
+    public void setPedidos(List<PedidoProduto> pedidos) { this.pedidos = pedidos; }
 }

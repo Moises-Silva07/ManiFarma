@@ -147,46 +147,70 @@ public class PedidoService {
 
     @Transactional
     public PedidoResponseDTO criarPedido(PedidoRequestDTO request) {
+
         Cliente cliente = (Cliente) clienteRepository.findById(request.getClienteId())
-                .orElseThrow(() -> new EntityNotFoundException("Cliente não encontrado com ID: " + request.getClienteId()));
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "Cliente não encontrado com ID: " + request.getClienteId()
+                ));
 
         Pedido pedido = new Pedido();
         pedido.setDescricao(request.getDescricao());
         pedido.setStatus(StatusPedido.PENDENTE);
         pedido.setReceita(request.getReceita());
         pedido.setCliente(cliente);
+        pedido.setValorTotal(0.0);
 
         if (request.getEmployeeId() != null) {
-            User user = employeeRepository.findById(request.getEmployeeId())
-                    .orElseThrow(() -> new EntityNotFoundException("Funcionário não encontrado com ID: " + request.getEmployeeId()));
-            if (!(user instanceof Employee)) {
-                throw new ClassCastException("O usuário com ID " + user.getId() + " é um Cliente, não um Funcionário.");
-            }
-            pedido.setEmployee((Employee) user);
+            Employee funcionario = (Employee) employeeRepository.findById(request.getEmployeeId())
+                    .orElseThrow(() -> new EntityNotFoundException(
+                            "Funcionário não encontrado: " + request.getEmployeeId()
+                    ));
+
+            pedido.setEmployee(funcionario);
         }
 
         double valorTotalPedido = 0.0;
+        List<PedidoProduto> itensDoPedido = new ArrayList<>();
 
         if (request.getItens() != null && !request.getItens().isEmpty()) {
-            List<PedidoProduto> itens = new ArrayList<>();
+
             for (PedidoProdutoRequestDTO itemDTO : request.getItens()) {
+
                 Produto produto = produtoRepository.findById(itemDTO.getProdutoId())
-                        .orElseThrow(() -> new EntityNotFoundException("Produto não encontrado com ID: " + itemDTO.getProdutoId()));
-                valorTotalPedido += produto.getPreco() * itemDTO.getQuantidade();
+                        .orElseThrow(() -> new EntityNotFoundException(
+                                "Produto não encontrado com ID: " + itemDTO.getProdutoId()
+                        ));
+
+                Unidade unidade;
+                if (itemDTO.getUnidade() != null)
+                    unidade = Unidade.valueOf(itemDTO.getUnidade().toUpperCase());
+                else
+                    unidade = produto.getUnidade();
+
+                if (itemDTO.getDose() == null || itemDTO.getDose() <= 0)
+                    throw new IllegalArgumentException("Dose inválida para o produto ID " + produto.getId());
+
+                double dose = itemDTO.getDose();
+
+                double valorItem = produto.getPreco() * dose;
+
+                valorTotalPedido += valorItem;
 
                 PedidoProduto item = new PedidoProduto();
                 item.setPedido(pedido);
                 item.setProduto(produto);
+                item.setDose(dose);
+                item.setUnidade(unidade);
                 item.setQuantidade(itemDTO.getQuantidade());
-                itens.add(item);
+                itensDoPedido.add(item);
             }
-            pedido.setItens(itens);
         }
 
+        pedido.setItens(itensDoPedido);
         pedido.setValorTotal(valorTotalPedido);
+
         Pedido pedidoSalvo = pedidoRepository.save(pedido);
 
-        // Gera link e envia email
         String linkPagamento = paymentService.criarLinkDePagamento(pedidoSalvo);
         emailService.enviarEmailPagamento(pedidoSalvo.getCliente(), pedidoSalvo, linkPagamento);
 

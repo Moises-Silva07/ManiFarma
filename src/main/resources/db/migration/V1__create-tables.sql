@@ -43,7 +43,8 @@ CREATE TABLE employees (
 CREATE TABLE produtos (
     id BIGSERIAL PRIMARY KEY,
     nome VARCHAR(255) NOT NULL,
-    preco DOUBLE PRECISION NOT NULL
+    preco DOUBLE PRECISION NOT NULL,
+    unidade VARCHAR(5) NOT NULL DEFAULT 'MG'
 );
 
 -- Tabela de pedidos
@@ -53,9 +54,10 @@ CREATE TABLE pedido (
     descricao TEXT,
     status VARCHAR(50) NOT NULL,
     receita VARCHAR(255),
-    valor_total DOUBLE PRECISION, -- <--- ADICIONE ESTA LINHA
-    cliente_id BIGINT NOT NULL, -- Um pedido sempre deve ter um cliente
-    employee_id BIGINT, -- Um funcionário pode ser atribuído depois
+    valor_total DOUBLE PRECISION,
+    cliente_id BIGINT NOT NULL,
+    employee_id BIGINT,
+    created_at TIMESTAMP NOT NULL,
     CONSTRAINT fk_pedido_cliente FOREIGN KEY (cliente_id) REFERENCES clientes(id),
     CONSTRAINT fk_pedido_employee FOREIGN KEY (employee_id) REFERENCES employees(id)
 );
@@ -66,6 +68,8 @@ CREATE TABLE pedido_produto (
     pedido_id BIGINT NOT NULL,
     produto_id BIGINT NOT NULL,
     quantidade INT NOT NULL,
+    dose DOUBLE PRECISION,
+    unidade VARCHAR(5),
     CONSTRAINT fk_pp_pedido FOREIGN KEY (pedido_id) REFERENCES pedido(id),
     CONSTRAINT fk_pp_produto FOREIGN KEY (produto_id) REFERENCES produtos(id)
 );

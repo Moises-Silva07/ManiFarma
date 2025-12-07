@@ -12,9 +12,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   let pedidoSelecionado = null;
   let produtosCache = [];
   let quantidadesSelecionadas = {};
+  let dosesSelecionadas = {};
 
   // --- Variáveis de paginação ---
   let todosPedidos = [];
+  let pedidosOriginais = [];
   let paginaAtual = 1;
   const itensPorPagina = 10;
 
@@ -29,9 +31,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     corpoTabela.innerHTML = `<tr><td colspan="5" class="text-muted text-center">Nenhum pedido disponível.</td></tr>`;
     return;
   }
-
-  // guarda todos os pedidos e renderiza a primeira página
-  let pedidosOriginais = []; // manter todos os pedidos 
 
   todosPedidos = data;
   pedidosOriginais = [...data];
@@ -86,6 +85,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     const fim = inicio + itensPorPagina;
     const pedidosPagina = todosPedidos.slice(inicio, fim);
 
+    if (pedidosPagina.length === 0) {
+      corpoTabela.innerHTML = `<tr><td colspan="5" class="text-muted text-center">Nenhum pedido encontrado.</td></tr>`;
+      return;
+    }
+
     corpoTabela.innerHTML = pedidosPagina
       .map(
         (pedido) => `
@@ -94,12 +98,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             <td>${pedido.clienteId ? `${pedido.clienteId} - ${pedido.clienteNome}` : "—"}</td>
             <td>${pedido.employeeId ? `${pedido.employeeId} - ${pedido.employeeNome}` : "—"}</td>
             <td>${pedido.status}</td>
-            <td>R$ ${pedido.valorTotal?.toFixed(2) || "0.00"}</td>
+            <td>R$ ${(pedido.valorTotal ?? 0).toFixed(2)}</td>
           </tr>`
       )
       .join("");
 
-    // Reaplica eventos de seleção
     document.querySelectorAll("#corpoTabela tr").forEach((linha) => {
       linha.addEventListener("click", () => {
         document.querySelectorAll("#corpoTabela tr").forEach((l) => l.classList.remove("selecionada"));
@@ -116,6 +119,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   function renderizarPaginacao() {
     paginacao.innerHTML = "";
     const totalPaginas = Math.ceil(todosPedidos.length / itensPorPagina);
+
+    if (totalPaginas <= 1) return;
 
     // Botão Anterior
     const liAnterior = document.createElement("li");
@@ -156,9 +161,15 @@ document.addEventListener("DOMContentLoaded", async () => {
     paginacao.appendChild(liProximo);
   }
 
-  // --- 3. Abrir modal com lista de produtos ---
+  // --- 3. Abrir modal com lista de produtos (agora com dose/unidade) ---
   btnAdicionar.addEventListener("click", async () => {
-    if (!pedidoSelecionado) return alert("Selecione um pedido primeiro.");
+    if (!pedidoSelecionado) {
+      return showModal({
+        title: "Atenção",
+        message: "Selecione um pedido primeiro.",
+        type: "warning"
+      });
+    }
 
     if (produtosCache.length === 0) {
       const res = await apiRequest("/produtos", "GET", null, true, true);
@@ -174,18 +185,36 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     quantidadesSelecionadas = {};
+    dosesSelecionadas = {};
     listaProdutos.innerHTML = "";
 
     produtosCache.forEach((produto) => {
+      const unidade = produto.unidade || "MG";
+      const preco = produto.precoPorUnidade ?? produto.preco ?? 0;
+
       listaProdutos.innerHTML += `
         <div class="col-12">
-          <div class="produto-card" data-id="${produto.id}">
-            <h5>${produto.nome}</h5>
-            <p>R$ ${produto.preco.toFixed(2)}</p>
-            <div class="qtd-control">
-              <button class="btnMenos">−</button>
-              <input type="text" class="qtdInput" value="0" readonly>
-              <button class="btnMais">+</button>
+          <div class="produto-card" data-id="${produto.id}" data-unidade="${unidade}">
+            <div>
+              <h5>${produto.nome}</h5>
+              <p class="mb-1">
+                Unidade: <strong>${unidade}</strong><br>
+                Preço por unidade: <strong>R$ ${Number(preco).toFixed(4)}</strong> / ${unidade.toLowerCase()}
+              </p>
+            </div>
+
+            <div class="mt-2">
+              <label class="form-label mb-1">Dose (${unidade.toLowerCase()}):</label>
+              <input type="number" class="form-control doseInput" step="0.01" min="0">
+            </div>
+
+            <div class="mt-2">
+              <label class="form-label mb-1">Quantidade (frascos/unidades):</label>
+              <div class="qtd-control">
+                <button type="button" class="btnMenos">−</button>
+                <input type="text" class="qtdInput" value="0" readonly>
+                <button type="button" class="btnMais">+</button>
+              </div>
             </div>
           </div>
         </div>`;
@@ -193,22 +222,29 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     document.querySelectorAll(".produto-card").forEach((card) => {
       const id = card.getAttribute("data-id");
-      const input = card.querySelector(".qtdInput");
+      const inputQtd = card.querySelector(".qtdInput");
       const btnMais = card.querySelector(".btnMais");
       const btnMenos = card.querySelector(".btnMenos");
+      const inputDose = card.querySelector(".doseInput");
 
       quantidadesSelecionadas[id] = 0;
+      dosesSelecionadas[id] = 0;
 
       btnMais.addEventListener("click", () => {
         quantidadesSelecionadas[id]++;
-        input.value = quantidadesSelecionadas[id];
+        inputQtd.value = quantidadesSelecionadas[id];
       });
 
       btnMenos.addEventListener("click", () => {
         if (quantidadesSelecionadas[id] > 0) {
           quantidadesSelecionadas[id]--;
-          input.value = quantidadesSelecionadas[id];
+          inputQtd.value = quantidadesSelecionadas[id];
         }
+      });
+
+      inputDose.addEventListener("input", () => {
+        const v = parseFloat(inputDose.value);
+        dosesSelecionadas[id] = isNaN(v) ? 0 : v;
       });
     });
 
@@ -216,22 +252,37 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 
   // --- 4. Confirmar e enviar ao backend ---
-btnConfirmarItens.addEventListener("click", async () => {
+  btnConfirmarItens.addEventListener("click", async () => {
 
-    const itensSelecionados = Object.entries(quantidadesSelecionadas)
-        .filter(([_, qtd]) => qtd > 0)
-        .map(([produtoId, quantidade]) => ({ produtoId: Number(produtoId), quantidade }));
+    const itensSelecionados = [];
 
-    // --- Validação: nenhum item selecionado ---
-    if (itensSelecionados.length === 0) {
-        return showModal({
-            title: "Atenção",
-            message: "Selecione ao menos 1 item para adicionar ao pedido.",
-            type: "warning",
+    for (const [produtoId, dose] of Object.entries(dosesSelecionadas)) {
+      const d = Number(dose);
+      if (d > 0) {
+        const qtd = quantidadesSelecionadas[produtoId] && quantidadesSelecionadas[produtoId] > 0
+          ? quantidadesSelecionadas[produtoId]
+          : 1; // default 1
+
+        const produto = produtosCache.find(p => String(p.id) === String(produtoId));
+        const unidade = produto && produto.unidade ? produto.unidade : "MG";
+
+        itensSelecionados.push({
+          produtoId: Number(produtoId),
+          quantidade: qtd,
+          dose: d,
+          unidade: unidade
         });
+      }
     }
 
-    // --- Envia para o backend ---
+    if (itensSelecionados.length === 0) {
+      return showModal({
+        title: "Atenção",
+        message: "Informe pelo menos a dose de um produto para adicionar.",
+        type: "warning",
+      });
+    }
+
     const response = await apiRequest(
         `/api/pedidos/${pedidoSelecionado}/itens`,
         "POST",
@@ -240,7 +291,6 @@ btnConfirmarItens.addEventListener("click", async () => {
         true
     );
 
-    // --- Erro no backend ---
     if (!response.ok) {
         return showModal({
             title: "Erro",
@@ -249,13 +299,12 @@ btnConfirmarItens.addEventListener("click", async () => {
         });
     }
 
-    // --- Sucesso ---
     showModal({
         title: "Sucesso!",
         message: "Itens adicionados ao pedido com sucesso!",
         type: "success",
     });
 
-    modal.hide(); // Fecha o modal de itens
+    modal.hide();
   });
 });
