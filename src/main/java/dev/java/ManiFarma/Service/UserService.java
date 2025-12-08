@@ -168,8 +168,6 @@ public class UserService {
         userRepository.save(user);
     }
 
-    // --- MÉTODO AUXILIAR DTO ---
-    // Ajustado para incluir o novo campo 'isAnonymized'
     private UserResponseDTO toUserResponseDTO(User user) {
         UserResponseDTO dto = new UserResponseDTO();
         dto.setId(user.getId());

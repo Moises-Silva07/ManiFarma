@@ -3,353 +3,350 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Relatórios & Dashboard - ManiFarma</title>
+    <title>ManiFarma Analytics</title>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <link rel="stylesheet" href="/css/global/global_menu_funcionario.css">
-    <link rel="stylesheet" href="../../css/relatorios_pedido.css">
+    <link rel="stylesheet" href="/css/relatorios_pedido.css">
 
-    <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-<!-- Start nav bar -->
-    <nav class="navbar navbar-expand-lg">
-        <div class="container-fluid">
-            <a href="/html/menu_funcionario/menu_funcionario.html">
-                <img  class="navbar-brand" src="/img/logo.png" alt="logo ManiFarma" title="Início">
-             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+
+<nav class="navbar navbar-expand-lg navbar-dark glass-nav fixed-top">
+    <div class="container-fluid px-4">
+        <a href="/html/menu_funcionario/menu_funcionario.html" class="navbar-brand d-flex align-items-center gap-2">
+            <img src="/img/logo.png" alt="Logo" height="40">
+            <span class="brand-text">ManiFarma <span class="text-primary-yellow">Analytics</span></span>
+        </a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
             <span class="navbar-toggler-icon"></span>
-            </button>
+        </button>
 
-            <div class="collapse navbar-collapse" id="navbarNavDropdown">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/html/menu_funcionario/pedido_validacao_funcionario.html">Validar Pedidos</a>
-                    </li>
+        <div class="collapse navbar-collapse" id="navMenu">
+            <ul class="navbar-nav ms-auto align-items-center">
+                <li class="nav-item"><a class="nav-link" href="/html/menu_funcionario/pedido_validacao_funcionario.html">Pedidos</a></li>
+                <li class="nav-item"><a class="nav-link" href="/html/menu_funcionario/itens_funcionario.html">Itens</a></li>
+                <li class="nav-item ms-3">
+                    <div class="user-badge">
+                        <i class="fa-solid fa-user-tie"></i> Admin
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
 
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/html/menu_funcionario/itens_pedidos_funcionario.html">Orçamento</a>
-                    </li>
+<main class="dashboard-container">
 
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/html/menu_funcionario/itens_funcionario.html">Itens</a>
-                    </li>
+    <div class="dashboard-header fade-in-down">
+        <div class="header-title">
+            <h1>Visão Geral</h1>
+            <p class="text-muted" id="dataAtualDisplay"></p>
+        </div>
 
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/html/menu_funcionario/relatorios_pedido.html">Relatórios</a>
-                    </li>
-                </ul>
+        <div class="filter-bar glass-card">
+            <div class="filter-group">
+                <label><i class="fa-regular fa-calendar"></i> De</label>
+                <input id="fromDate" type="date">
+            </div>
+            <div class="filter-group">
+                <label><i class="fa-regular fa-calendar-check"></i> Até</label>
+                <input id="toDate" type="date">
+            </div>
+            <div class="filter-group small">
+                <label>Top</label>
+                <input id="limit" type="number" min="1" max="20" value="5">
+            </div>
+            <div class="filter-actions">
+                <button id="btnAplicar" class="btn-glow"><i class="fa-solid fa-bolt"></i> Atualizar</button>
+                <button id="btnReset" class="btn-icon" title="Limpar"><i class="fa-solid fa-rotate"></i></button>
             </div>
         </div>
-    </nav>
-    <!-- End nav bar -->
+    </div>
 
-<main class="container">
-  <h1 class="logo">📊 ManiFarma — Relatórios e Dashboard</h1>
-    <section class="card filtro">
-        <h2>Filtro de Data</h2>
-        <div class="filtro-row">
-            <div class="campo">
-                <label for="fromDate">De</label>
-                <input id="fromDate" type="date" />
+    <div class="kpi-grid fade-in-up">
+        <div class="kpi-card glass-card kpi-receita">
+            <div class="kpi-icon">
+                <i class="fa-solid fa-sack-dollar"></i>
             </div>
-            <div class="campo">
-                <label for="toDate">Até</label>
-                <input id="toDate" type="date" />
+            <div class="kpi-info">
+                <span>Receita Total</span>
+                <h2 id="receitaTotal">R$ 0,00</h2>
             </div>
-            <div class="campo">
-                <label for="limit">Mostrar top</label>
-                <input id="limit" type="number" min="1" max="20" value="5" />
+            <div class="kpi-chart-bg"></div> </div>
+
+        <div class="kpi-card glass-card">
+            <div class="kpi-icon icon-blue">
+                <i class="fa-solid fa-cart-shopping"></i>
             </div>
-            <div class="acoes">
-                <button id="btnAplicar">Aplicar</button>
-                <button id="btnReset">Reset</button>
+            <div class="kpi-info">
+                <span>Total Pedidos</span>
+                <h2 id="totalPedidos">0</h2>
             </div>
         </div>
-    </section>
 
-    <section class="card resumo">
-        <h2>Resumo Geral</h2>
-        <div class="grid">
-            <div class="info-box">
-                <h3>Total de Pedidos</h3>
-                <p id="totalPedidos">0</p>
+        <div class="kpi-card glass-card">
+            <div class="kpi-icon icon-purple">
+                <i class="fa-solid fa-receipt"></i>
             </div>
-            <div class="info-box">
-                <h3>Receita Total</h3>
-                <p id="receitaTotal">R$ 0,00</p>
-            </div>
-            <div class="info-box">
-                <h3>Pendentes</h3>
-                <p id="pendentes">0</p>
-            </div>
-            <div class="info-box">
-                <h3>Pagos</h3>
-                <p id="pagos">0</p>
-            </div>
-            <div class="info-box">
-                <h3>Concluídos</h3>
-                <p id="concluidos">0</p>
-            </div>
-            <div class="info-box">
-                <h3>Cancelados</h3>
-                <p id="cancelados">0</p>
+            <div class="kpi-info">
+                <span>Ticket Médio</span>
+                <h2 id="ticketMedio">R$ 0,00</h2>
             </div>
         </div>
-        <p class="muted" id="ultimaAtualizacao">—</p>
-    </section>
 
-    <section class="card dashboard">
-        <h2>Dashboard</h2>
-        <div class="chart-grid">
-            <div class="chart-card">
-                <h3>Distribuição por Status</h3>
-                <canvas id="statusChart"></canvas>
+        <div class="kpi-card glass-card kpi-alert">
+            <div class="kpi-icon icon-orange">
+                <i class="fa-regular fa-clock"></i>
             </div>
-            <div class="chart-card">
-                <h3>Top Clientes</h3>
+            <div class="kpi-info">
+                <span>Aguardando</span>
+                <h2 id="pendentes">0</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="charts-grid fade-in-up delay-1">
+
+        <div class="chart-box glass-card area-clientes">
+            <div class="box-header">
+                <h3><i class="fa-solid fa-crown text-primary-yellow"></i> Top Clientes</h3>
+                <button class="btn-more"><i class="fa-solid fa-ellipsis"></i></button>
+            </div>
+            <div class="canvas-wrapper">
                 <canvas id="clientsChart"></canvas>
             </div>
-            <div class="chart-card">
-                <h3>Top Atendentes</h3>
+        </div>
+
+        <div class="chart-box glass-card area-status">
+            <div class="box-header">
+                <h3>Status dos Pedidos</h3>
+            </div>
+            <div class="canvas-wrapper doughnut-wrapper">
+                <canvas id="statusChart"></canvas>
+                <div class="donut-center">
+                    <span id="centerTotal">0</span>
+                    <small>Total</small>
+                </div>
+            </div>
+            <div class="status-legend mt-3" id="statusLegend">
+            </div>
+        </div>
+
+        <div class="chart-box glass-card area-funcionarios">
+            <div class="box-header">
+                <h3><i class="fa-solid fa-user-group text-blue"></i> Performance da Equipe</h3>
+            </div>
+            <div class="canvas-wrapper">
                 <canvas id="employeesChart"></canvas>
             </div>
         </div>
-    </section>
+
+    </div>
+
 </main>
 
-<footer>
-    <div> </div>
-</footer>
-
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 <script src="/js/validarToken.js"></script>
 
 <script>
     validarToken();
 
+    Chart.defaults.color = '#a0a0a0';
+    Chart.defaults.font.family = "'Poppins', sans-serif";
+    Chart.defaults.scale.grid.color = 'rgba(255, 255, 255, 0.05)';
 
-  const API_SUMMARY       = "/api/reports/summary";
-  const API_TOP_CLIENTS   = "/api/reports/clients/top";
-  const API_TOP_EMPLOYEES = "/api/reports/employees/top";
+    const API_SUMMARY = "/api/reports/summary";
+    const API_TOP_CLIENTS = "/api/reports/clients/top";
+    const API_TOP_EMPLOYEES = "/api/reports/employees/top";
 
-  // Chart instances
-  let statusChart   = null;
-  let clientsChart  = null;
-  let employeesChart = null;
+    let statusChart, clientsChart, employeesChart;
 
-  // util: format BRL
-  function fmtBRL(value) {
-    return Number(value || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-  }
+    const fmtBRL = v => Number(v||0).toLocaleString('pt-BR', {style:'currency', currency:'BRL'});
+    const $ = id => document.getElementById(id);
 
-  // ========== SUMMARY ==========
-async function loadSummary(from, to) {
-  try {
-    const params = new URLSearchParams();
-    if (from) params.set('from', from);
-    if (to) params.set('to', to);
+    async function loadSummary(from, to) {
+        const params = new URLSearchParams();
+        if(from) params.set('from', from);
+        if(to) params.set('to', to);
 
-    const url = API_SUMMARY + (params.toString() ? '?' + params.toString() : '');
+        const res = await fetch(`${API_SUMMARY}?${params}`, {
+            headers: {'Authorization': `Bearer ${localStorage.getItem("token")}`}
+        });
+        const data = await res.json();
 
-    const res = await fetch(url);
-    if (!res.ok) throw new Error('Falha ao carregar resumo');
-    const data = await res.json();
+        animateValue("totalPedidos", 0, data.totalPedidos || 0, 1000);
+        animateValue("pendentes", 0, data.pendentes || 0, 1000);
 
-    document.getElementById('totalPedidos').textContent  = data.totalPedidos  ?? 0;
-    document.getElementById('receitaTotal').textContent  = fmtBRL(data.receitaTotal ?? 0);
-    document.getElementById('pendentes').textContent     = data.pendentes    ?? 0;
-    document.getElementById('pagos').textContent         = data.pagos        ?? 0;
-    document.getElementById('concluidos').textContent    = data.concluidos   ?? 0;
-    document.getElementById('cancelados').textContent    = data.cancelados   ?? 0;
+        $('receitaTotal').textContent = fmtBRL(data.receitaTotal);
 
-    document.getElementById('ultimaAtualizacao').textContent =
-      'Atualizado: ' + (new Date()).toLocaleString('pt-BR');
+        const ticket = data.totalPedidos > 0 ? (data.receitaTotal / data.totalPedidos) : 0;
+        $('ticketMedio').textContent = fmtBRL(ticket);
 
-    updateStatusChart({
-      pendentes:  data.pendentes  ?? 0,
-      pagos:      data.pagos      ?? 0,
-      concluidos: data.concluidos ?? 0,
-      cancelados: data.cancelados ?? 0
-    });
-
-  } catch (err) {
-    console.error(err);
-    document.getElementById('ultimaAtualizacao').textContent = 'Erro ao carregar resumo';
-  }
-}
-
-  // ========== TOP CLIENTES ==========
-async function loadTopClients(from, to, limit) {
-  const params = new URLSearchParams();
-  if (from)  params.set('from', from);
-  if (to)    params.set('to', to);
-  if (limit) params.set('limit', limit);
-
-  const url = API_TOP_CLIENTS + (params.toString() ? '?' + params.toString() : '');
-
-  try {
-    const res = await fetch(url);
-    if (!res.ok) throw new Error('Falha ao carregar top clientes');
-    const list = await res.json();
-
-    // Usa os nomes reais do DTO
-    const labels = list.map(item =>
-      item.clientName || ('Cliente ' + item.clientId)
-    );
-    const values = list.map(item =>
-      Number(item.totalSpent ?? 0)
-    );
-
-    updateBarChart('clients', labels, values, 'Total gasto (R$)');
-  } catch (err) {
-    console.error(err);
-    updateBarChart('clients', [], [], 'Total gasto (R$)');
-  }
-}
-
-
-  // ========== TOP ATENDENTES ==========
-async function loadTopEmployees(from, to, limit) {
-  const params = new URLSearchParams();
-  if (from)  params.set('from', from);
-  if (to)    params.set('to', to);
-  if (limit) params.set('limit', limit);
-
-  const url = API_TOP_EMPLOYEES + (params.toString() ? '?' + params.toString() : '');
-
-  try {
-    const res = await fetch(url);
-    if (!res.ok) throw new Error('Falha ao carregar top atendentes');
-    const list = await res.json();
-
-    const labels = list.map(item =>
-      item.employeeName || ('Atendente ' + item.employeeId)
-    );
-    const values = list.map(item =>
-      Number(item.totalValueHandled ?? 0)
-    );
-
-    updateBarChart('employees', labels, values, 'Valor atendido (R$)');
-  } catch (err) {
-    console.error(err);
-    updateBarChart('employees', [], [], 'Valor atendido (R$)');
-  }
- }
-
-  // ====== CHART HELPERS ======
-  function updateStatusChart(counts) {
-    const ctx = document.getElementById('statusChart').getContext('2d');
-    const labels = ['Pendentes', 'Pagos', 'Concluídos', 'Cancelados'];
-    const data   = [
-      counts.pendentes  || 0,
-      counts.pagos      || 0,
-      counts.concluidos || 0,
-      counts.cancelados || 0
-    ];
-
-    if (statusChart) statusChart.destroy();
-
-    statusChart = new Chart(ctx, {
-      type: 'pie',
-      data: {
-        labels,
-        datasets: [{
-          data,
-          backgroundColor: ['#f39c12', '#2ecc71', '#3498db', '#e74c3c']
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: { legend: { position: 'bottom' } }
-      }
-    });
-  }
-
-  function updateBarChart(target, labels, values, labelName) {
-    let canvasId, instanceRef, color;
-    if (target === 'clients') {
-      canvasId = 'clientsChart';
-      instanceRef = clientsChart;
-      color = 'rgba(254,231,21,0.9)';
-    } else {
-      canvasId = 'employeesChart';
-      instanceRef = employeesChart;
-      color = 'rgba(52,152,219,0.9)';
+        updateStatusChart(data);
     }
 
-    const ctx = document.getElementById(canvasId).getContext('2d');
-    if (instanceRef) instanceRef.destroy();
+    async function loadCharts(from, to, limit) {
+        const headers = {'Authorization': `Bearer ${localStorage.getItem("token")}`};
+        const params = new URLSearchParams({limit});
+        if(from) params.set('from', from);
+        if(to) params.set('to', to);
 
-    const chart = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels,
-        datasets: [{
-          label: labelName,
-          data: values,
-          backgroundColor: color
-        }]
-      },
-      options: {
-        indexAxis: 'y',
-        responsive: true,
-        plugins: { legend: { display: false } },
-        scales: {
-          x: {
-            ticks: {
-              callback: v => 'R$ ' + Number(v).toLocaleString('pt-BR')
+        const [resClients, resEmp] = await Promise.all([
+            fetch(`${API_TOP_CLIENTS}?${params}`, {headers}),
+            fetch(`${API_TOP_EMPLOYEES}?${params}`, {headers})
+        ]);
+
+        const clients = await resClients.json();
+        const employees = await resEmp.json();
+
+        updateClientsChart(clients);
+        updateEmployeesChart(employees);
+    }
+
+    function updateStatusChart(data) {
+        const ctx = $('statusChart').getContext('2d');
+        const total = (data.pendentes + data.pagos + data.concluidos + data.cancelados);
+        $('centerTotal').textContent = total;
+
+        if(statusChart) statusChart.destroy();
+
+        statusChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Pendentes', 'Pagos', 'Concluídos', 'Cancelados'],
+                datasets: [{
+                    data: [data.pendentes, data.pagos, data.concluidos, data.cancelados],
+                    backgroundColor: ['#f39c12', '#3498db', '#2ecc71', '#e74c3c'],
+                    borderWidth: 0,
+                    hoverOffset: 10
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '75%',
+                plugins: { legend: { display: false } }
             }
-          }
-        }
-      }
-    });
+        });
 
-    if (target === 'clients') {
-      clientsChart = chart;
-    } else {
-      employeesChart = chart;
+        const legendHTML = `
+            <div class="legend-item"><span class="dot" style="background:#f39c12"></span> Pendentes (${data.pendentes})</div>
+            <div class="legend-item"><span class="dot" style="background:#3498db"></span> Pagos (${data.pagos})</div>
+            <div class="legend-item"><span class="dot" style="background:#2ecc71"></span> Concluídos (${data.concluidos})</div>
+            <div class="legend-item"><span class="dot" style="background:#e74c3c"></span> Cancelados (${data.cancelados})</div>
+        `;
+        $('statusLegend').innerHTML = legendHTML;
     }
-  }
 
-// ====== CONTROLES DO FILTRO ======
-document.getElementById('btnAplicar').addEventListener('click', applyFilter);
-document.getElementById('btnReset').addEventListener('click', resetFilter);
+    function updateClientsChart(data) {
+        const ctx = $('clientsChart').getContext('2d');
+        if(clientsChart) clientsChart.destroy();
 
-function getFilterValues() {
-  const from = document.getElementById('fromDate').value ? new Date(document.getElementById('fromDate').value).toISOString() : null;
-  const to = document.getElementById('toDate').value ? new Date(document.getElementById('toDate').value).toISOString() : null;
-  const limit = parseInt(document.getElementById('limit').value || '5', 10);
-  return { from, to, limit };
-}
+        const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+        gradient.addColorStop(0, '#FEE715');
+        gradient.addColorStop(1, 'rgba(254, 231, 21, 0.1)');
 
+        clientsChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: data.map(c => c.clientName || 'ID '+c.clientId),
+                datasets: [{
+                    label: 'Total Gasto',
+                    data: data.map(c => c.totalSpent),
+                    backgroundColor: gradient,
+                    borderRadius: 6,
+                    barThickness: 30
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: 'rgba(255,255,255,0.05)' }
+                    },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+    }
 
-async function applyFilter() {
-  const { from, to, limit } = getFilterValues();
-  // Passa as datas também para o loadSummary
-  await loadSummary(from, to); // Passando os filtros de data para o resumo
-  await loadTopClients(from, to, limit);
-  await loadTopEmployees(from, to, limit);
-}
+    function updateEmployeesChart(data) {
+        const ctx = $('employeesChart').getContext('2d');
+        if(employeesChart) employeesChart.destroy();
 
+        employeesChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: data.map(e => e.employeeName || 'ID '+e.employeeId),
+                datasets: [{
+                    label: 'Vendas Realizadas',
+                    data: data.map(e => e.totalValueHandled),
+                    borderColor: '#00d2ff',
+                    backgroundColor: 'rgba(0, 210, 255, 0.1)',
+                    tension: 0.4,
+                    fill: true,
+                    pointBackgroundColor: '#00d2ff',
+                    pointRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { grid: { color: 'rgba(255,255,255,0.05)' } },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+    }
 
-async function resetFilter() {
-  document.getElementById('fromDate').value = '';
-  document.getElementById('toDate').value   = '';
-  document.getElementById('limit').value    = '5';
-  await applyFilter();
-}
-// inicialização da página
-(async function init() {
-  await loadSummary(null, null);  // Chama o resumo com todas as datas, sem filtro
-  await loadTopClients(null, null, 5);
-  await loadTopEmployees(null, null, 5);
-})();
+    function getFilters() {
+        return {
+            from: $('fromDate').value,
+            to: $('toDate').value,
+            limit: $('limit').value
+        };
+    }
+
+    async function refresh() {
+        const {from, to, limit} = getFilters();
+        await Promise.all([
+            loadSummary(from, to),
+            loadCharts(from, to, limit)
+        ]);
+    }
+
+    function animateValue(id, start, end, duration) {
+        if (start === end) return;
+        const range = end - start;
+        let current = start;
+        const increment = end > start ? 1 : -1;
+        const stepTime = Math.abs(Math.floor(duration / range));
+        const obj = document.getElementById(id);
+        const timer = setInterval(function() {
+            current += increment;
+            obj.textContent = current;
+            if (current == end) clearInterval(timer);
+        }, Math.max(stepTime, 10));
+    }
+
+    $('btnAplicar').onclick = refresh;
+    $('btnReset').onclick = () => {
+        $('fromDate').value = ''; $('toDate').value = ''; $('limit').value = 5;
+        refresh();
+    };
+
+    refresh();
 
 </script>
 </body>

@@ -8,10 +8,12 @@ public class ClientReportDTO {
     private Long ordersCount;
     private Double totalSpent;
 
+    // Construtor vazio
     public ClientReportDTO() {
-        this.totalSpent = 0.0;
+        this.totalSpent = 0.0; // Garantir que totalSpent não seja nulo
     }
 
+    // Construtor com parâmetros - exatamente como a JPQL instancia
     public ClientReportDTO(Long clientId,
                            String clientName,
                            String email,
@@ -21,7 +23,7 @@ public class ClientReportDTO {
         this.clientName = clientName;
         this.email = email;
         this.ordersCount = ordersCount;
-        this.totalSpent = (totalSpent != null) ? totalSpent : 0.0;
+        this.totalSpent = (totalSpent != null) ? totalSpent : 0.0; // Evitar nulo em totalSpent
     }
 
     public Long getClientId() {

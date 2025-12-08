@@ -4,6 +4,7 @@ import dev.java.ManiFarma.DTO.*;
 import dev.java.ManiFarma.Entity.*;
 import dev.java.ManiFarma.Repository.*;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,6 +25,7 @@ public class PedidoService {
     private final ProdutoRepository produtoRepository;
     private final PaymentService paymentService;
     private final EmailService emailService;
+    private final String pharmacistPassword;
 
     public PedidoService(
             PedidoRepository pedidoRepository,
@@ -31,7 +33,8 @@ public class PedidoService {
             EmployeeRepository employeeRepository,
             ProdutoRepository produtoRepository,
             PaymentService paymentService,
-            EmailService emailService
+            EmailService emailService,
+            @Value("${PHARMACIST_PASSWORD}") String pharmacistPassword
     ) {
         this.pedidoRepository = pedidoRepository;
         this.clienteRepository = clienteRepository;
@@ -39,6 +42,7 @@ public class PedidoService {
         this.produtoRepository = produtoRepository;
         this.paymentService = paymentService;
         this.emailService = emailService;
+        this.pharmacistPassword = pharmacistPassword; // <-- E você atribui o valor ao campo 'final'
     }
 
 
@@ -93,7 +97,7 @@ public class PedidoService {
     }
 
 
-    //  MÉTODO PRIVADO - Salva a imagem no servidor COM VALIDAÇÕES
+    //  SALVANDO A IMAGEM NO SERVIDOR LOCAL.
 
     private String salvarImagemReceita(MultipartFile arquivo) {
         try {
@@ -240,9 +244,7 @@ public class PedidoService {
                 .collect(Collectors.toList());
     }
 
-    // ==========================================================
-    // 1. NOVO MÉTODO ADICIONADO AQUI
-    // ==========================================================
+
     public List<PedidoResponseDTO> getPedidosPorFuncionario(Long employeeId) {
         // Verifica se o funcionário existe (opcional, mas boa prática)
         if (!employeeRepository.existsById(employeeId)) {
@@ -341,7 +343,8 @@ public class PedidoService {
     // ALTERAR STATUS DO PEDIDO
 
     @Transactional
-    public void alterarStatus(Long pedidoId, String novoStatus) {
+// Adicionamos um novo parâmetro 'senha' que pode ser nulo
+    public void alterarStatus(Long pedidoId, String novoStatus, String senha) {
         Pedido pedido = pedidoRepository.findById(pedidoId)
                 .orElseThrow(() -> new EntityNotFoundException("Pedido não encontrado: " + pedidoId));
 
@@ -349,6 +352,18 @@ public class PedidoService {
 
         try {
             StatusPedido statusEnum = StatusPedido.valueOf(statusFormatado);
+            if (statusEnum == StatusPedido.VALIDO) {
+                
+                if (senha == null || senha.trim().isEmpty()) {
+                    // Lança uma exceção de segurança se a senha estiver faltando
+                    throw new SecurityException("A senha do farmacêutico é obrigatória para validar um pedido.");
+                }
+                // 2. Compara a senha enviada com a senha segura armazenada
+                if (!senha.equals(pharmacistPassword)) {
+                    // Lança uma exceção de segurança se a senha estiver incorreta
+                    throw new SecurityException("Senha do farmacêutico incorreta.");
+                }
+            }
             pedido.setStatus(statusEnum);
             pedidoRepository.save(pedido);
 
@@ -359,6 +374,7 @@ public class PedidoService {
             throw new IllegalArgumentException("Status inválido enviado: " + novoStatus +
                     ". Valores aceitos: PENDENTE, VALIDO, ENVIODECOTACAO, PAGO, CONCLUIDO, CANCELADO");
         }
+
     }
 
     // Lista os pedidos por Valido

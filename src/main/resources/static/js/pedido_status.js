@@ -1,125 +1,187 @@
-// Verifica se o usuário está logado com Token
-validarToken(); 
+// ======================================================================
+//  AUTENTICAÇÃO
+// ======================================================================
+validarToken();
 
+let pedidoIdAlvo = null;
+let novoStatusAlvo = null;
+let modalSenhaInstance = null;
+
+// ======================================================================
+// CARREGAR PEDIDOS DO FUNCIONÁRIO
+// ======================================================================
 document.addEventListener("DOMContentLoaded", async () => {
-  const clienteId = localStorage.getItem("userId");
-  const tabela = document.getElementById("tabelaPedidos");
-  const msg = document.getElementById("message");
+    await carregarPedidos();
+});
 
-  if (!clienteId) {
-    showModal({
-            title: "Atenção",
-            message: "Usuário não identificado. Faça login novamente.",
-            type: "warning",
-        });
-    window.location.href = "/html/login/login.html";
-  }
+// ======================================================================
+async function carregarPedidos() {
+    const tabela = document.getElementById("corpoTabela");
+    const msg = document.getElementById("message");
 
-  const { ok, data } = await apiRequest(`/api/pedidos/cliente/${clienteId}`, "GET", null, true, true);
+    const { ok, data } = await apiRequest("/api/pedidos/status/PENDENTE", "GET", null, true, true);
 
-  if (ok && Array.isArray(data) && data.length > 0) {
-    msg.textContent = "";
+    if (!ok) {
+        tabela.innerHTML = `<tr><td colspan="5" class="text-danger text-center">Erro ao carregar pedidos.</td></tr>`;
+        return;
+    }
+
     tabela.innerHTML = "";
 
+    if (data.length === 0) {
+        tabela.innerHTML = `<tr><td colspan="5" class="text-center text-muted">Nenhum pedido pendente.</td></tr>`;
+        return;
+    }
+
     data.forEach(pedido => {
-      const row = document.createElement("tr");
+        const tr = document.createElement("tr");
 
-      const receitaCell = pedido.receita
-        ? `
-           ${pedido.receita} 
-           <button class="btn btn-outline-primary btn-sm ver-receita" data-id="${pedido.id}">
-             Ver Receita
-           </button>`
-        : "Nenhuma";
+        tr.innerHTML = `
+            <td>${pedido.id}</td>
+            <td>${pedido.employeeId ?? "—"}</td>
+            <td>${pedido.status}</td>
+            <td>R$ ${(pedido.valorTotal ?? 0).toFixed(2)}</td>
+            <td>
+                <button class="btn btn-success btn-sm" onclick="solicitarAlteracaoStatus(${pedido.id}, 'VALIDO')">Validar</button>
+                <button class="btn btn-danger btn-sm" onclick="solicitarAlteracaoStatus(${pedido.id}, 'CANCELADO')">Cancelar</button>
+                <button class="btn btn-primary btn-sm ver-receita" data-id="${pedido.id}">Receita</button>
+            </td>
+        `;
 
-        const pagamentoCell = (() => {
-          if (pedido.status === "CANCELADO") {
-            return `<span class="text-danger fw-bold">Cotação cancelada</span>`;
-          }
-
-          if (pedido.linkPagamento) {
-            return `
-              <a href="${pedido.linkPagamento}" target="_blank" class="btn btn-success btn-sm">
-                💳 Pagar Agora
-              </a>`;
-          }
-
-          if (pedido.status === "VALIDO") {
-            return `<span class="text-primary fw-bold">Cotação gerada, aguardando pagamento</span>`;
-          }
-
-          return "Aguardando cotação";
-        })();
-
-      row.innerHTML = `
-        <td>${pedido.id}</td>
-        <td>${pedido.descricao}</td>
-        <td>${pedido.status || "Pendente"}</td>
-        <td>${receitaCell}</td>
-        <td>${pagamentoCell}</td>
-      `;
-      
-      tabela.appendChild(row);
+        tabela.appendChild(tr);
     });
 
-    // Evento para visualizar receita (com correção do target)
+    prepararEventosReceita();
+}
+
+// ======================================================================
+// EVENTO PARA VISUALIZAR RECEITA
+// ======================================================================
+function prepararEventosReceita() {
     document.querySelectorAll(".ver-receita").forEach(btn => {
-      btn.addEventListener("click", async (e) => {
-        // Usa currentTarget (garante o elemento <button>, não o emoji ou texto dentro dele)
-        const pedidoId = e.currentTarget.getAttribute("data-id");
+        btn.addEventListener("click", async (e) => {
+            const pedidoId = e.currentTarget.getAttribute("data-id");
 
-        const img = document.getElementById("imagemReceita");
-        const msgErro = document.getElementById("mensagemErroReceita");
-        const modal = new bootstrap.Modal(document.getElementById("modalReceita"));
+            const img = document.getElementById("imagemReceita");
+            const msgErro = document.getElementById("mensagemErroReceita");
+            const modal = new bootstrap.Modal(document.getElementById("modalReceita"));
 
-        // Limpa estado anterior
-        img.src = "";
-        msgErro.classList.add("d-none");
+            img.src = "";
+            msgErro.classList.add("d-none");
 
-        try {
-          const token = localStorage.getItem("token");
+            try {
+                const token = localStorage.getItem("token");
 
-          const response = await fetch(`http://localhost:8080/api/pedidos/${pedidoId}/receita`, {
-            method: "GET",
-            headers: {
-              "Authorization": `Bearer ${token}` // ✔ ENVIA O TOKEN
+                const response = await fetch(`/api/pedidos/${pedidoId}/receita`, {
+                    method: "GET",
+                    headers: { "Authorization": `Bearer ${token}` }
+                });
+
+                if (!response.ok) {
+                    msgErro.textContent = "Erro ao carregar imagem.";
+                    msgErro.classList.remove("d-none");
+                } else {
+                    const blob = await response.blob();
+                    img.src = URL.createObjectURL(blob);
+                }
+
+                modal.show();
+
+            } catch (error) {
+                msgErro.textContent = "Erro inesperado ao buscar imagem.";
+                msgErro.classList.remove("d-none");
+                modal.show();
             }
-          });
-
-          if (!response.ok) {
-            const data = await response.json().catch(() => ({}));
-            msgErro.textContent = data.error || "Erro ao carregar a imagem.";
-            msgErro.classList.remove("d-none");
-          } else {
-            const blob = await response.blob();
-            const url = URL.createObjectURL(blob);
-            img.src = url;
-          }
-
-          modal.show();
-        } catch (error) {
-          showModal({
-            title: "Erro",
-            message: "Erro ao buscar imagem do servidor.",
-            type: "danger",
         });
-          msgErro.classList.remove("d-none");
-          modal.show();
-        }
-      });
     });
+}
 
-  } else if (ok && data.length === 0) {
-    showModal({
-            title: "Atenção",
-            message: "Você ainda não possui pedidos.",
-            type: "warning",
-        });
-  } else {
-    showModal({
-            title: "Erro",
-            message: "Erro ao carregar seus pedidos. Tente novamente mais tarde.",
-            type: "danger",
-        });
-  }
+// ======================================================================
+// SOLICITAR ALTERAÇÃO DE STATUS (VERIFICA SE PRECISA DE SENHA)
+// ======================================================================
+function solicitarAlteracaoStatus(pedidoId, novoStatus) {
+    pedidoIdAlvo = pedidoId;
+    novoStatusAlvo = novoStatus.toUpperCase();
+
+    if (novoStatusAlvo === "VALIDO") {
+        document.getElementById("inputSenhaFarmaceutico").value = "";
+        document.getElementById("erroSenhaFarmaceutico").classList.add("d-none");
+
+        modalSenhaInstance = bootstrap.Modal.getOrCreateInstance(
+            document.getElementById("modalSenhaFarmaceutico")
+        );
+        modalSenhaInstance.show();
+    } else {
+        enviarAlteracaoStatusComSenha(null);
+    }
+}
+
+// ======================================================================
+// CONFIRMAR SENHA DO MODAL
+// ======================================================================
+document.getElementById("btnConfirmarSenhaFarmaceutico").addEventListener("click", () => {
+    const senha = document.getElementById("inputSenhaFarmaceutico").value.trim();
+    const erro = document.getElementById("erroSenhaFarmaceutico");
+
+    if (!senha) {
+        erro.textContent = "Informe a senha.";
+        erro.classList.remove("d-none");
+        return;
+    }
+
+    enviarAlteracaoStatusComSenha(senha);
 });
+
+// ======================================================================
+// REALIZA A ALTERAÇÃO DE STATUS NO BACKEND
+// ======================================================================
+async function enviarAlteracaoStatusComSenha(senha) {
+    if (!pedidoIdAlvo || !novoStatusAlvo) {
+        alert("Erro: Pedido ou status não definido.");
+        return;
+    }
+
+    try {
+        const token = localStorage.getItem("token");
+
+        const response = await fetch(`/api/pedidos/${pedidoIdAlvo}/status`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                status: novoStatusAlvo,
+                senha: senha
+            })
+        });
+
+        const data = await response.json().catch(() => ({}));
+
+        if (!response.ok) {
+            showModal({
+                title: "Erro",
+                message: data.error || "Erro ao atualizar status",
+                type: "danger"
+            });
+            return;
+        }
+
+        if (modalSenhaInstance) modalSenhaInstance.hide();
+
+        showModal({
+            title: "Sucesso!",
+            message: "Status atualizado com sucesso!",
+            type: "success"
+        });
+
+        await carregarPedidos();
+
+    } catch (error) {
+        showModal({
+            title: "Erro",
+            message: "Erro inesperado: " + error.message,
+            type: "danger"
+        });
+    }
+}

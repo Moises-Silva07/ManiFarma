@@ -290,14 +290,13 @@ public class PedidoController {
     }
 
 
-    // ALTERAR STATUS DO PEDIDO
-    // Este método já possui um bom tratamento try...catch
     @PutMapping("/{id}/status")
     public ResponseEntity<?> alterarStatus(
             @PathVariable Long id,
             @RequestBody Map<String, String> body) {
         try {
             String status = body.get("status");
+            String senha = body.get("senha"); // <-- 1. ADICIONADO: Pega a senha do corpo da requisição
 
             if (status == null || status.trim().isEmpty()) {
                 Map<String, Object> error = new HashMap<>();
@@ -305,8 +304,7 @@ public class PedidoController {
                 error.put("error", "O campo 'status' é obrigatório");
                 return ResponseEntity.badRequest().body(error);
             }
-
-            pedidoService.alterarStatus(id, status);
+            pedidoService.alterarStatus(id, status, senha);
 
             Map<String, Object> response = new HashMap<>();
             response.put("success", true);
@@ -325,6 +323,13 @@ public class PedidoController {
             error.put("success", false);
             error.put("error", e.getMessage());
             return ResponseEntity.badRequest().body(error);
+
+        } catch (SecurityException e) {
+            Map<String, Object> error = new HashMap<>();
+            error.put("success", false);
+            error.put("error", e.getMessage());
+            // Retorna 403 Forbidden, o código correto para falha de autorização
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
 
         } catch (Exception e) {
             e.printStackTrace();

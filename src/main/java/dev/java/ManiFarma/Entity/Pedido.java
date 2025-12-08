@@ -16,7 +16,7 @@ public class Pedido {
     private String descricao;
 
     @CreationTimestamp
-    @Column(updatable = false)
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
     @Enumerated(EnumType.STRING)
@@ -47,7 +47,7 @@ public class Pedido {
     @Column(name = "receita_url")
     private String receitaUrl; // caso queira expor via link público
 
-    // ===============================
+    // =============    ==================
     // Getters e Setters
     // ===============================
     public Long getId() { return id; }

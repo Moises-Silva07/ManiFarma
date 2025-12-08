@@ -9,9 +9,7 @@ import dev.java.ManiFarma.Repository.PedidoRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ReportService {
@@ -22,15 +20,18 @@ public class ReportService {
         this.pedidoRepository = pedidoRepository;
     }
 
-    public ReportSummaryDTO getSummary() {
-        long totalPedidos = pedidoRepository.countAllOrders();
-        Double receitaTotal = pedidoRepository.sumAllRevenue();
+    public ReportSummaryDTO getSummary(LocalDateTime start, LocalDateTime end) {
+        if (start == null) start = LocalDateTime.of(2000, 1, 1, 0, 0);
+        if (end == null) end = LocalDateTime.now();
+
+        long totalPedidos = pedidoRepository.countAllOrders(start, end);
+        Double receitaTotal = pedidoRepository.sumAllRevenue(start, end);
         if (receitaTotal == null) receitaTotal = 0.0;
 
-        long pendentes = pedidoRepository.countByStatus(StatusPedido.PENDENTE);
-        long pagos = pedidoRepository.countByStatus(StatusPedido.PAGO);
-        long concluidos = pedidoRepository.countByStatus(StatusPedido.CONCLUIDO);
-        long cancelados = pedidoRepository.countByStatus(StatusPedido.CANCELADO);
+        long pendentes = pedidoRepository.countByStatus(StatusPedido.PENDENTE, start, end);
+        long pagos = pedidoRepository.countByStatus(StatusPedido.PAGO, start, end);
+        long concluidos = pedidoRepository.countByStatus(StatusPedido.CONCLUIDO, start, end);
+        long cancelados = pedidoRepository.countByStatus(StatusPedido.CANCELADO, start, end);
 
         return new ReportSummaryDTO(totalPedidos, receitaTotal, pendentes, pagos, concluidos, cancelados);
     }
@@ -40,46 +41,28 @@ public class ReportService {
     }
 
     public List<ClientReportDTO> getTopClients(LocalDateTime start, LocalDateTime end, int limit) {
-        if (start == null) {
-            start = LocalDateTime.of(2000, 1, 1, 0, 0, 0, 0); // Data padrão
-        }
-        if (end == null) {
-            end = LocalDateTime.now(); // Data atual
-        }
+        if (start == null) start = LocalDateTime.of(2000, 1, 1, 0, 0, 0, 0);
+        if (end == null) end = LocalDateTime.now();
 
-        List<Object[]> results = pedidoRepository.findTopClients(start, end);
-
-        List<ClientReportDTO> clientes = results.stream()
-                .map(result -> new ClientReportDTO(
-                        (Long) result[0],  // id
-                        (String) result[1], // nome
-                        (String) result[2], // email
-                        (Long) result[3],   // número de pedidos
-                        (Double) result[4]  // total gasto
-                ))
-                .collect(Collectors.toList());
+        // Agora o repositório já retorna a lista de DTOs pronta!
+        // Não precisa mais fazer o map manual de Object[]
+        List<ClientReportDTO> clientes = pedidoRepository.findTopClients(start, end);
 
         if (limit > 0 && clientes.size() > limit) {
             return clientes.subList(0, limit);
         }
-
         return clientes;
     }
 
     public List<EmployeeReportDTO> getTopEmployees(LocalDateTime start, LocalDateTime end, int limit) {
-        if (start == null) {
-            start = LocalDateTime.of(2000, 1, 1, 0, 0, 0, 0); // Data padrão
-        }
-        if (end == null) {
-            end = LocalDateTime.now(); // Data atual
-        }
+        if (start == null) start = LocalDateTime.of(2000, 1, 1, 0, 0, 0, 0);
+        if (end == null) end = LocalDateTime.now();
 
         List<EmployeeReportDTO> funcionarios = pedidoRepository.findTopEmployees(start, end);
 
         if (limit > 0 && funcionarios.size() > limit) {
             return funcionarios.subList(0, limit);
         }
-
         return funcionarios;
     }
 }

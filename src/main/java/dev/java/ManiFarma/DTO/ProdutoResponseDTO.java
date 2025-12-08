@@ -24,4 +24,8 @@ public class ProdutoResponseDTO {
     public void setNome(String nome) { this.nome = nome; }
     public void setPrecoPorUnidade(Double precoPorUnidade) { this.precoPorUnidade = precoPorUnidade; }
     public void setUnidade(String unidade) { this.unidade = unidade; }
+
+    public double getPreco() {
+        return 0;
+    }
 }

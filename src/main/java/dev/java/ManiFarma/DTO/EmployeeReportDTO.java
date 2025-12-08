@@ -7,10 +7,12 @@ public class EmployeeReportDTO {
     private Long ordersHandled;
     private Double totalValueHandled;
 
+    // Construtor vazio
     public EmployeeReportDTO() {
-        this.totalValueHandled = 0.0;
+        this.totalValueHandled = 0.0; // Garantir que totalValueHandled não seja nulo
     }
 
+    // Construtor com parâmetros - exatamente como a JPQL instancia
     public EmployeeReportDTO(Long employeeId,
                              String employeeName,
                              Long ordersHandled,
@@ -18,7 +20,7 @@ public class EmployeeReportDTO {
         this.employeeId = employeeId;
         this.employeeName = employeeName;
         this.ordersHandled = ordersHandled;
-        this.totalValueHandled = (totalValueHandled != null) ? totalValueHandled : 0.0;
+        this.totalValueHandled = (totalValueHandled != null) ? totalValueHandled : 0.0; // Evitar nulo em totalValueHandled
     }
 
     public Long getEmployeeId() {

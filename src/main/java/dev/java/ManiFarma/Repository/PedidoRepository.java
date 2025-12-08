@@ -1,45 +1,55 @@
 package dev.java.ManiFarma.Repository;
 
 import dev.java.ManiFarma.Entity.Pedido;
-import org.springframework.data.jpa.repository.JpaRepository;
-import java.util.List;
-import dev.java.ManiFarma.DTO.ClientReportDTO;
+import dev.java.ManiFarma.Entity.StatusPedido;
+import dev.java.ManiFarma.DTO.ClientReportDTO; // Adicione este import
 import dev.java.ManiFarma.DTO.EmployeeReportDTO;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public interface PedidoRepository extends JpaRepository<Pedido, Long> {
     List<Pedido> findByClienteId(Long clienteId);
     List<Pedido> findByEmployeeId(Long employeeId);
 
-    @Query("select count(p) from Pedido p")
-    long countAllOrders();
+    @Query("select count(p) from Pedido p where p.createdAt BETWEEN :start AND :end")
+    long countAllOrders(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
 
-    @Query("select coalesce(sum(p.valorTotal), 0) from Pedido p")
-    Double sumAllRevenue();
+    @Query("select coalesce(sum(p.valorTotal), 0) from Pedido p where p.createdAt BETWEEN :start AND :end")
+    Double sumAllRevenue(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
 
-    @Query("select count(p) from Pedido p where p.status = :status")
-    long countByStatus(@Param("status") dev.java.ManiFarma.Entity.StatusPedido status);
-
-    @Query(value = """
-            SELECT c.id, u.nome, u.email, COUNT(p.id), COALESCE(SUM(p.valorTotal), 0.0)
-            FROM Pedido p
-            JOIN p.cliente c
-            JOIN c.usuario u
-            WHERE p.createdAt BETWEEN :start AND :end
-            GROUP BY c.id, u.nome, u.email
-            ORDER BY SUM(p.valorTotal) DESC
-            """, nativeQuery = true)
-    List<Object[]> findTopClients(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
+    @Query("select count(p) from Pedido p where p.status = :status AND p.createdAt BETWEEN :start AND :end")
+    long countByStatus(@Param("status") StatusPedido status, @Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
 
     @Query("""
-            SELECT new dev.java.ManiFarma.DTO.EmployeeReportDTO(e.id, e.nome, COUNT(p), COALESCE(SUM(p.valorTotal), 0.0))
+            SELECT new dev.java.ManiFarma.DTO.ClientReportDTO(
+                c.id, 
+                c.nome, 
+                c.email, 
+                COUNT(p), 
+                COALESCE(SUM(p.valorTotal), 0.0)
+            )
+            FROM Pedido p
+            JOIN p.cliente c
+            WHERE p.createdAt BETWEEN :start AND :end
+            GROUP BY c.id, c.nome, c.email
+            ORDER BY SUM(p.valorTotal) DESC
+            """)
+    List<ClientReportDTO> findTopClients(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
+
+    @Query("""
+            SELECT new dev.java.ManiFarma.DTO.EmployeeReportDTO(
+                e.id, 
+                e.nome, 
+                COUNT(p), 
+                COALESCE(SUM(p.valorTotal), 0.0)
+            )
             FROM Pedido p 
             JOIN p.employee e
             WHERE p.createdAt BETWEEN :start AND :end
-            GROUP BY e.id 
+            GROUP BY e.id, e.nome
             ORDER BY SUM(p.valorTotal) DESC
             """)
     List<EmployeeReportDTO> findTopEmployees(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
