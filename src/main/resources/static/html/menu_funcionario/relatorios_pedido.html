@@ -16,26 +16,36 @@
 </head>
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-dark glass-nav fixed-top">
-    <div class="container-fluid px-4">
-        <a href="/html/menu_funcionario/menu_funcionario.html" class="navbar-brand d-flex align-items-center gap-2">
-            <img src="/img/logo.png" alt="Logo" height="40">
-            <span class="brand-text">ManiFarma <span class="text-primary-yellow">Analytics</span></span>
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg">
+    <div class="container-fluid">
+        <a href="/html/menu_funcionario/menu_funcionario.html">
+            <img class="navbar-brand" src="/img/logo.png" alt="logo ManiFarma" title="Início">
         </a>
-
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarNavDropdown">
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <div class="collapse navbar-collapse" id="navMenu">
-            <ul class="navbar-nav ms-auto align-items-center">
-                <li class="nav-item"><a class="nav-link" href="/html/menu_funcionario/pedido_validacao_funcionario.html">Pedidos</a></li>
-                <li class="nav-item"><a class="nav-link" href="/html/menu_funcionario/itens_funcionario.html">Itens</a></li>
-                <li class="nav-item ms-3">
-                    <div class="user-badge">
-                        <i class="fa-solid fa-user-tie"></i> Admin
-                    </div>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav ms-auto">
+
+                <li class="nav-item">
+                    <a class="nav-link active" href="/html/menu_funcionario/pedido_validacao_funcionario.html">Validar Pedidos</a>
                 </li>
+
+                <li class="nav-item">
+                    <a class="nav-link active" href="/html/menu_funcionario/itens_pedidos_funcionario.html">Orçamento</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link active" href="/html/menu_funcionario/itens_funcionario.html">Itens</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link active" href="/html/menu_funcionario/relatorios_pedido.html">Relatórios</a>
+                </li>
+
             </ul>
         </div>
     </div>
