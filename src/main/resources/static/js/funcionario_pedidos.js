@@ -110,16 +110,15 @@ async function enviarStatusParaAPI(pedidoId, status, senha) {
     try { getModalSenhaInstance().hide(); } catch (e) {}
 
     if (ok) {
-        await showModal({
-            title: "Sucesso",
-            message: `Status alterado para ${status}.`,
-            type: "success"
-        });
+      // Exibir modal de sucesso
+      await showModal({
+          title: "Sucesso",
+          message: `Status alterado para ${status}.`,
+          type: "success"
+      });
 
-        // Recarregar lista
-        location.reload();
-        return;
-    }
+    return;
+}
 
     // ERRO: senha incorreta
     if (statusCode === 403) {
@@ -413,8 +412,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 });
 
-
-
 // ========================================================================
 //   ATRIBUIR FUNCIONÁRIO
 // ========================================================================
@@ -442,7 +439,7 @@ async function atribuirFuncionario(pedidoId, funcionarioId) {
       message: "Pedido atribuído!",
       type: "success"
     });
-    location.reload();
+    
   } else {
     showModal({
       title: "Erro",
