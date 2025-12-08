@@ -273,11 +273,25 @@ document.addEventListener("DOMContentLoaded", async () => {
       detalhes.innerHTML = `
         <td colspan="4">
           <div class="p-3 border rounded bg-light">
-            <h5>Pedido #${pedido.id}</h5>
+            <h5>Detalhes do Pedido #${pedido.id}</h5>
 
-            <p><strong>Cliente:</strong> ${pedido.clienteNome}</p>
+          <p><strong>Funcionário responsável:</strong>
+            ${pedido.employeeNome ? pedido.employeeNome + " (ID: " + pedido.employeeId + ")" : "Nenhum funcionário atribuído."}
+          </p>
+          <br>
+          <p><strong>Cliente ID:</strong> ${pedido.clienteId}</p>
+          <p><strong>Cliente:</strong> ${pedido.clienteNome || "—"}</p>
+          <p><strong>Telefone:</strong> ${pedido.clienteTelefone || "—"}</p>
+          <br>
+          <p><strong>Descrição:</strong> ${pedido.descricao}</p>
+          <p><strong>Receita:</strong> ${pedido.receita || "—"}</p>
 
-            <p><strong>Status:</strong> ${pedido.status}</p>
+          <h6 class="mt-3">Itens do Pedido:</h6>
+          <ul>
+            ${(pedido.itens || []).map(item => `
+              <li>${item.produtoNome} - Quantidade: ${item.quantidade}</li>
+            `).join("") || "<li>Nenhum item informado.</li>"}
+          </ul>
 
             <div class="mt-3">
               <button class="btn btn-outline-primary btn-sm ver-receita" data-id="${pedido.id}">
@@ -289,16 +303,16 @@ document.addEventListener("DOMContentLoaded", async () => {
               </button>
 
               ${pedido.status === "PENDENTE" ? `
-                 <button class="btn btn-success btn-sm" onclick="alterarStatus(${pedido.id}, 'VALIDO')">Validar</button>
-                 <button class="btn btn-danger btn-sm" onclick="alterarStatus(${pedido.id}, 'CANCELADO')">Cancelar</button>
+                 <button class="btn btn-success btn-sm" onclick="alterarStatus(${pedido.id}, 'VALIDO')">✅ Validar</button>
+                 <button class="btn btn-danger btn-sm" onclick="alterarStatus(${pedido.id}, 'CANCELADO')">❎ Cancelar</button>
               ` : ""}
 
               ${pedido.status === "VALIDO" ? `
-                 <button class="btn btn-info btn-sm" onclick="enviarCotacao(${pedido.id})">Enviar Cotação</button>
+                 <button class="btn btn-info btn-sm" onclick="enviarCotacao(${pedido.id})">💲 Enviar Cotação</button>
               ` : ""}
 
               ${pedido.status === "PAGO" ? `
-                 <button class="btn btn-primary btn-sm" onclick="alterarStatus(${pedido.id}, 'CONCLUIDO')">Concluir Pedido</button>
+                 <button class="btn btn-primary btn-sm" onclick="alterarStatus(${pedido.id}, 'CONCLUIDO')">🏁 Concluir Pedido</button>
               ` : ""}
             </div>
           </div>
