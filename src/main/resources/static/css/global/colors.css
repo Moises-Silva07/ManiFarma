@@ -1,9 +1,9 @@
 :root {
-  --bg-color: #FAFDFB;          /* fundo claro e limpo */
-  --primary-color: #7CB342;     /* verde principal */
-  --accent-color: #C5E1A5;      /* verde suave para hover e destaques */
-  --text-color: #2E2E2E;        /* cor de texto principal */
-  --success-color: #81C784;     /* verde sucesso */
-  --error-color: #E57373;       /* vermelho para erros */
-  --button-hover: #558B2F;      /* verde escuro para hover */
+  --bg-color: #FFFFFF;
+  --primary-color: #007BFF;
+  --accent-color: #DDEEFF;
+  --text-color: #000000;
+  --success-color: #28a745;
+  --error-color: #CC0000;
+  --button-hover: #0056b3;
 }
