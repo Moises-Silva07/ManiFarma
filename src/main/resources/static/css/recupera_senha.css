@@ -1,7 +1,6 @@
-
 .container p {
   font-size: 13px;
-  color: #28a745;
+  color: #000000;
   padding: 10px 0;
 }
 
@@ -18,8 +17,8 @@
   width: 100%;
   text-decoration: none;
   padding: 12px;
-  background: #FEE715;
-  color: #101820;
+  background: #007BFF;
+  color: #FFFFFF;
   border-radius: 8px;
   font-weight: bold;
   cursor: pointer;
@@ -29,7 +28,7 @@
 }
 
 .btn:hover {
-  background: #92850c;
+  background: #0056b3;
 }
 
 @media (max-width: 768px) {
