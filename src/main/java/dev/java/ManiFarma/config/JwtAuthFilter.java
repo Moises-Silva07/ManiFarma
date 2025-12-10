@@ -36,7 +36,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         final String authHeader = request.getHeader("Authorization");
 
-        // 🔹 1. Ignora o filtro para rotas públicas
+
         String path = request.getRequestURI();
         if (path.startsWith("/api/auth")
                 || path.startsWith("/api/reports")
@@ -49,7 +49,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             return;
         }
 
-        // 🔹 2. Se não houver token, apenas segue sem autenticar (não lança erro)
+
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
