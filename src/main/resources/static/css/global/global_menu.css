@@ -1,10 +1,11 @@
 body {
   height: 100vh;
-  background-color: #101820;
+  background-color: #FFFFFF;
 }
 
 .navbar {
-  background-color: #FEE715;
+  background-color: #007BFF;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .navbar-brand {
@@ -19,10 +20,11 @@ body {
   max-width: 900px;
   margin: 30px auto;
   padding: 20px;
-  border: 1px solid #FEE715;
-  background: #101820;
+  border: 1px solid #CCCCCC;
+  background: #FFFFFF;
   border-radius: 10px;
   box-shadow: 0px 2px 6px rgba(0,0,0,0.1);
+  color: #000000;
 }
 
 form {
@@ -32,8 +34,8 @@ form {
 }
 
 .btn {
-  background: #FEE715;
-  color: #101820;
+  background: #007BFF;
+  color: #FFFFFF;
   padding: 12px;
   border: none;
   border-radius: 8px;
@@ -42,7 +44,7 @@ form {
 }
 
 .btn:hover {
-  background: #92850c;
+  background: #0056b3;
 }
 
 .message {
@@ -57,13 +59,12 @@ form {
   text-align: center;
   margin-top: 20px;
   font-size: 0.9em;
-  color: #FEE715;
+  color: #007BFF;
 }
 
-/* ------ Rodapé ------ */
 .footer {
-  background-color: #0e141a;
-  color: #FEE715;
+  background-color: #F8F9FA;
+  color: #000000;
   padding: 40px 20px 20px;
   margin-top: 50px;
   font-family: Arial, sans-serif;
@@ -80,11 +81,11 @@ form {
 .footer-col h3,
 .footer-col h4 {
   margin-bottom: 10px;
-  color: #FEE715;
+  color: #007BFF;
 }
 
 .footer-col p {
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(0, 0, 0, 0.7);
   font-size: 0.9em;
 }
 
@@ -99,17 +100,17 @@ form {
 
 .footer-col a {
   text-decoration: none;
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(0, 0, 0, 0.7);
   transition: color 0.3s;
 }
 
 .footer-col a:hover {
-  color: #FEE715;
+  color: #007BFF;
 }
 
 .footer-divider {
   border: none;
-  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  border-top: 1px solid rgba(0, 0, 0, 0.2);
   margin: 30px auto;
   width: 90%;
 }
@@ -117,7 +118,7 @@ form {
 .footer-bottom {
   text-align: center;
   font-size: 0.85em;
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(0, 0, 0, 0.6);
 }
 
 @media (max-width: 1024px) {
