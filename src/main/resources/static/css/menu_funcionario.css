@@ -2,22 +2,19 @@
   height: 70px;
 }
 
-
-/* Fundo geral do main */
 main {
-  background-color: #101820;
-  color: #FEE715;
+  background-color: #FFFFFF;
+  color: #000000;
   padding: 40px;
   min-height: 90vh;
 }
 
-/* Cabeçalho do main (logo + texto) */
 .main-header {
   display: flex;
   align-items: center;
   gap: 20px;
   margin-bottom: 40px;
-  border-bottom: 2px solid #FEE715;
+  border-bottom: 2px solid #007BFF;
   padding-bottom: 20px;
 }
 
@@ -29,26 +26,24 @@ main {
 
 .main-header h1 {
   font-size: 1.8rem;
-  color: #FEE715;
+  color: #007BFF;
   margin: 0;
 }
 
 .main-header p {
-  color: #cfcfcf;
+  color: #333333;
   font-size: 0.95rem;
 }
 
-/* Container dos módulos */
 .container-programa {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 20px;
 }
 
-/* Cada bloco */
 .campo-programa {
-  background: #101820;
-  border: 1px solid #FEE715;
+  background: #F8F9FA;
+  border: 1px solid #007BFF;
   border-radius: 12px;
   padding: 20px;
   text-align: center;
@@ -57,20 +52,19 @@ main {
 
 .campo-programa:hover {
   transform: translateY(-3px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.1);
 }
 
 .campo-programa h2 {
   margin-bottom: 10px;
-  color: #FEE715;
+  color: #007BFF;
   font-size: 1.2rem;
 }
 
-/* Botão */
 .btn-acesso {
   display: inline-block;
-  background-color: #FEE715;
-  color: #101820;
+  background-color: #007BFF;
+  color: #FFFFFF;
   padding: 8px 14px;
   border-radius: 6px;
   text-decoration: none;
@@ -79,10 +73,9 @@ main {
 }
 
 .btn-acesso:hover {
-  background-color: #FEE715;
+  background-color: #0056b3;
 }
 
-/* Responsivo */
 @media (max-width: 768px) {
   .main-header {
     flex-direction: column;
@@ -98,12 +91,12 @@ main {
 @media (max-width: 768px) {
 
   .navbar-nav {
-    margin: 15px 0; /* Diminui o espaçamento em telas menores */
+    margin: 15px 0;
     text-align: center;
   }
 
   .container-programa {
-    padding: 15px; /* Reduz o padding para caber melhor */
+    padding: 15px;
     font-size: 0.95em;
   }
 }
