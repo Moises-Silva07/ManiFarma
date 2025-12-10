@@ -2,35 +2,37 @@
   height: 70px;
 }
 
-
 label {
-    color:#FEE715
+    color:#007BFF;
 }
 
 input {
-  color: #e6e6e6;
+  color: #333333;
+  background: #FFFFFF;
+  border: 1px solid #CCCCCC;
 }
 
 textarea {
-  width: 100%;               
-  height: 150px;            
-  resize: none;              
-  overflow-y: auto;          
-  overflow-x: hidden;       
-  
+  width: 100%;
+  height: 150px;
+  resize: none;
+  overflow-y: auto;
+  overflow-x: hidden;
+
   padding: 10px;
-  border: 1px solid #FEE715;
+  border: 1px solid #007BFF;
   border-radius: 8px;
   font-size: 1em;
   color: #101820;
-  background: #e6e6e6;
+  background: #FFFFFF;
+  color: #000000;
   outline: none;
   transition: 0.3s;
 }
 
 .btn {
-  background: #FEE715;
-  color: #101820;
+  background: #007BFF;
+  color: #FFFFFF;
   padding: 12px;
   border: none;
   border-radius: 8px;
@@ -39,7 +41,7 @@ textarea {
 }
 
 .btn:hover {
-  background: #92850c;
+  background: #0056b3;
 }
 
 @media (max-width: 768px) {
