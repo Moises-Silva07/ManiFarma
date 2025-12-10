@@ -16,6 +16,19 @@ function getModalSenhaInstance() {
   return bootstrap.Modal.getOrCreateInstance(modalEl);
 }
 
+const statusFormatado = {
+  PENDENTE: "Pendente",
+  VALIDO: "Válido",
+  ENVIODECOTACAO: "Envio de Cotação",
+  PAGO: "Pago",
+  CONCLUIDO: "Concluído",
+  CANCELADO: "Cancelado"
+};
+
+function formatarStatus(status) {
+  return statusFormatado[status] || status;
+}
+
 
 // ========================================================================
 //   CLICK NO BOTÃO DO MODAL DE SENHA
@@ -261,7 +274,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             pedido.status === "CONCLUIDO" ? "bg-success" :
             pedido.status === "CANCELADO" ? "bg-danger" :
             "bg-warning text-dark"
-          }">${pedido.status}</span>
+          }">${formatarStatus(pedido.status)}</span>
         </td>
         <td>R$ ${(pedido.valorTotal || 0).toFixed(2)}</td>
       `;

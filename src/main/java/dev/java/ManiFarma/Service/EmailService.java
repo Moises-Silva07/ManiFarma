@@ -30,17 +30,16 @@ public class EmailService {
             message.setFrom(fromEmail); 
 
 
-            message.setTo(cliente.getEmail()); // <-- PARA: O email do cliente real
+            message.setTo(cliente.getEmail());
             
-            // --- 2. (OPCIONAL) Limpeza do Assunto ---
+
             message.setSubject("ManiFarma: Cotação do Pedido #" + pedido.getId());
 
             // Formata o valor para R$ XX,XX
             NumberFormat formatadorMoeda = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
             String valorFormatado = formatadorMoeda.format(pedido.getValorTotal());
 
-            // --- 3. (OPCIONAL) Limpeza do Texto ---
-            // O seu String.format já estava correto, apenas removi os "teste"
+
             String texto = String.format(
                     // 1º %s = cliente.getNome()
                     "Olá, %s!\n\n"

@@ -42,14 +42,14 @@ public class PaymentService {
             List<PreferenceItemRequest> items = new ArrayList<>();
             items.add(itemRequest);
 
-            // 3. O restante da lógica continua igual
+
             PreferenceRequest preferenceRequest = PreferenceRequest.builder()
                     .items(items).build();
             
             PreferenceClient client = new PreferenceClient();
             Preference preference = client.create(preferenceRequest);
 
-            return preference.getInitPoint(); // Este é o link!
+            return preference.getInitPoint();
 
         } catch (Exception e) {
             System.err.println("Erro ao criar link de pagamento: " + e.getMessage());

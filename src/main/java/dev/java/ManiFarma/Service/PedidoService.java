@@ -26,6 +26,7 @@ public class PedidoService {
     private final PaymentService paymentService;
     private final EmailService emailService;
     private final String pharmacistPassword;
+    private final String uploadDir;
 
     public PedidoService(
             PedidoRepository pedidoRepository,
@@ -34,7 +35,8 @@ public class PedidoService {
             ProdutoRepository produtoRepository,
             PaymentService paymentService,
             EmailService emailService,
-            @Value("${PHARMACIST_PASSWORD}") String pharmacistPassword
+            @Value("${PHARMACIST_PASSWORD}") String pharmacistPassword,
+            @Value("${file.upload-dir}") String uploadDir
     ) {
         this.pedidoRepository = pedidoRepository;
         this.clienteRepository = clienteRepository;
@@ -43,6 +45,7 @@ public class PedidoService {
         this.paymentService = paymentService;
         this.emailService = emailService;
         this.pharmacistPassword = pharmacistPassword; // <-- E você atribui o valor ao campo 'final'
+        this.uploadDir = uploadDir;
     }
 
 
@@ -101,7 +104,7 @@ public class PedidoService {
 
     private String salvarImagemReceita(MultipartFile arquivo) {
         try {
-            // Valida o tipo do arquivo
+            // Valida o tipo do arquivo (seu código original, está perfeito)
             String contentType = arquivo.getContentType();
             if (contentType == null ||
                     (!contentType.equals("image/jpeg") &&
@@ -110,40 +113,39 @@ public class PedidoService {
                 throw new IllegalArgumentException("Apenas imagens JPG, JPEG ou PNG são permitidas!");
             }
 
-            // Valida o tamanho (máximo 5MB)
+            // Valida o tamanho (seu código original, está perfeito)
             if (arquivo.getSize() > 5 * 1024 * 1024) {
                 throw new IllegalArgumentException("A imagem não pode ter mais de 5MB!");
             }
 
-            // Define o diretório de upload
-            String uploadDir = "uploads/receitas/";
-            Path uploadPath = Paths.get(uploadDir);
+            Path diretorioReceitas = Paths.get(this.uploadDir + "receitas/");
 
-            // Cria o diretório se não existir
-            if (!Files.exists(uploadPath)) {
-                Files.createDirectories(uploadPath);
-                System.out.println(" Diretório criado: " + uploadPath.toAbsolutePath());
+            if (!Files.exists(diretorioReceitas)) {
+                Files.createDirectories(diretorioReceitas);
+                System.out.println(" Diretório criado: " + diretorioReceitas.toAbsolutePath());
             }
 
-            //  Gera nome único para o arquivo
+            // Gera nome único para o arquivo
             String nomeOriginal = arquivo.getOriginalFilename();
             String extensao = nomeOriginal != null ? nomeOriginal.substring(nomeOriginal.lastIndexOf(".")) : ".jpg";
             String nomeArquivo = System.currentTimeMillis() + extensao;
 
-            //  Salva o arquivo
-            Path caminhoCompleto = uploadPath.resolve(nomeArquivo);
+            // Salva o arquivo no novo caminho
+            Path caminhoCompleto = diretorioReceitas.resolve(nomeArquivo);
             Files.copy(arquivo.getInputStream(), caminhoCompleto);
 
             System.out.println(" Imagem salva em: " + caminhoCompleto.toAbsolutePath());
 
-            return caminhoCompleto.toString();
+            // Retorna o caminho absoluto para o banco de dados
+            return caminhoCompleto.toAbsolutePath().toString();
 
         } catch (IllegalArgumentException e) {
             // Repassa erros de validação
             throw e;
         } catch (Exception e) {
-            // Erros de I/O
+
             System.err.println(" Erro ao salvar imagem: " + e.getMessage());
+            e.printStackTrace();
             throw new RuntimeException("Erro ao salvar a imagem da receita: " + e.getMessage());
         }
     }
@@ -343,7 +345,6 @@ public class PedidoService {
     // ALTERAR STATUS DO PEDIDO
 
     @Transactional
-// Adicionamos um novo parâmetro 'senha' que pode ser nulo
     public void alterarStatus(Long pedidoId, String novoStatus, String senha) {
         Pedido pedido = pedidoRepository.findById(pedidoId)
                 .orElseThrow(() -> new EntityNotFoundException("Pedido não encontrado: " + pedidoId));
@@ -355,10 +356,10 @@ public class PedidoService {
             if (statusEnum == StatusPedido.VALIDO) {
                 
                 if (senha == null || senha.trim().isEmpty()) {
-                    // Lança uma exceção de segurança se a senha estiver faltando
+
                     throw new SecurityException("A senha do farmacêutico é obrigatória para validar um pedido.");
                 }
-                // 2. Compara a senha enviada com a senha segura armazenada
+
                 if (!senha.equals(pharmacistPassword)) {
                     // Lança uma exceção de segurança se a senha estiver incorreta
                     throw new SecurityException("Senha do farmacêutico incorreta.");

@@ -1,7 +1,29 @@
+
+.tabela-pedidos td.receita-cell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;              
+    text-align: center;
+    white-space: normal;   
+    word-break: break-word; 
+}
+
+
+.tabela-pedidos {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.tabela-pedidos th,
+.tabela-pedidos td {
+    text-align: center !important;
+    vertical-align: middle !important;
+}
+
 .navbar-brand {
   height: 70px;
 }
-
 
 .modal-header {
   background-color: #FEE715;

@@ -15,6 +15,20 @@ document.addEventListener("DOMContentLoaded", async () => {
     window.location.href = "/html/login/login.html";
   }
 
+  const statusFormatado = {
+    PENDENTE: "Pendente",
+    VALIDO: "Válido",
+    ENVIODECOTACAO: "Envio de Cotação",
+    PAGO: "Pago",
+    CONCLUIDO: "Concluído",
+    CANCELADO: "Cancelado"
+  };
+
+  function formatarStatus(status) {
+    return statusFormatado[status] || status;
+  }
+
+
   const { ok, data } = await apiRequest(`/api/pedidos/cliente/${clienteId}`, "GET", null, true, true);
 
   if (ok && Array.isArray(data) && data.length > 0) {
@@ -54,8 +68,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       row.innerHTML = `
         <td>${pedido.id}</td>
         <td>${pedido.descricao}</td>
-        <td>${pedido.status || "Pendente"}</td>
-        <td>${receitaCell}</td>
+        <td>${formatarStatus(pedido.status) || "Pendente"}</td>
+        <td class="receita-cell">${receitaCell}</td>
         <td>${pagamentoCell}</td>
       `;
 

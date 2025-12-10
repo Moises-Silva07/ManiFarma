@@ -120,8 +120,7 @@ public class UserController {
     // --- Endpoints existentes ---
     @GetMapping
     public ResponseEntity<List<UserResponseDTO>> getAllUsers() {
-        // Este endpoint não lança exceções, apenas retorna lista vazia.
-        // Não precisa de try-catch.
+
         List<UserResponseDTO> users = userService.findAllUsers();
         return ResponseEntity.ok(users);
     }

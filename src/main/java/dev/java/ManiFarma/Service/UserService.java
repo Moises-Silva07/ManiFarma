@@ -64,7 +64,7 @@ public class UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado com o ID: " + id));
 
-        // Garante que a anonimização só se aplique a clientes
+        // anonimização apenas para cliente
         if (!(user instanceof Cliente)) {
             throw new IllegalArgumentException("A anonimização de dados só é aplicável a clientes.");
         }
@@ -83,7 +83,7 @@ public class UserService {
         cliente.setEstado("XX");
         cliente.setTelefone("(00) 00000-0000");
 
-        // 2. Define as flags de estado permanente
+
         cliente.setDisabled(true);
         cliente.setAnonymized(true);
 
@@ -99,7 +99,6 @@ public class UserService {
     }
 
 
-    // --- MÉTODOS DE CONSULTA E ATUALIZAÇÃO ---
 
     public List<UserResponseDTO> findAllUsers() {
         return userRepository.findAll().stream()
@@ -123,7 +122,7 @@ public class UserService {
             throw new IllegalStateException("Não é possível atualizar um usuário que foi anonimizado.");
         }
 
-        // Lógica de atualização (seu código original)
+
         existingUser.setNome(request.getNome());
         existingUser.setEmail(request.getEmail());
 

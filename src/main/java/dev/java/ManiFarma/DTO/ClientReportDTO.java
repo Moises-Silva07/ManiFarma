@@ -65,4 +65,8 @@ public class ClientReportDTO {
     public void setTotalSpent(Double totalSpent) {
         this.totalSpent = totalSpent;
     }
+
+    public String getNome() {
+        return null;
+    }
 }

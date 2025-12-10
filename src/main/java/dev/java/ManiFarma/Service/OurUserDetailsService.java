@@ -23,10 +23,7 @@ public class OurUserDetailsService implements UserDetailsService {
         User user = userRepository.findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado com email: " + username));
 
-        // A flag 'enabled' do UserDetails do Spring Security é a terceira.
-        // Usamos '!user.isDisabled()' para que:
-        // - se isDisabled=false (ativo), enabled=true
-        // - se isDisabled=true (inativo), enabled=false
+
         return new org.springframework.security.core.userdetails.User(
                 user.getEmail(),
                 user.getSenha(),

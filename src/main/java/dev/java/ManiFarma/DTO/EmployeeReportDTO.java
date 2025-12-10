@@ -54,4 +54,8 @@ public class EmployeeReportDTO {
     public void setTotalValueHandled(Double totalValueHandled) {
         this.totalValueHandled = totalValueHandled;
     }
+
+    public String getNome() {
+        return null;
+    }
 }

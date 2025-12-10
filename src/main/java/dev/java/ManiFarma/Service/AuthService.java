@@ -70,8 +70,7 @@ public class AuthService {
     }
 
     public UserResponseDTO login(LoginRequest request) {
-        //para autenticar o usuário
-        // Este método 'authenticate' lança AuthenticationException se o login falhar
+
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getSenha())
         );

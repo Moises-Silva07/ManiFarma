@@ -34,8 +34,7 @@ public class ProdutoController {
 
     @GetMapping
     public List<ProdutoResponseDTO> listar() {
-        // GET all geralmente não precisa de try-catch,
-        // pois retorna lista vazia, o que é ok.
+
         return service.listarTodos();
     }
 
@@ -59,8 +58,7 @@ public class ProdutoController {
 
     @PostMapping
     public ResponseEntity<ProdutoResponseDTO> criar(@Valid @RequestBody ProdutoRequestDTO dto) {
-        // Criar geralmente não tem erro 404, então podemos manter simples.
-        // A validação @Valid já retorna 400 automaticamente se o DTO falhar.
+
         ProdutoResponseDTO criado = service.criar(dto);
         return ResponseEntity
                 .created(URI.create("/produtos/" + criado.getId()))

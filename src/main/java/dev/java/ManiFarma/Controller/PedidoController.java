@@ -39,7 +39,6 @@ public class PedidoController {
 
 
     // CRIAR PEDIDO - Cliente envia apenas descrição + imagem
-    // Este método já possui um bom tratamento try...catch
     @PostMapping(consumes = {"multipart/form-data"})
     public ResponseEntity<?> criarPedido(
             @RequestParam("descricao") String descricao,
@@ -87,8 +86,7 @@ public class PedidoController {
     }
 
 
-    //  VISUALIZAR/BAIXAR IMAGEM DA RECEITA
-    // Este método já possui um bom tratamento try...catch
+    //  VISUALIZAR RECEITA
     @GetMapping("/{id}/receita")
     public ResponseEntity<?> visualizarReceita(@PathVariable Long id) {
         try {
@@ -140,7 +138,6 @@ public class PedidoController {
 
 
     // LISTAR TODOS OS PEDIDOS
-    // Este método já possui um bom tratamento try...catch
     @GetMapping
     public ResponseEntity<?> listarTodosPedidos() {
         try {
@@ -156,7 +153,6 @@ public class PedidoController {
 
 
     //  BUSCAR PEDIDO POR ID
-    // Este método já possui um bom tratamento try...catch
     @GetMapping("/{id}")
     public ResponseEntity<?> buscarPedidoPorId(@PathVariable Long id) {
         try {
@@ -178,7 +174,6 @@ public class PedidoController {
 
 
     //  BUSCAR PEDIDOS POR CLIENTE
-    // Este método já possui um bom tratamento try...catch
     @GetMapping("/cliente/{clienteId}")
     public ResponseEntity<?> buscarPedidosPorCliente(@PathVariable Long clienteId) {
         try {
@@ -193,9 +188,7 @@ public class PedidoController {
         }
     }
 
-    // ==========================================================
-    // 2. NOVO ENDPOINT ADICIONADO AQUI
-    // ==========================================================
+
     @GetMapping("/funcionario/{employeeId}")
     public ResponseEntity<?> buscarPedidosPorFuncionario(@PathVariable Long employeeId) {
         try {
@@ -217,7 +210,6 @@ public class PedidoController {
 
 
     //  ENVIAR COTAÇÃO - Funcionário gera link e envia email
-    // Este método já possui um bom tratamento try...catch
     @PostMapping("/{id}/enviar-cotacao")
     public ResponseEntity<?> enviarCotacao(@PathVariable Long id) {
         try {
@@ -252,7 +244,6 @@ public class PedidoController {
 
 
     //  ATRIBUIR FUNCIONÁRIO AO PEDIDO
-    // Este método já possui um bom tratamento try...catch
     @PutMapping("/{id}/atribuir")
     public ResponseEntity<?> atribuirFuncionario(
             @PathVariable Long id,
@@ -341,14 +332,13 @@ public class PedidoController {
     }
 
     // Endpoint para listar pedidos pelo status
-    // Este método já possui um bom tratamento try...catch
     @GetMapping("/status/{status}")
     public ResponseEntity<?> listarPedidosPorStatus(@PathVariable String status) {
         try {
             List<PedidoResponseDTO> pedidos = pedidoService.getPedidosPorStatus(status);
             return ResponseEntity.ok(pedidos);
-        
-        } catch (IllegalArgumentException e) { // Captura se o status for inválido (ex: "ABCDE")
+
+        } catch (IllegalArgumentException e) {
             Map<String, String> error = new HashMap<>();
             error.put("error", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
@@ -362,13 +352,12 @@ public class PedidoController {
     }
 
     // Endpoint para puxar o id pedido para adicionar o item
-    // Este método já possui um bom tratamento try...catch
     @PostMapping("/{pedidoId}/itens")
     @Transactional
     public ResponseEntity<?> adicionarItensAoPedido(
             @PathVariable Long pedidoId,
             @RequestBody List<PedidoProdutoRequestDTO> itens) {
-        
+
         try {
             PedidoResponseDTO atualizado = pedidoService.adicionarItensAoPedido(pedidoId, itens);
             return ResponseEntity.ok(atualizado);
@@ -377,7 +366,7 @@ public class PedidoController {
             Map<String, String> error = new HashMap<>();
             error.put("error", e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
-        
+
         } catch (Exception e) {
             e.printStackTrace();
             Map<String, String> error = new HashMap<>();
