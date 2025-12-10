@@ -3,20 +3,23 @@
 }
 
 :root {
-  --bg-dark: #101820;
-  --primary: #FEE715;
+  --bg-dark: #FFFFFF;
+  --primary: #007BFF;
   --light-bg: #f8f9fa;
-  --text-dark: #101820;
+  --text-dark: #000000;
+  --text-light: #FFFFFF;
+  --secondary-dark-bg: #F8F9FA;
 }
 
 body {
   background: var(--bg-dark);
-  color: #fff;
+  color: var(--text-dark);
   font-family: Arial, sans-serif;
 }
 
 .custom-navbar {
-  background: var(--primary);
+  background: var(--light-bg);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .custom-navbar .navbar-brand,
@@ -25,10 +28,9 @@ body {
   font-weight: 600;
 }
 
-/* HERO */
 .hero {
   height: 80vh;
-  background: linear-gradient(rgba(16,24,32,0.85), rgba(16,24,32,0.85)), url('/img/hero_farmacia.jpg') center/cover no-repeat;
+  background: linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)), url('/img/hero_farmacia.jpg') center/cover no-repeat;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -43,19 +45,19 @@ body {
 
 .hero-subtitle {
   font-size: 1.25rem;
-  color: #ffffffcc;
+  color: var(--text-dark);
 }
 
 .btn-hero {
   background: var(--primary);
-  color: var(--text-dark);
+  color: var(--text-light);
   padding: 12px 28px;
   border-radius: 8px;
   transition: background 0.3s;
 }
 
 .btn-hero:hover {
-  background: #e5d300;
+  background: #0056b3;
 }
 
 .btn-outline-hero {
@@ -68,10 +70,9 @@ body {
 
 .btn-outline-hero:hover {
   background: var(--primary);
-  color: var(--text-dark);
+  color: var(--text-light);
 }
 
-/* Seção Como Funciona */
 #como-funciona {
   background: var(--light-bg);
   color: var(--text-dark);
@@ -84,12 +85,11 @@ body {
   line-height: 60px;
   border-radius: 50%;
   background: var(--primary);
-  color: var(--text-dark);
+  color: var(--text-light);
   margin: 0 auto 15px;
   font-weight: bold;
 }
 
-/* Categorias */
 #categorias {
   background: var(--bg-dark);
 }
@@ -100,90 +100,31 @@ body {
 
 .categoria-icon {
   font-size: 2.5rem;
+  color: var(--primary);
 }
 
-/* Benefícios */
 .benefit h5 {
   color: var(--primary);
   margin-bottom: 10px;
 }
 
-/* Sobre nós */
 #sobre-nos {
-  background: var(--bg-dark);
+  background: var(--secondary-dark-bg);
 }
 
-/* FAQ */
 .accordion-button {
   background: var(--primary);
-  color: var(--text-dark);
+  color: var(--text-light);
 }
 
 .accordion-button:not(.collapsed) {
-  background: darkgoldenrod;
+  background: #0056b3;
 }
 
-/* Contato */
 section.py-4 {
   background: var(--bg-dark);
 }
 
-/* ------ Rodapé ------ */
 .footer {
-  background-color: #0e141a;
-  color: #FEE715;
-  padding: 40px 20px 20px;
-  margin-top: 50px;
-  font-family: Arial, sans-serif;
-}
-
-.footer-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 30px;
-  max-width: 1100px;
-  margin: 0 auto;
-}
-
-.footer-col h3,
-.footer-col h4 {
-  margin-bottom: 10px;
-  color: #FEE715;
-}
-
-.footer-col p {
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 0.9em;
-}
-
-.footer-col ul {
-  list-style: none;
-  padding: 0;
-}
-
-.footer-col ul li {
-  margin-bottom: 8px;
-}
-
-.footer-col a {
-  text-decoration: none;
-  color: rgba(255, 255, 255, 0.7);
-  transition: color 0.3s;
-}
-
-.footer-col a:hover {
-  color: #FEE715;
-}
-
-.footer-divider {
-  border: none;
-  border-top: 1px solid rgba(255, 255, 255, 0.2);
-  margin: 30px auto;
-  width: 90%;
-}
-
-.footer-bottom {
-  text-align: center;
-  font-size: 0.85em;
-  color: rgba(255, 255, 255, 0.6);
-}
+  background-color: var(--secondary-dark-bg);
+  color: var(--text-dark);
