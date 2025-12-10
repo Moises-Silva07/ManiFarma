@@ -44,8 +44,7 @@ public class ReportService {
         if (start == null) start = LocalDateTime.of(2000, 1, 1, 0, 0, 0, 0);
         if (end == null) end = LocalDateTime.now();
 
-        // Agora o repositório já retorna a lista de DTOs pronta!
-        // Não precisa mais fazer o map manual de Object[]
+
         List<ClientReportDTO> clientes = pedidoRepository.findTopClients(start, end);
 
         if (limit > 0 && clientes.size() > limit) {

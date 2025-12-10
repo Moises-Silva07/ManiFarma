@@ -26,7 +26,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    // --- NOVO ENDPOINT ---
+
     @PatchMapping("/{id}/toggle-activation")
     public ResponseEntity<?> toggleUserActivation(@PathVariable Long id) {
         try {
@@ -45,7 +45,7 @@ public class UserController {
         }
     }
 
-    // --- ENDPOINTS DE DELETE AGORA DESATIVAM O USUÁRIO ---
+
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deactivateUser(@PathVariable Long id) {
         try {
@@ -117,7 +117,7 @@ public class UserController {
         return ResponseEntity.status(status).body(error);
     }
 
-    // --- Endpoints existentes ---
+
     @GetMapping
     public ResponseEntity<List<UserResponseDTO>> getAllUsers() {
 
@@ -172,22 +172,22 @@ public class UserController {
             successResponse.put("message", "Senha atualizada com sucesso!");
             return ResponseEntity.ok(successResponse);
 
-            // TRATAMENTO DE ERROS
+
 
         } catch (EntityNotFoundException e) {
-            // ERRO 404: Usuário não encontrado
+
             Map<String, String> error = new HashMap<>();
             error.put("error", e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
         
         } catch (IllegalArgumentException e) {
-            // ERRO 400: Senha atual incorreta
+
             Map<String, String> error = new HashMap<>();
             error.put("error", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
         
         } catch (Exception e) {
-            // ERRO 500: Outros erros
+
             Map<String, String> error = new HashMap<>();
             error.put("error", "Erro interno ao atualizar senha.");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);

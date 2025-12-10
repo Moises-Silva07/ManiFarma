@@ -33,7 +33,7 @@ public class AuthService {
 
     public UserResponseDTO register(UserRegisterRequestDTO request) {
         if (userRepository.existsByEmail(request.getEmail())) {
-            // CORRIGIDO: Lança uma exceção 400 (Bad Request)
+
             throw new IllegalArgumentException("Email já cadastrado");
         }
 

@@ -31,12 +31,12 @@ public class PaymentService {
             }
 
             PreferenceItemRequest itemRequest = PreferenceItemRequest.builder()
-                    .id(pedido.getId().toString()) // ID do seu pedido
-                    .title("Orçamento ManiFarma #" + pedido.getId()) // Título do pagamento
-                    .description(pedido.getDescricao()) // Descrição do pedido (opcional)
-                    .quantity(1) // É 1 "orçamento"
+                    .id(pedido.getId().toString())
+                    .title("Orçamento ManiFarma #" + pedido.getId())
+                    .description(pedido.getDescricao())
+                    .quantity(1)
                     .currencyId("BRL")
-                    .unitPrice(new BigDecimal(valorTotal)) // <-- A MUDANÇA PRINCIPAL
+                    .unitPrice(new BigDecimal(valorTotal))
                     .build();
             
             List<PreferenceItemRequest> items = new ArrayList<>();

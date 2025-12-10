@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface EmployeeRepository extends UserRepository {
-    // Métodos específicos para Employee, se houver
+
 }

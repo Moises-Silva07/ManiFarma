@@ -22,14 +22,14 @@ public class Pedido {
     @Enumerated(EnumType.STRING)
     private StatusPedido status;
 
-    private String receita; // nome do arquivo (ex: receita_123.pdf)
+    private String receita;
 
     @Column(length = 255)
-    private String linkPagamento; // link de pagamento gerado
+    private String linkPagamento;
 
     private Double valorTotal;
 
-    // 🔹 Novo campo — caminho completo do arquivo no servidor
+
     @Column(length = 500)
     private String caminhoReceita;
 
@@ -45,11 +45,9 @@ public class Pedido {
     private List<PedidoProduto> itens = new ArrayList<>();
 
     @Column(name = "receita_url")
-    private String receitaUrl; // caso queira expor via link público
+    private String receitaUrl;
 
-    // =============    ==================
-    // Getters e Setters
-    // ===============================
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 

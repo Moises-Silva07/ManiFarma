@@ -27,11 +27,11 @@ public class OurUserDetailsService implements UserDetailsService {
         return new org.springframework.security.core.userdetails.User(
                 user.getEmail(),
                 user.getSenha(),
-                !user.isDisabled(), // enabled
-                true, // accountNonExpired
-                true, // credentialsNonExpired
-                true, // accountNonLocked
-                Collections.emptyList() // authorities
+                !user.isDisabled(),
+                true,
+                true,
+                true,
+                Collections.emptyList()
         );
     }
 }

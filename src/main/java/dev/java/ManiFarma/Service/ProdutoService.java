@@ -59,13 +59,13 @@ public class ProdutoService {
 
     public ProdutoResponseDTO criar(ProdutoRequestDTO dto) {
         System.out.println("Nome: " + dto.getNome());
-        System.out.println("Preço: " + dto.getPreco());  // Verifique o valor do preço aqui
+        System.out.println("Preço: " + dto.getPreco());
 
         Produto entity = new Produto();
         entity.setNome(dto.getNome());
         entity.setPreco(dto.getPreco());
 
-        // Converte string para enum, default MG
+
         Unidade unidade = Unidade.MG;
         if (dto.getUnidade() != null && !dto.getUnidade().isBlank()) {
             unidade = Unidade.valueOf(dto.getUnidade().toUpperCase());
@@ -105,7 +105,7 @@ public class ProdutoService {
 
     public void deletar(Long id) {
         if (!repository.existsById(id)) {
-            // CORRIGIDO:
+
             throw new EntityNotFoundException("Produto não encontrado com ID: " + id);
         }
         repository.deleteById(id);

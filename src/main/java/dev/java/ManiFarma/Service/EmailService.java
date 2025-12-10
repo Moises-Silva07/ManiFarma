@@ -35,7 +35,7 @@ public class EmailService {
 
             message.setSubject("ManiFarma: Cotação do Pedido #" + pedido.getId());
 
-            // Formata o valor para R$ XX,XX
+
             NumberFormat formatadorMoeda = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
             String valorFormatado = formatadorMoeda.format(pedido.getValorTotal());
 

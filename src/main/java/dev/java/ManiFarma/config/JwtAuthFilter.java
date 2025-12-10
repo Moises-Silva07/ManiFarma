@@ -76,7 +76,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             }
         } catch (Exception e) {
             System.err.println("⚠️ Erro ao processar o token JWT: " + e.getMessage());
-            // Não lança exceção — deixa a requisição continuar normalmente
+
         }
 
         filterChain.doFilter(request, response);

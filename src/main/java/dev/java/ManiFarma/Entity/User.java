@@ -3,10 +3,7 @@ package dev.java.ManiFarma.Entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
-/**
- * Entidade que representa um usuário genérico na tabela 'users'.
- * Pode ser um cliente ou outro tipo de usuário.
- */
+
 @Data
 @Entity
 @Table(name = "users")

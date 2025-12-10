@@ -3,24 +3,21 @@ package dev.java.ManiFarma.Controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import dev.java.ManiFarma.DTO.ProdutoRequestDTO;
 import dev.java.ManiFarma.DTO.ProdutoResponseDTO;
 import dev.java.ManiFarma.Service.ProdutoService;
 import jakarta.validation.Valid;
-
 import java.net.URI;
 import java.util.List;
-// ADICIONE ESTES IMPORTS
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import java.util.Map;
 import java.util.HashMap;
-// FIM DOS IMPORTS ADICIONADOS
+
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-// ... (outros imports)
+
 
 @RestController
 @RequestMapping("/produtos")
@@ -87,7 +84,7 @@ public class ProdutoController {
     public ResponseEntity<?> deletar(@PathVariable Long id) {
         try {
             service.deletar(id);
-            return ResponseEntity.noContent().build(); // 204 No Content
+            return ResponseEntity.noContent().build();
 
         } catch (EntityNotFoundException e) {
             Map<String, String> error = new HashMap<>();

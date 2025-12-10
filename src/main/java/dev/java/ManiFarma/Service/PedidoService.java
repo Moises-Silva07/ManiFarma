@@ -44,7 +44,7 @@ public class PedidoService {
         this.produtoRepository = produtoRepository;
         this.paymentService = paymentService;
         this.emailService = emailService;
-        this.pharmacistPassword = pharmacistPassword; // <-- E você atribui o valor ao campo 'final'
+        this.pharmacistPassword = pharmacistPassword;
         this.uploadDir = uploadDir;
     }
 
@@ -57,23 +57,23 @@ public class PedidoService {
             Long employeeId,
             MultipartFile receitaFile
     ) {
-        //  Valida se a imagem foi enviada
+
         if (receitaFile == null || receitaFile.isEmpty()) {
             throw new IllegalArgumentException("A imagem da receita é obrigatória!");
         }
 
-        //  Verifica se o cliente existe
+
         Cliente cliente = (Cliente) clienteRepository.findById(clienteId)
                 .orElseThrow(() -> new EntityNotFoundException("Cliente não encontrado com ID: " + clienteId));
 
-        // Cria o novo pedido
+
         Pedido pedido = new Pedido();
         pedido.setDescricao(descricao);
-        pedido.setStatus(StatusPedido.PENDENTE); // Sempre inicia como PENDENTE
+        pedido.setStatus(StatusPedido.PENDENTE);
         pedido.setCliente(cliente);
         pedido.setValorTotal(0.0);
 
-        // Se houver funcionário associado
+
         if (employeeId != null) {
             User user = employeeRepository.findById(employeeId)
                     .orElseThrow(() -> new EntityNotFoundException("Funcionário não encontrado com ID: " + employeeId));

@@ -19,15 +19,15 @@ import java.util.stream.Collectors;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder; // <<< Use a interface PasswordEncoder
+    private final PasswordEncoder passwordEncoder;
 
-    // Injeta a interface no construtor
+
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
-    // --- LÓGICA DE DESATIVAÇÃO (SOFT DELETE - REVERSÍVEL) ---
+
     @Transactional
     public void deactivateUser(Long id) {
         User user = userRepository.findById(id)
@@ -43,7 +43,7 @@ public class UserService {
         this.deactivateUser(user.getId());
     }
 
-    // --- LÓGICA PARA ATIVAR/DESATIVAR (TOGGLE) ---
+
     @Transactional
     public UserResponseDTO toggleUserActivation(Long id) {
         User user = userRepository.findById(id)
@@ -64,17 +64,17 @@ public class UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado com o ID: " + id));
 
-        // anonimização apenas para cliente
+
         if (!(user instanceof Cliente)) {
             throw new IllegalArgumentException("A anonimização de dados só é aplicável a clientes.");
         }
 
         Cliente cliente = (Cliente) user;
 
-        // 1. Anonimiza os dados pessoais
+
         cliente.setNome("Usuário Anonimizado");
-        cliente.setEmail("user_" + cliente.getId() + "@anon.com"); // E-mail único para evitar conflitos
-        cliente.setSenha(passwordEncoder.encode(UUID.randomUUID().toString())); // Senha inválida e aleatória
+        cliente.setEmail("user_" + cliente.getId() + "@anon.com");
+        cliente.setSenha(passwordEncoder.encode(UUID.randomUUID().toString()));
         cliente.setCpf("000.000.000-00");
         cliente.setCep("00000-000");
         cliente.setRua("Endereço Anonimizado");
@@ -117,7 +117,7 @@ public class UserService {
         User existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado com o ID: " + id));
 
-        // Impede a atualização de um usuário anonimizado
+
         if (existingUser.isAnonymized()) {
             throw new IllegalStateException("Não é possível atualizar um usuário que foi anonimizado.");
         }
@@ -174,7 +174,7 @@ public class UserService {
         dto.setEmail(user.getEmail());
         dto.setClient(user.isClient());
         dto.setDisabled(user.isDisabled());
-        dto.setAnonymized(user.isAnonymized()); // Mapeia o novo campo
+        dto.setAnonymized(user.isAnonymized());
 
         if (user instanceof Cliente cliente) {
             dto.setCpf(cliente.getCpf());

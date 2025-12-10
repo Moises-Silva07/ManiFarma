@@ -18,7 +18,7 @@ import lombok.EqualsAndHashCode;
 @PrimaryKeyJoinColumn(name = "id") // Define que a coluna 'id' é a chave estrangeira para a tabela 'users'
 public class Cliente extends User {
 
-    @Column(name = "cpf") // Mapeamento explícito das colunas
+    @Column(name = "cpf")
     private String cpf;
 
     @Column(name = "cep")

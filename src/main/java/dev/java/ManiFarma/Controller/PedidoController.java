@@ -26,7 +26,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/pedidos")
-@CrossOrigin(origins = "*") // Ajuste conforme necessário
+@CrossOrigin(origins = "*")
 public class PedidoController {
 
     private final PedidoService pedidoService;
@@ -50,7 +50,7 @@ public class PedidoController {
                     descricao,
                     StatusPedido.PENDENTE,
                     clienteId,
-                    null, // Sem funcionário inicialmente
+                    null,
                     receita
             );
 
@@ -62,21 +62,21 @@ public class PedidoController {
             return new ResponseEntity<>(response, HttpStatus.CREATED);
 
         } catch (IllegalArgumentException e) {
-            // Erros de validação (tipo de arquivo, tamanho, etc)
+
             Map<String, Object> error = new HashMap<>();
             error.put("success", false);
             error.put("error", e.getMessage());
             return ResponseEntity.badRequest().body(error);
 
         } catch (EntityNotFoundException e) {
-            // Cliente não encontrado
+
             Map<String, Object> error = new HashMap<>();
             error.put("success", false);
             error.put("error", e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
 
         } catch (Exception e) {
-            // Erro interno
+
             e.printStackTrace();
             Map<String, Object> error = new HashMap<>();
             error.put("success", false);
@@ -103,7 +103,7 @@ public class PedidoController {
             Resource resource = new UrlResource(caminhoArquivo.toUri());
 
             if (resource.exists() && resource.isReadable()) {
-                // Detecta o tipo da imagem pelo nome do arquivo
+
                 String fileName = caminhoArquivo.getFileName().toString().toLowerCase();
                 MediaType mediaType = MediaType.IMAGE_JPEG; // Padrão
 
@@ -195,7 +195,7 @@ public class PedidoController {
             List<PedidoResponseDTO> pedidos = pedidoService.getPedidosPorFuncionario(employeeId);
             return ResponseEntity.ok(pedidos);
 
-        } catch (EntityNotFoundException e) { // Captura se o ID do funcionário não existir
+        } catch (EntityNotFoundException e) {
             Map<String, String> error = new HashMap<>();
             error.put("error", e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
@@ -226,7 +226,7 @@ public class PedidoController {
             error.put("error", e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
 
-        } catch (RuntimeException e) { // Captura erros de negócio (ex: pedido sem valor)
+        } catch (RuntimeException e) {
             e.printStackTrace();
             Map<String, Object> error = new HashMap<>();
             error.put("success", false);
@@ -287,7 +287,7 @@ public class PedidoController {
             @RequestBody Map<String, String> body) {
         try {
             String status = body.get("status");
-            String senha = body.get("senha"); // <-- 1. ADICIONADO: Pega a senha do corpo da requisição
+            String senha = body.get("senha");
 
             if (status == null || status.trim().isEmpty()) {
                 Map<String, Object> error = new HashMap<>();
@@ -319,7 +319,7 @@ public class PedidoController {
             Map<String, Object> error = new HashMap<>();
             error.put("success", false);
             error.put("error", e.getMessage());
-            // Retorna 403 Forbidden, o código correto para falha de autorização
+
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
 
         } catch (Exception e) {
@@ -331,7 +331,7 @@ public class PedidoController {
         }
     }
 
-    // Endpoint para listar pedidos pelo status
+
     @GetMapping("/status/{status}")
     public ResponseEntity<?> listarPedidosPorStatus(@PathVariable String status) {
         try {
@@ -351,7 +351,7 @@ public class PedidoController {
         }
     }
 
-    // Endpoint para puxar o id pedido para adicionar o item
+
     @PostMapping("/{pedidoId}/itens")
     @Transactional
     public ResponseEntity<?> adicionarItensAoPedido(

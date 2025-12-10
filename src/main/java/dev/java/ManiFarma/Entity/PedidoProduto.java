@@ -24,7 +24,7 @@ public class PedidoProduto {
     @Enumerated(EnumType.STRING)
     private Unidade unidade; // MG ou ML
 
-    // Getters e Setters
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 

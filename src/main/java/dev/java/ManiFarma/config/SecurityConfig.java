@@ -36,7 +36,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
 
-                // Isso faz com que qualquer rota fora da lista abaixo exija token JWT válido.
+
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(
                                 "/api/auth/**",
@@ -54,10 +54,6 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
 
-                // MANTER TUDO LIBERADO PARA TESTAR O FRONT
-                //.authorizeHttpRequests(authorize -> authorize
-                //        .anyRequest().permitAll()
-                //)
 
                 .exceptionHandling(ex -> ex
                         .authenticationEntryPoint((request, response, authException) -> {

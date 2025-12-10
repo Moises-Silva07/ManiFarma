@@ -7,7 +7,6 @@ import dev.java.ManiFarma.Service.ReportService;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -29,14 +28,14 @@ public class ReportController {
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to
     ) {
-        // Converte LocalDate (apenas data) para LocalDateTime (com hora) para cobrir o dia todo
+
         LocalDateTime start = (from != null) ? from.atStartOfDay() : null;
         LocalDateTime end = (to != null) ? to.atTime(LocalTime.MAX) : null;
 
         return ResponseEntity.ok(service.getSummary(start, end));
     }
 
-    // ... (Mantenha os outros endpoints como estavam)
+
     @GetMapping("/orders")
     public ResponseEntity<List<Pedido>> orders(
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
