@@ -40,11 +40,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       const receitaCell = pedido.receita
         ? `
-           ${pedido.receita}
-           <button class="btn btn-outline-primary btn-sm ver-receita" data-id="${pedido.id}">
-             Ver Receita
-           </button>`
-        : "Nenhuma";
+            <div class="receita-box">
+              <span class="receita-nome">${pedido.receita}</span>
+              <button class="btn btn-outline-primary btn-sm ver-receita" data-id="${pedido.id}">
+                Ver Receita
+              </button>
+            </div>
+          `
+        : `<span class="text-muted">Nenhuma</span>`;
 
         const pagamentoCell = (() => {
           if (pedido.status === "CANCELADO") {
