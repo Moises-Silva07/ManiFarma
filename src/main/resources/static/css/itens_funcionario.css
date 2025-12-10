@@ -3,28 +3,29 @@
 }
 
 .pagination .page-link {
-  color: #101820;      
-  border-color: #FEE715;
+  color: #000000;
+  border-color: #007BFF;
 }
 
 .pagination .page-item.active .page-link {
-  background-color: #FEE715;
-  border-color: #FEE715;
-  color: #101820;                      
+  background-color: #007BFF;
+  border-color: #007BFF;
+  color: #FFFFFF;
 }
 
 .pagination .page-link:hover {
-  background-color: #FEE715;
-  color: #101820;
+  background-color: #0056b3;
+  color: #FFFFFF;
 }
 
 tr.selecionada {
-  background-color: #adadad !important; 
+  background-color: #DDEEFF !important;
 }
+
 
 h2 {
   text-align: center;
-  color:#FEE715;
+  color:#007BFF;
   padding-bottom: 10px;
 }
 
@@ -37,26 +38,26 @@ h2 {
   width: 100%;
   padding: 12px;
   margin: 20px 20px 0px 20px;
-  background: #FEE715;
-  color: #101820;
-  border: none; 
-  cursor: pointer; /* Muda cursor para mãozinha */
+  background: #007BFF;
+  color: #FFFFFF;
+  border: none;
+  cursor: pointer;
   font-size: 1em;
   font-weight: bold;
-  transition: 0.3s;  /* Suaviza animações */
+  transition: 0.3s;
 }
 
 .button:hover {
-  background: #92850c;
+  background: #0056b3; /
 }
 
 .button:focus {
-  outline: 2px solid #FEE715;
+  outline: 2px solid #007BFF;
   outline-offset: 2px;
 }
 
 tr.selecionada {
-  background-color: rgb(116, 116, 116) !important;
+  background-color: #DDEEFF !important;
 }
 
 @media (max-width: 768px) {
@@ -66,7 +67,7 @@ tr.selecionada {
   }
 
   .carousel-item {
-    height: 300px; /* reduz altura do carrossel */
+    height: 300px;
   }
 
   footer {
@@ -81,7 +82,7 @@ tr.selecionada {
   }
 
   .carousel-item {
-    height: 220px; /* ainda menor para celulares */
+    height: 220px;
   }
 
   footer {
