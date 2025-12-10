@@ -1,37 +1,16 @@
-
-.tabela-pedidos td.receita-cell {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;              
-    text-align: center;
-    white-space: normal;   
-    word-break: break-word; 
-}
-
-
-.tabela-pedidos {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.tabela-pedidos th,
-.tabela-pedidos td {
-    text-align: center !important;
-    vertical-align: middle !important;
-}
-
 .navbar-brand {
   height: 70px;
 }
 
+
 .modal-header {
-  background-color: #FEE715;
+  background-color: #007BFF;
+  color: #FFFFFF;
 }
 
 h2 {
   text-align: center;
-  color:#FEE715;
+  color:#007BFF;
   padding-bottom: 10px;
 }
 
@@ -39,21 +18,22 @@ table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 15px;
+  background-color: #FFFFFF;
 }
 
 table, th, td {
-  border: 1px solid #FEE715;
+  border: 1px solid #007BFF;
   text-align: center;
   padding: 10px;
 }
 
 th {
-  background: #101820;
-  color: #FEE715;
+  background: #007BFF;
+  color: #FFFFFF;
 }
 
 tbody {
-  color: #e6e6e6;
+  color: #000000;
 }
 
 @media (max-width: 768px) {
@@ -70,7 +50,7 @@ tbody {
 
   table {
     display: block;
-    overflow-x: auto; /* Adiciona scroll horizontal se necessário */
+    overflow-x: auto;
     white-space: nowrap;
   }
 }
