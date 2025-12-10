@@ -16,13 +16,14 @@
 }
 
 .modal-content-termos {
-    background: #fff;
+    background: #FFFFFF;
     width: 90%;
     max-width: 600px;
     padding: 20px;
     border-radius: 12px;
     max-height: 80vh;
     overflow-y: auto;
+    color: #000000;
 }
 
 .checkbox-termos {
@@ -30,7 +31,7 @@
 }
 
 .checkbox-termos a{
-    color:dodgerblue;
+    color: #007BFF;
 }
 
 .checkbox-termos input {
@@ -44,7 +45,7 @@
 .container-btn {
   display: flex;
   justify-content: center;
-  gap: 5%; 
+  gap: 5%;
   align-items: center;
   width: 100%;
 }
@@ -53,8 +54,8 @@
   width: 100%;
   text-decoration: none;
   padding: 12px;
-  background: #FEE715;
-  color: #101820;
+  background: #007BFF;
+  color: #FFFFFF;
   border-radius: 8px;
   font-weight: bold;
   cursor: pointer;
@@ -64,7 +65,7 @@
 }
 
 .btn:hover {
-  background: #92850c;
+  background: #0056b3;
 }
 
 @media (max-width: 768px) {
@@ -82,7 +83,6 @@
   }
 }
 
-/* Telas até 480px (smartphones pequenos) */
 @media (max-width: 480px) {
   .container-btn {
     gap: 12px;
